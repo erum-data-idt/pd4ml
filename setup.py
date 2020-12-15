@@ -8,4 +8,8 @@ setup(name='erum_data_data',
       author_email='erik.buhmann@uni-hamburg.de',
       license='MIT',
       packages=['erum_data_data'],
+      install_requires=[
+         'numpy >= 1.14.0',
+         'six >= 1.10.0',
+      ],
       zip_safe=False)

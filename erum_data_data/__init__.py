@@ -1,1 +1,1 @@
-from .erum_data_data import load
+from .erum_data_data import *
