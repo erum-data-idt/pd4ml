@@ -12,6 +12,7 @@ The only function so far is the "load" function to load the training and testing
 import erum_data_data as edd
 X_train, y_train, X_test, y_test = edd.load('LHCO', cache_dir = './', cache_subdir = 'datasets')
 ```
-Here a subfolder ./datasets is created.
+Here a subfolder ./datasets is created. The datasets take up a total disk space of about 2 GB. For loading the datasets a free RAM of at least 7 GB is necessary.
 
-Included datasets at the moment with the tags: 'airshower', 'LHCO', 'belle'
+Included datasets at the moment with the tags: 
+'airshower', 'LHCO', 'belle'
