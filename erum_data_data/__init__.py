@@ -1,1 +1,1 @@
-import erum_data_data
+from erum_data_data import *
