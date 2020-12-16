@@ -7,6 +7,9 @@ import numpy as np
 
 # dictionary of urls from DESY cloud, filenames and md5 checksums
 URL_DICT = {'test_filenames':[
+                '1_top_tagging_1_2M.npz',
+                '2_spinodal_200k.npz',
+                '3_EOSL_or_EOSQ_180k.npz',
                 '4_airshower_100k.npz',
                 '5_LHCOlympics2020_350k.npz',
                 '6_belle-selective_400k.npz',
@@ -15,6 +18,9 @@ URL_DICT = {'test_filenames':[
                 'test_half2.npy',
                 ],
              'test_urls': [
+                 'https://desycloud.desy.de/index.php/s/ZcCtQ6G8df4F5px/download',
+                 'https://desycloud.desy.de/index.php/s/gfd79exSBgYqspA/download',
+                 'https://desycloud.desy.de/index.php/s/rLrLPLZDTtBLd5n/download',
                 'https://desycloud.desy.de/index.php/s/Qcn38RExyDstEAP/download',
                  'https://desycloud.desy.de/index.php/s/izD3CN8nw68nWPp/download',
                  'https://desycloud.desy.de/index.php/s/Yd885LGfdMqoxbq/download',
@@ -23,6 +29,9 @@ URL_DICT = {'test_filenames':[
                 'https://desycloud.desy.de/index.php/s/mctQMTo7gfNmAa2/download',
                  ],
             'test_md5': [
+                '7cee4581389e269d9214d51bcaa58fce',
+                '7808e5dd8d0fa7e6a7f26991fd69a23f',
+                '66a12b7ac5f2e2b5db5bffb216654ef5',
                 'fcc0784f2dd781d7b1e02754fbffb360',
                 'e996ca33ce3fa89877b7cb6bfad449ea',
                 '5315e853616d12c39b590ff6d3fcc95e',
@@ -104,12 +113,18 @@ def load(dataname, cache_dir = './', cache_subdir = 'datasets'):
     as well as numpy arrays for test and training label
     '''
 
-    if dataname == 'airshower':
+    if dataname == 'top':
         i = 0
-    elif dataname == 'LHCO':
+    elif dataname == 'spinodal':
         i = 1
-    elif dataname == 'belle':
+    elif dataname == 'EOSL':
         i = 2
+    elif dataname == 'airshower':
+        i = 3
+    elif dataname == 'LHCO':
+        i = 4
+    elif dataname == 'belle':
+        i = 5
     else:
         print('WARNING: NOT A VALID DATANAME')
         return
