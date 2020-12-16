@@ -6,17 +6,30 @@ install this package as a python module with pip via:
 pip install git+https://github.com/erikbuh/erum_data_data.git
 ```
 
-The only function so far is the "load" function to load the training and testing datasets. The datasets features "X" are returned as a list of numpy arrays. The labels are returend directly as a numpy array. 
+The essential function so far is the "load" function to load the training and testing datasets. The datasets features "X" are returned as a list of numpy arrays. The labels are returend directly as a numpy array. 
 
 ```
 import erum_data_data as edd
-X_train, y_train, X_test, y_test = edd.load('LHCO', cache_dir = './', cache_subdir = 'datasets')
+
+# loading training data into RAM (downloads dataset first time)
+X_train, y_train  = edd.load('LHCO', 'train', cache_dir = './', cache_subdir = 'datasets')
+
+# loading test data into RAM (downloads dataset first time)
+X_test, y_test = edd.load('LHCO', 'test', cache_dir = './', cache_subdir = 'datasets')
 ```
-Here a subfolder ./datasets is created. The datasets take up a total disk space of about 2 GB. For loading the datasets a free RAM of at least 7 GB is necessary.
+
+Here a subfolder ./datasets is created. The datasets take up a total disk space of about 2 GB. For loading the training datasets a free RAM of at max. 5 GB is necessary (depending on the dataset).
 
 Included datasets at the moment with the tags: 
 1: 'top', 2: 'spinodal', 3: 'EOSL', 4: 'airshower', 5: 'LHCO', 6: 'belle'
 
+
+An description of the datasets can be printed via the function:
+```
+edd.print_description('top')
+```
+
+Some example plots can be found in the notebooks in the example folder.
 
 
 
