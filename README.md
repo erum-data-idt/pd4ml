@@ -20,9 +20,10 @@ X_test, y_test = edd.load('LHCO', 'test', cache_dir = './', cache_subdir = 'data
 
 Here a subfolder ./datasets is created. The datasets take up a total disk space of about 2 GB. For loading the training datasets a free RAM of at max. 5 GB is necessary (depending on the dataset).
 
-Included datasets at the moment with the tags: 
+Included datasets at the moment with the tags:
+```
 1: 'top', 2: 'spinodal', 3: 'EOSL', 4: 'airshower', 5: 'LHCO', 6: 'belle'
-
+```
 
 An description of the datasets can be printed via the function:
 ```
