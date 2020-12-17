@@ -12,13 +12,13 @@ The essential function so far is the "load" function to load the training and te
 import erum_data_data as edd
 
 # loading training data into RAM (downloads dataset first time)
-X_train, y_train  = edd.load('LHCO', 'train', cache_dir = './', cache_subdir = 'datasets')
+X_train, y_train  = edd.load('top', dataset='train', cache_dir = './', cache_subdir = 'datasets')
 
 # loading test data into RAM (downloads dataset first time)
-X_test, y_test = edd.load('LHCO', 'test', cache_dir = './', cache_subdir = 'datasets')
+X_test, y_test = edd.load('top', dataset='test', cache_dir = './', cache_subdir = 'datasets')
 ```
 
-Here a subfolder ./datasets is created. The datasets take up a total disk space of about 2 GB. For loading the training datasets a free RAM of at max. 5 GB is necessary (depending on the dataset).
+Here a subfolder ./datasets is created. The datasets take up a total disk space of about 2 GB. For loading the training datasets a free RAM of at at least 5 GB is necessary (depending on the dataset).
 
 Included datasets at the moment with the tags:
 ```

@@ -12,23 +12,23 @@ URL_DICT = {'test_filenames':[
                 '3_EOSL_or_EOSQ_180k.npz',
                 '4_airshower_100k.npz',
                 '5_LHCOlympics2020_features_1_1M.npz',
-                '6_belle-selective_400k.npz',
+                '6_belle_selective_400k.npz',
                 ],
              'test_urls': [
-                 'https://desycloud.desy.de/index.php/s/xXdGE7saNNCAZCK/download',
+                 'https://desycloud.desy.de/index.php/s/t388fECRMTficjx/download',
                  'https://desycloud.desy.de/index.php/s/CrKz3cy3XcMpxpJ/download',
                  'https://desycloud.desy.de/index.php/s/DT7sWm6rNR5zss9/download',
                 'https://desycloud.desy.de/index.php/s/Qcn38RExyDstEAP/download',
                  'https://desycloud.desy.de/index.php/s/4DaZCFgmZ83o9FT/download',
-                 'https://desycloud.desy.de/index.php/s/Yd885LGfdMqoxbq/download',
+                 'https://desycloud.desy.de/index.php/s/RKB4z3mMcPPY982/download',
                  ],
             'test_md5': [
-                '3d27b9ddd0ba4bbebe10bf2a1f9bcc3c',
+                '0d7f28cf5519ad04ad92ee7359efe7ea',
                 '89f0ea8c9e01a13c549d2acb60be2839',
                 'be5563e787f856bd6b2f9fe171277bc3',
                 'fcc0784f2dd781d7b1e02754fbffb360',
                 'd9a29ff15679c7034b7acf58e82afa0f',
-                '5315e853616d12c39b590ff6d3fcc95e',
+                '85b10c9df3903455ab247a0ab4b51e5f',
                 ],
              }
 
@@ -90,8 +90,8 @@ def _get_filepath(filename, url, md5, cache_dir = './', cache_subdir = 'datasets
         if md5 is not None:
             assert _check_md5(fpath) == md5, 'Hash of downloaded file incorrect.'
         print('Done Downloading')
-    else:
-        print('file was already downloaded')
+    #else:
+        #print('file was already downloaded, is loading')
         
     return fpath
 
@@ -198,10 +198,9 @@ Ref:
 Deep-learned Top Tagging with a Lorentz Layer by A Butter, G Kasieczka, T and M Russell (arXiv: 1707.08966)
 
 Dataset shape:
-~2M events have been stored divided between training (70%) and test (30%) and the shape of the dataset is (# of events, 201, 4).
+~2M events have been stored divided between training (70%) and test (30%) and the shape of the dataset is (# of events, 200, 4).
 The feature represent the leading 200 jet constituent four-momenta, with zero-padding for jets that have less than 200.
 Constituents are sorted by pT, with the highest pT one first.
-The truth top four-momentum is stored as truth_px, truth_py, etc.
 The set label are 0 for QCD and 1 for top.
 ''')
     
