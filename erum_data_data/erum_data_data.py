@@ -15,7 +15,7 @@ URL_DICT = {'test_filenames':[
                 '6_belle_selective_400k.npz',
                 ],
              'test_urls': [
-                 'https://desycloud.desy.de/index.php/s/t388fECRMTficjx/download',
+                 'https://desycloud.desy.de/index.php/s/aZqyNSg4B7nn8qQ/download',
                  'https://desycloud.desy.de/index.php/s/CrKz3cy3XcMpxpJ/download',
                  'https://desycloud.desy.de/index.php/s/DT7sWm6rNR5zss9/download',
                 'https://desycloud.desy.de/index.php/s/Qcn38RExyDstEAP/download',
@@ -23,7 +23,7 @@ URL_DICT = {'test_filenames':[
                  'https://desycloud.desy.de/index.php/s/RKB4z3mMcPPY982/download',
                  ],
             'test_md5': [
-                '0d7f28cf5519ad04ad92ee7359efe7ea',
+                '708a8369d75ceff2229bd8c46b47afea',
                 '89f0ea8c9e01a13c549d2acb60be2839',
                 'be5563e787f856bd6b2f9fe171277bc3',
                 'fcc0784f2dd781d7b1e02754fbffb360',
