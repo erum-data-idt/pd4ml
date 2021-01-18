@@ -198,9 +198,15 @@ Ref:
 Deep-learned Top Tagging with a Lorentz Layer by A Butter, G Kasieczka, T and M Russell (arXiv: 1707.08966)
 
 Dataset shape:
-~2M events have been stored divided between training (70%) and test (30%) and the shape of the dataset is (# of events, 200, 4).
+~2M events have been stored divided between training (~1.6M) and test (~400k)) and the shape of the dataset is (# of events, 200, 4).
 The feature represent the leading 200 jet constituent four-momenta, with zero-padding for jets that have less than 200.
 Constituents are sorted by pT, with the highest pT one first.
+The second dataset that is included is just a flag "ttv" to identify what the event was before the reshaping operated by us. Here a legenda:
+	0 = training event;
+	1 = test event;
+	2 = validation event;
+
+Note that in the current splitting of the dataset, training and validation events have been merged together as a uniqe train dataset.
 The set label are 0 for QCD and 1 for top.
 ''')
     
