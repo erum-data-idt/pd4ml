@@ -190,7 +190,7 @@ All six datasets are tagged with:
 Top tagging dataset.
 
 Description:
-14tev, hadronic tops for signal, qcd diets background, delphes ATLAS detector card with pythia. No MPI/pile-up included
+14 TeV, hadronic tops for signal, QCD djets background, Delphes ATLAS detector card with Pythia. No MPI/pile-up included
 Particle-flow entries (produced by Delphes E-flow) have been clustered into anti-kT 0.8 jets in the pT range [550,650].
 All top jets are matched to a parton-level top within ∆R = 0.8, and to all top decay partons within 0.8. Also,|eta|_jet < 2 has been required.
 
@@ -201,25 +201,28 @@ Dataset shape:
 ~2M events have been stored divided between training (~1.6M) and test (~400k)) and the shape of the dataset is (# of events, 200, 4).
 The feature represent the leading 200 jet constituent four-momenta, with zero-padding for jets that have less than 200.
 Constituents are sorted by pT, with the highest pT one first.
+
 The second dataset that is included is just a flag "ttv" to identify what the event was before the reshaping operated by us. Here a legenda:
 	0 = training event;
 	1 = test event;
 	2 = validation event;
 
-Note that in the current splitting of the dataset, training and validation events have been merged together as a uniqe train dataset.
+Note that in the current splitting of the dataset, training and validation events have been merged together as a unique training dataset. So for most intents and purposes one should just train the model on the first dataset and omit the second 'ttv' dataset altogether.
+
 The set label are 0 for QCD and 1 for top.
 ''')
     
     spinodal_description = ('''
 Spinodal dataset.
 Description:
-The goal of this classification is to identify the nature of the QCD phase transitic collisions at the CBM experiment and, in particular, whether signals for b-associated with the phase transition can be ound in the final momentum spectra of certain collisions.
+The classification goal for this dataset is to identify the nature of the QCD phase transitic collisions at the CBM experiment and, in particular, whether signals for b-associated with the phase transition can be ound in the final momentum spectra of certain collisions.
 
 Ref:
 J. Steinheimer, L. Pang, K. Shou, V. Koch, J. Randrup and H.Stoecker, JHEP 19 doi:10.1007/JHEP12(2019)122 [arXiv:1906.06562 [nucl-th]]
 
 Dataset shape:
-The dataset is composed of 200'000 2Dhistograms of shape 20x20 describing pion momenta, divided in training (70%) and test (30%). So, the shape of the dataset is (# of events, 20, 20).
+The dataset is composed of 200'000 2D histograms of shape 20x20 describing pion momenta, divided in training (70%) and test (30%). So, the shape of the dataset is (# of events, 20, 20).
+
 The set label is 1 for a Spinodal event and 0 for a Maxwell event.
 ''')
     
@@ -234,7 +237,7 @@ An equation-of-state-meter of quantum chromodynamics transition from deep learni
 Identifying the nature of the QCD transition in relativistic collision of heavy nuclei with deep learning, Yi-Lun Du, Kai Zhou, Jan Steinheimer, Long-Gang Pang, Anton Motornenko, Hong-Shi Zong, Xin-Nian Wang and Horst Stoecker, arXiv:1910.11530
 
 Dataset shape:
-The dataset is composed of ~180'000 2Dhistogram of shape 24x24 of the pion spectra and it is divided in 70% training and 30% test. So, the shape of the dataset is (# of events, 24, 24).
+The dataset is composed of ~180'000 2D histogram of shape 24x24 of the pion spectra and it is divided in 70% training and 30% test. So, the shape of the dataset is (# of events, 24, 24).
 Label is 1 for EOSQ and 0 for EOSL.
 ''')
     
@@ -289,8 +292,8 @@ The dataset 'events_anomalydetection_v2.features.h5' was used and split into two
 
 ----------------------------------    
 Dataset shape:
-- one numpy array of the shape (no. of events, 15)
-    - 15 features, namely:
+- one numpy array of the shape (no. of events, 14)
+    - 14 features, namely:
 
         The features (calculated using fastjet plugins) are the 3-momenta, invariant masses, 
         and n-jettiness variables tau1, tau2 and tau3 for the highest pT jet (j1) 
