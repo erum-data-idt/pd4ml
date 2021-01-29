@@ -36,7 +36,7 @@ Some example plots can be found in the notebooks in the example folder.
 
 ### Simple Fully-Connected Network Implementation
 
-A simple model implementation can be found in the folder 'simple_model'. To run the notebook one needs to additionally install at least [tensorflow](https://www.tensorflow.org/) version >= 2.0 and [scikit](https://scikit-learn.org/stable/) >=0.22. 
+A simple model implementation can be found in the folder 'simple_model'. To run the notebook one needs to additionally install at least [tensorflow](https://www.tensorflow.org/) version >= 2.0 and [scikit](https://scikit-learn.org/stable/) >= 0.22. 
 
 
 
