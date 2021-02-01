@@ -18,7 +18,7 @@ URL_DICT = {'test_filenames':[
                  'https://desycloud.desy.de/index.php/s/aZqyNSg4B7nn8qQ/download',
                  'https://desycloud.desy.de/index.php/s/CrKz3cy3XcMpxpJ/download',
                  'https://desycloud.desy.de/index.php/s/DT7sWm6rNR5zss9/download',
-                 'https://desycloud.desy.de/index.php/s/Qcn38RExyDstEAP/download',
+                 'https://desycloud.desy.de/index.php/s/Le5MZCGar7ZEm9f/download',
                  'https://desycloud.desy.de/index.php/s/4DaZCFgmZ83o9FT/download',
                  'https://desycloud.desy.de/index.php/s/RKB4z3mMcPPY982/download',
                  ],
@@ -26,7 +26,7 @@ URL_DICT = {'test_filenames':[
                 '708a8369d75ceff2229bd8c46b47afea',
                 '89f0ea8c9e01a13c549d2acb60be2839',
                 'be5563e787f856bd6b2f9fe171277bc3',
-                'fcc0784f2dd781d7b1e02754fbffb360',
+                'b3afa0efe9f4c6a5b936364cd52b1904',
                 'd9a29ff15679c7034b7acf58e82afa0f',
                 '85b10c9df3903455ab247a0ab4b51e5f',
                 ],
@@ -253,24 +253,18 @@ Produced by jonas.glombitza@rwth-aachen.de
 Dataset shape:
 
 Three sets of input data:
-- first set of input data:
+- first set of input data (shape: [70k, 9, 9, 80]):
     - 70k events (airshowers)
-    - 81 ground detector stations
-    - 81 features
-        - 1  time   (arrival time of first particles at each station)
-        - 80 measured signal traces
+    - 9x9 = 81 ground detector stations
+    - 80 measured signal bins (forming one signal trace per station)
     -padding: (-1) padding for instances that the detector / or timestep did not detect a particle
     
-- second set of input data:
+- second set of input data (shape: [70k, 9, 9, 1]:
     - 70k events (airshowers)
-    - 11 features per airshower:
-        'logE',  --> (energy of cosmic ray)
-        'Xmax',  --> (depth of shower maximum)  
-        'showermax_x', 'showermax_y', 'showermax_z',     --> (point of showermaximum in x,y,z)
-        'showeraxis_x', 'showeraxis_y', 'showeraxis_z',  --> (shower axis (arrival direction) in x,y,z)
-        'showercore_x', 'showercore_y', 'showercore_z',  --> (shower core (intersection shower axis with detector plane) in x,y,z)
-    
-- thrid set of input data
+    - 9x9 = 81 ground detector stations   
+    - 1 starting time of the signal trace (arrival time of first particles at each station)
+
+- third set of input data
     - detector geometry - for reference if needed
     - 81 ground detector stations
     - 3 features: x,y,z location of each station
