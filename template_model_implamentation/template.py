@@ -18,21 +18,22 @@ class ModelTemplate:
     my_compatible_datasets = []         ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
 
     def my_preprocessing(self, in_data):
-        #   write your preprocessing routin here
         """
         Method should take as an input the list of datasets to be used as an iput for the model
         and after the application of all the preprocessing routin, it should return the modified data
         in the desired shapes
         """
-
+        
+        #   write your preprocessing routin here
         return out_data
 
 
     def my_model(self, shapes = None, save_model_png = False):
+        '''
+         model should take shapes of the input datasets (not counting the number of events)
+         and return the desired model
+        '''
         #   write your model here
-        ## model should take shapes of the input datasets (not counting the number of events)
-        ## and return the desired model
-
         return model
 
 
@@ -41,7 +42,9 @@ class ModelTemplate:
 ###  FCN EXAMPLE IMPELEMTATION ###
 
     def fcn_preprocessing(self, in_data):
-        ## in_data: numpy array. Input to be preprocessed
+        ''' in_data: numpy array. Input to be preprocessed
+            returns flattened array.
+        '''
         if len(in_data.shape[1:]) > 1:
             out_data = np.reshape(in_data, (len(in_data), in_data.shape[1]*in_data.shape[2]))
             return out_data

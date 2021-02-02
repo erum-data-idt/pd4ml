@@ -1,5 +1,5 @@
 ### This is a template file meant to be a guideline to smooth out the implementation of our models in the same framework. 
-##	William.
+##	William Korcari: william.korcari@desy.de 	
 
 import erum_data_data as edd
 import tensorflow as tf
@@ -13,7 +13,7 @@ from utils import roc_auc
 from utils import test_accuracy
 from utils import test_f1_score
 
-datasets = ["top", "spinodal", "EOSL", "aorshower", "LHCO", "belle"]
+datasets = ["top", "spinodal", "EOSL", "aorshower", "belle"]
 
 ds = 'top' ## Choose your dataset among those listed above.
 
@@ -36,7 +36,7 @@ fcn.compile(**fcn_model.fcn_compile_args)
 history = fcn.fit(x = fcn_train, y = y_train, **fcn_model.fcn_fit_args)
 
 ##	From here on, one should be able to use already defined methods as showed in the following lines. 
-##	Let me know if you face any issues with that.
+##	Let us know if you face any issues with that.
 
 #training history plots
 train_plots(history, ds, True)
