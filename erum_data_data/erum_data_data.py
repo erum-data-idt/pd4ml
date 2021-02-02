@@ -8,7 +8,7 @@ import numpy as np
 # dictionary of urls from DESY cloud, filenames and md5 checksums
 URL_DICT = {'test_filenames':[
                 '1_top_tagging_2M.npz',
-                '2_spinodal_200k.npz',
+                '2_spinodal_29k.npz',
                 '3_EOSL_or_EOSQ_180k.npz',
                 '4_airshower_100k.npz',
                 '5_LHCOlympics2020_features_1_1M.npz',
@@ -16,7 +16,7 @@ URL_DICT = {'test_filenames':[
                 ],
              'test_urls': [
                  'https://desycloud.desy.de/index.php/s/aZqyNSg4B7nn8qQ/download',
-                 'https://desycloud.desy.de/index.php/s/CrKz3cy3XcMpxpJ/download',
+                 'https://desycloud.desy.de/index.php/s/zZCCSfwwEkT5Pgk/download',
                  'https://desycloud.desy.de/index.php/s/DT7sWm6rNR5zss9/download',
                  'https://desycloud.desy.de/index.php/s/Le5MZCGar7ZEm9f/download',
                  'https://desycloud.desy.de/index.php/s/4DaZCFgmZ83o9FT/download',
@@ -24,7 +24,7 @@ URL_DICT = {'test_filenames':[
                  ],
             'test_md5': [
                 '708a8369d75ceff2229bd8c46b47afea',
-                '89f0ea8c9e01a13c549d2acb60be2839',
+                'c22326822d9bac7c074467ccccc6fe4f',
                 'be5563e787f856bd6b2f9fe171277bc3',
                 'b3afa0efe9f4c6a5b936364cd52b1904',
                 'd9a29ff15679c7034b7acf58e82afa0f',
@@ -221,7 +221,7 @@ Ref:
 J. Steinheimer, L. Pang, K. Shou, V. Koch, J. Randrup and H.Stoecker, JHEP 19 doi:10.1007/JHEP12(2019)122 [arXiv:1906.06562 [nucl-th]]
 
 Dataset shape:
-The dataset is composed of 200'000 2D histograms of shape 20x20 describing pion momenta, divided in training (70%) and test (30%). So, the shape of the dataset is (# of events, 20, 20).
+The dataset is composed of 29'000 2D histograms of shape 20x20 describing pion momenta, divided in training (70%) and test (30%). So, the shape of the dataset is (# of events, 20, 20).
 
 The set label is 1 for a Spinodal event and 0 for a Maxwell event.
 ''')
