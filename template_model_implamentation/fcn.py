@@ -7,9 +7,6 @@ import numpy as np
 
 class Fcn:
 
-    def __init__(self):
-        pass
-
     metrics =   [
                     tf.keras.metrics.BinaryAccuracy(name = "acc"), 
                     tf.keras.metrics.AUC(name = "AUC")
