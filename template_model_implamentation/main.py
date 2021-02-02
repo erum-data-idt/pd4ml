@@ -6,7 +6,7 @@ import tensorflow as tf
 
 ##	utils.py is the file that contains all the self-built methods of this script.
 ##	Please add the model generating function and the preprocessing function in that file.
-from fcn import Fcn		    	#import your model function
+from fcn import Network		    	#import your model function
 
 from utils import train_plots
 from utils import roc_auc
@@ -20,7 +20,7 @@ from utils import test_f1_score
 
 
 
-nn = Fcn()
+nn = Network()
 
 datasets =  nn.compatible_datasets
 

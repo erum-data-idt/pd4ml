@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 
 
-class ModelTemplate:
+class Network:
 
     def __init__(self):
         pass

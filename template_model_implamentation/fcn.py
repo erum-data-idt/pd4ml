@@ -5,7 +5,7 @@
 import tensorflow as tf
 import numpy as np
 
-class Fcn:
+class Network:
 
     metrics =   [
                     tf.keras.metrics.BinaryAccuracy(name = "acc"), 
