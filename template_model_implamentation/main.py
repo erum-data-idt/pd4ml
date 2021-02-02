@@ -4,21 +4,18 @@
 import erum_data_data as edd
 import tensorflow as tf
 
-##	utils.py is the file that contains all the self-built methods of this script.
 ##	Please add the model generating function and the preprocessing function in that file.
 from fcn import Network		    	#import your model function
 
+##	utils.py is the file that contains all the self-built methods of this script.
 from utils import train_plots
 from utils import roc_auc
 from utils import test_accuracy
 from utils import test_f1_score
 
 
-
 #########################################
 #####  EXAMPLE IMPLEMENTATION OF FCN  ###
-
-
 
 nn = Network()
 
