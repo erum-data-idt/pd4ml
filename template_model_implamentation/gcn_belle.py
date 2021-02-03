@@ -25,10 +25,9 @@ class Network:
     fit_args = {
         "shuffle": True,
         "validation_split": 0.2,
-        #"epochs": 100,
-        "epochs" : 1,
+        "epochs": 100,
         "callbacks": callbacks,
-        "batch_size": 300,
+        "batch_size": 1024,
     }
     compatible_datasets = ["belle"]
 
