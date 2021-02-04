@@ -2,29 +2,8 @@ import os
 import requests
 import numpy as np
 from dataclasses import dataclass
-
-
-from rich.progress import (
-    BarColumn,
-    DownloadColumn,
-    TextColumn,
-    TransferSpeedColumn,
-    TimeRemainingColumn,
-    Progress,
-)
-
-
-progress = Progress(
-    TextColumn("[bold blue]{task.fields[filename]}", justify="right"),
-    BarColumn(bar_width=None),
-    "[progress.percentage]{task.percentage:>3.1f}%",
-    "•",
-    DownloadColumn(),
-    "•",
-    TransferSpeedColumn(),
-    "•",
-    TimeRemainingColumn(),
-)
+from typing import Iterable
+from .utils import download_progress, console
 
 
 @dataclass
@@ -34,12 +13,20 @@ class Dataset:
     url: str
     md5: str
 
+    datasets_register = set()
+
     @classmethod
-    def print_description(cls):
+    def __init_subclass__(cls, /, register: bool = True, **kwargs) -> None:
+        super().__init_subclass__(**kwargs)
+        if register:
+            cls.datasets_register.add(cls)
+
+    @classmethod
+    def print_description(cls) -> None:
         print(cls.__doc__)
 
     @classmethod
-    def data_path(cls, path: str, with_filename=True) -> str:
+    def data_path(cls, path: str, with_filename: bool = True) -> str:
         data_dir = os.path.join(
             os.path.expanduser(path),
             f"{cls.__name__}",
@@ -61,25 +48,24 @@ class Dataset:
         os.makedirs(datadir, exist_ok=True)
 
         response = requests.get(cls.url, stream=True)
-        with progress:
-            task_id = progress.add_task(
-                "download",
-                filename=cls.filename,
-                start=False,
-            )
-            # This will break if the response headers doesn't contain content length
-            progress.update(task_id, total=int(response.headers["Content-length"]))
-            data_path = cls.data_path(path)
-            with open(data_path, "wb") as dest_file:
-                progress.start_task(task_id)
-                for data in response.iter_content(1 << 20):
-                    dest_file.write(data)
-                    progress.update(task_id, advance=len(data))
+        task_id = download_progress.add_task(
+            "download",
+            filename=cls.filename,
+            start=False,
+        )
+        # This will break if the response headers doesn't contain content length
+        download_progress.update(task_id, total=int(response.headers["Content-length"]))
+        data_path = cls.data_path(path)
+        with open(data_path, "wb") as dest_file:
+            download_progress.start_task(task_id)
+            for data in response.iter_content(1 << 20):
+                dest_file.write(data)
+                download_progress.update(task_id, advance=len(data))
 
     @classmethod
     def load(
         cls,
-        dataset: str = "train",
+        split: str = "train",
         path: str = "./datasets",
         force_download: bool = False,
     ):
@@ -94,26 +80,40 @@ class Dataset:
 
         Parameters
         ----------
-        datset: chosse the training or testing set:
+        split: chosse the training or testing set:
             dataset = 'train' or 'test'
         path: directory where the datasets are saved
             path = './datasets'
+        force_download: force re-downloading
+            force_download = False
 
 
         Returns
         -------
         X, y
-        X: a list of numpy arrays with X input features - see print_decription() for more details
+        X: a list of numpy arrays with X input features - see `print_description()` for more details
         y: a numpy array with labels [0,1]
         """
         if not os.path.exists(data_path := cls.data_path(path)) or force_download:
-            cls.download(path)
+            with download_progress:
+                cls.download(path)
 
         np_zip = np.load(data_path)
 
         X = []
         for i in range(int(len(np_zip) / 2 - 1)):
-            X.append(np_zip["X_{}_{}".format(dataset, i)])
-        y = np_zip["y_{}".format(dataset)]
+            X.append(np_zip["X_{}_{}".format(split, i)])
+        y = np_zip["y_{}".format(split)]
 
         return X, y
+
+
+def download_datasets(
+    datasets: Iterable[str] = Dataset.datasets_register,
+    path: str = "./datasets",
+    workers: int = 4,
+) -> None:
+    assert set(datasets) <= Dataset.datasets_register
+    with download_progress:
+        for dataset in datasets:
+            dataset.download(path)
