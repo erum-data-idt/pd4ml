@@ -13,6 +13,7 @@ setup(
         "numpy >= 1.14.0",
         "six >= 1.10.0",
         "rich >= 9.10.0",
+        "requests >= 2.24.0",
     ],
     python_requires="~=3.8",
     zip_safe=False,
