@@ -3,7 +3,7 @@ import requests
 import numpy as np
 from dataclasses import dataclass
 from typing import Iterable
-from .utils import download_progress, console
+from .utils import download_progress, console, _check_md5
 
 
 @dataclass
@@ -30,7 +30,6 @@ class Dataset:
         data_dir = os.path.join(
             os.path.expanduser(path),
             f"{cls.__name__}",
-            f"{cls.md5}",
         )
         if with_filename:
             return os.path.join(data_dir, f"{cls.filename}")
@@ -94,7 +93,10 @@ class Dataset:
         X: a list of numpy arrays with X input features - see `print_description()` for more details
         y: a numpy array with labels [0,1]
         """
-        if not os.path.exists(data_path := cls.data_path(path)) or force_download:
+        if exists := os.path.exists(data_path := cls.data_path(path)):
+            if _check_md5(data_path) != cls.md5:
+                force_download = True
+        if not exists or force_download:
             with download_progress:
                 cls.download(path)
 

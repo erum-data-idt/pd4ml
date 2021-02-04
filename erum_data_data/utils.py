@@ -1,5 +1,6 @@
 import re
 import functools
+import hashlib
 from rich.progress import (
     BarColumn,
     DownloadColumn,
@@ -25,6 +26,15 @@ download_progress = Progress(
 )
 
 console = Console()
+
+
+def _check_md5(fpath):
+    """ returns md5 checksum for file in fpath """
+    hash_md5 = hashlib.md5()
+    with open(fpath, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
 
 
 _VERSION_TMPL = r"^(?P<major>{v})" r"\.(?P<minor>{v})" r"\.(?P<patch>{v})$"
