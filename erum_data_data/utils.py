@@ -70,7 +70,7 @@ class Version:
             return Version(other)
         elif isinstance(other, Version):
             return other
-        raise AssertionError("{other} (type {type(other)}) cannot be compared to version.")
+        raise AssertionError(f"{other} (type {type(other)}) cannot be compared to version.")
 
     def __eq__(self, other):
         other = self._validate(other)
