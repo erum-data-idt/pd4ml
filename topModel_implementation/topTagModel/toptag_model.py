@@ -1,0 +1,87 @@
+### This is a template file meant to be a guideline to smooth out the implementation of our models in the same framework. 
+### This is a template file meant to be a guideline to smooth out the implementation of our models in the same framework. 
+import tensorflow as tf
+import numpy as np
+from topTagModel.toptag_utils import convert, Dataset, _outputs, lr_schedule
+
+
+class _DotDict:
+    pass
+
+
+class Network:
+
+    def __init__(self):
+        pass
+
+
+    metrics   = [tf.keras.metrics.BinaryAccuracy(name = "acc")]  ##list of metrics to be used
+    compile_args = {'loss':'categorical_crossentropy',
+                    'optimizer':tf.keras.optimizers.Adam(learning_rate=lr_schedule(0)),
+                    'metrics': metrics
+                   }                      ##dictionary of the arguments to be passed to the method compile()
+
+    callbacks = [tf.keras.callbacks.ModelCheckpoint(filepath='./',
+                             monitor='val_acc',
+                             verbose=1,
+                             save_best_only=True),
+                 tf.keras.callbacks.LearningRateScheduler(lr_schedule),
+                 tf.keras.callbacks.ProgbarLogger(),
+                 tf.keras.callbacks.EarlyStopping(monitor='val_acc',
+                                                  min_delta =0.0001,
+                                                  patience=15,
+                                                  restore_best_weights = True),
+                ]                                              ##list of callbacks to be used in model.
+    fit_args = {'batch_size': 1024,
+                'epochs': 30,
+                'validation_split': 0.2,
+                'shuffle': True,
+                'callbacks': callbacks
+               }                      ##dictionary of the arguments to be passed to the method fit()
+
+    compatible_datasets = ['top']         ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+
+    def preprocessing(self, X, y, src_dir, ds_type):
+        """
+        Method should take as an input the list of datasets to be used as an iput for the model
+        and after the application of all the preprocessing routin, it should return the modified data
+        in the desired shapes
+        """
+        X = np.reshape(X, (len(X), (X.shape[1]*X.shape[2])))
+        path = convert(X, y, src_dir, basename='{}_file'.format(ds_type))
+        dataset = Dataset(path, data_format='channel_last')
+        #   write your preprocessing routin here
+        return dataset
+
+
+
+    
+    def model(self, ds, input_shapes):
+        r"""ParticleNet model from `"ParticleNet: Jet Tagging via Particle Clouds"
+        <https://arxiv.org/abs/1902.08570>`_ paper.
+        Parameters
+        ----------
+        input_shapes : dict
+            The shapes of each input (`points`, `features`, `mask`).
+        """
+
+        setting = _DotDict()
+        setting.num_class = 2 #num_classes
+        # conv_params: list of tuple in the format (K, (C1, C2, C3))
+        setting.conv_params = [
+            (16, (64, 64, 64)),
+            (16, (128, 128, 128)),
+            (16, (256, 256, 256)),
+            ]
+        # conv_pooling: 'average' or 'max'
+        setting.conv_pooling = 'average'
+        # fc_params: list of tuples in the format (C, drop_rate)
+        setting.fc_params = [(256, 0.1)]
+        setting.num_points = input_shapes['points'][0]
+
+        points = tf.keras.Input(name='points', shape=input_shapes['points'])
+        features = tf.keras.Input(name='features', shape=input_shapes['features']) if 'features' in input_shapes else None
+        mask = tf.keras.Input(name='mask', shape=input_shapes['mask']) if 'mask' in input_shapes else None
+        outputs = _outputs(points, features, mask, setting, name=ds+'_model')
+
+        return tf.keras.Model(inputs=[points, features, mask], outputs=outputs, name=ds+'_model')
