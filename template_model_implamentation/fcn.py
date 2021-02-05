@@ -37,12 +37,12 @@ class Network(NetworkABC):
         """in_data: numpy array. Input to be preprocessed
         returns flattened array.
         """
-        if len(in_data.shape[1:]) > 1:
-            out_data = np.reshape(in_data, (len(in_data), in_data.shape[1] * in_data.shape[2]))
-            return out_data
-        return in_data
+        if len(in_data[0].shape[1:]) > 1:
+            out_data = np.reshape(in_data[0], (len(in_data[0]), in_data[0].shape[1] * in_data[0].shape[2]))
+            return [out_data]
+        return [in_data[0]]
 
-    def model(self, ds, shape, save_model_png=False):
+    def model(self, ds, shapes, save_model_png=False):
 
         """
         Builds sequential model.
@@ -56,7 +56,7 @@ class Network(NetworkABC):
             return
 
         model = tf.keras.Sequential()
-        model.add(tf.keras.Input(shape=shape))
+        model.add(tf.keras.Input(shape=shapes[0]))
         tf.keras.layers.BatchNormalization()
         for l in range(15):
             model.add(tf.keras.layers.Dense(256, activation="relu"))  ##add hidden layers
