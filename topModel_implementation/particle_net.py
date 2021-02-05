@@ -2,7 +2,7 @@
 ### This is a template file meant to be a guideline to smooth out the implementation of our models in the same framework. 
 import tensorflow as tf
 import numpy as np
-from toptag_utils import convert, Dataset, _outputs, lr_schedule
+from utils_particle_net import convert, Dataset, _outputs, lr_schedule
 from template import NetworkABC
 
 
