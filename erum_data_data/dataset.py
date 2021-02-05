@@ -113,7 +113,6 @@ class Dataset:
 def download_datasets(
     datasets: Iterable[str] = Dataset.datasets_register,
     path: str = "./datasets",
-    workers: int = 4,
 ) -> None:
     assert set(datasets) <= Dataset.datasets_register
     with download_progress:
