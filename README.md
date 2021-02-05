@@ -10,7 +10,7 @@ pip install git+https://github.com/erikbuh/erum_data_data.git
 
 The essential function so far is the "load" function to load the training and testing datasets. The datasets features "X" are returned as a list of numpy arrays. The labels are returend directly as a numpy array. 
 
-```
+```python
 from erum_data_data import Spinodal   # or any other dataset (see below) 
 
 # loading training data into RAM (downloads dataset first time)
@@ -28,8 +28,16 @@ Included datasets at the moment with the tags:
 ```
 
 An description of the datasets can be printed via the function:
-```
+```python
 Spinodal.print_description()
+```
+
+Show all available datasets:
+```python
+import erum_data_data as edd
+
+for dataset in edd.Dataset.datasets_register:
+    print(dataset.name)
 ```
 
 Some example plots can be found in the notebooks in the example folder.
