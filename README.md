@@ -32,7 +32,6 @@ for dataset in edd.Dataset.datasets_register:
     print(dataset.name)
 ```
 
-import erum_data_data as edd
 An description of the datasets can be printed via the function:
 ```python
 import erum_data_data as edd
