@@ -8,26 +8,36 @@ pip install git+https://github.com/erikbuh/erum_data_data.git
 
 The essential function so far is the "load" function to load the training and testing datasets. The datasets features "X" are returned as a list of numpy arrays. The labels are returend directly as a numpy array. 
 
-```
+```python
 import erum_data_data as edd
 
 # loading training data into RAM (downloads dataset first time)
-X_train, y_train  = edd.load('top', dataset='train', cache_dir = './', cache_subdir = 'datasets')
+X_train, y_train  = edd.TopTagging.load(split="train")
 
 # loading test data into RAM (downloads dataset first time)
-X_test, y_test = edd.load('top', dataset='test', cache_dir = './', cache_subdir = 'datasets')
+X_test, y_test = edd.TopTagging.load(split="test")
 ```
 
 Here a subfolder ./datasets is created. The datasets take up a total disk space of about 2.4 GB. For loading the training datasets a free RAM of at at least 5 GB is necessary (depending on the dataset).
 
 Included datasets at the moment with the tags:
 ```
-1: 'top', 2: 'spinodal', 3: 'EOSL', 4: 'airshower', 5: 'belle'
+1: TopTagging, 2: Spinodal, 3: EOSL, 4: Airshower, 5: Belle
+```
+Show all available datasets:
+```python
+import erum_data_data as edd
+
+for dataset in edd.Dataset.datasets_register:
+    print(dataset.name)
 ```
 
+import erum_data_data as edd
 An description of the datasets can be printed via the function:
-```
-edd.print_description('top')
+```python
+import erum_data_data as edd
+
+edd.TopTagging.print_description()
 ```
 
 Some example plots can be found in the notebooks in the example folder.
