@@ -119,39 +119,41 @@ def require_software(**kwargs):
     class CNN:
         pass
     """
-    force_env = kwargs.pop("force_env", False)
-    corrupted_env = []
-    for package, version in kwargs.items():
-        assert isinstance(package, str)
-        assert isinstance(version, str)
-        required = Version(version)
-        try:
-            pkg = import_module(package)
-        except ImportError:
-            console.log(
-                f":cross_mark: {package} - {required} is not installed! "
-                f"Install package: `pip install '{package}=={version}'`"
-            )
-            corrupted_env.append(package)
-            continue
-        current = Version(pkg.__version__)
-        if current < required:
-            console.log(
-                f":cross_mark: {package} - {current} (required: {required}) is outdated! "
-                f"Try upgrading: `pip install '{package}>={version}'`"
-            )
-            corrupted_env.append(package)
-        else:
-            console.log(
-                f":white_heavy_check_mark: {package} - {current} (required: {required}) is installed"
-            )
-    if corrupted_env and force_env:
-        raise Exception(
-            f"Environment is not properly set up ({len(corrupted_env)} packages are not installed or outdated). "
-            "Please install the required packages!"
-        )
 
     def decorator(cls):
+        force_env = kwargs.pop("force_env", False)
+        corrupted_env = []
+        console.print(f"[bold green]Checking software requirements for {cls.__name__}...\n")
+        for package, version in kwargs.items():
+            assert isinstance(package, str)
+            assert isinstance(version, str)
+            required = Version(version)
+            try:
+                pkg = import_module(package)
+            except ImportError:
+                console.print(
+                    f"\t:cross_mark: {package} - {required} is not installed! "
+                    f"Install package: `pip install '{package}=={version}'`"
+                )
+                corrupted_env.append(package)
+                continue
+            current = Version(pkg.__version__)
+            if current < required:
+                console.print(
+                    f"\t:cross_mark: {package} - {current} (required: {required}) is outdated! "
+                    f"Try upgrading: `pip install '{package}>={version}'`"
+                )
+                corrupted_env.append(package)
+            else:
+                console.print(
+                    f"\t:white_heavy_check_mark: {package} - {current} (required: {required}) is installed"
+                )
+        if corrupted_env and force_env:
+            raise Exception(
+                f"Environment is not properly set up ({len(corrupted_env)} packages are not installed or outdated). "
+                "Please install the required packages!"
+            )
+
         @functools.wraps(cls)
         def wrapper(*args, **kwargs):
             return cls(*args, **kwargs)
