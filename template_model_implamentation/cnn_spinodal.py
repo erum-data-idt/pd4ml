@@ -2,6 +2,8 @@ from template import NetworkABC
 import tensorflow as tf
 import numpy as np
 
+from erum_data_data.erum_data_data import Spinodal
+
 
 class Network(NetworkABC):
     def __init__(self):
@@ -33,7 +35,7 @@ class Network(NetworkABC):
     }  ##dictionary of the arguments to be passed to the method fit()
 
     compatible_datasets = [
-        "spinodal"
+        Spinodal
     ]  ## we would also ask you to add a list of the datasets that would be compatible with your implementation
 
     def preprocessing(self, in_data):
@@ -47,6 +49,7 @@ class Network(NetworkABC):
         return out_data
 
     def model(self, ds, shape, save_model_png=False):
+        assert ds in self.compatible_datasets
 
         model = tf.keras.Sequential()
         model.add(
@@ -64,6 +67,6 @@ class Network(NetworkABC):
         model.add(tf.keras.layers.Dense(1, activation="sigmoid"))
 
         if save_model_png:
-            tf.keras.utils.plot_model(model, to_file="./{}_model.png".format(ds))
+            tf.keras.utils.plot_model(model, to_file="./{}_model.png".format(ds.__name__))
 
         return model

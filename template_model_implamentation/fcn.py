@@ -5,6 +5,8 @@ from template import NetworkABC
 import tensorflow as tf
 import numpy as np
 
+from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL
+
 
 class Network(NetworkABC):
 
@@ -31,7 +33,7 @@ class Network(NetworkABC):
         "batch_size": 300,
     }
 
-    compatible_datasets = ["top", "spinodal", "EOSL"]
+    compatible_datasets = [TopTagging, Spinodal, EOSL]
 
     def preprocessing(self, in_data):
         """in_data: numpy array. Input to be preprocessed
@@ -51,18 +53,16 @@ class Network(NetworkABC):
         save_model_png = bool. Save .png of the model in the execution dir.
         """
 
-        if ds == "airshower" or ds == "belle":
-            print("Dataset {} has too many input datasets.".format(self.ds))
-            return
+        assert ds in self.compatible_datasets
 
         model = tf.keras.Sequential()
         model.add(tf.keras.Input(shape=shape))
         tf.keras.layers.BatchNormalization()
-        for l in range(15):
-            model.add(tf.keras.layers.Dense(256, activation="relu"))  ##add hidden layers
-        model.add(tf.keras.layers.Dense(1, activation="sigmoid"))  ##add output layer
+        for _ in range(15):
+            model.add(tf.keras.layers.Dense(256, activation="relu"))  # add hidden layers
+        model.add(tf.keras.layers.Dense(1, activation="sigmoid"))  # add output layer
 
         if save_model_png:
-            tf.keras.utils.plot_model(model, to_file="./{}_model.png".format(ds))
+            tf.keras.utils.plot_model(model, to_file="./{}_model.png".format(ds.name))
 
         return model

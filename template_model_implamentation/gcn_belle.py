@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers
 from template import NetworkABC
+from erum_data_data.erum_data_data import Belle
 
 
 class Network(NetworkABC):
@@ -29,7 +30,7 @@ class Network(NetworkABC):
         "callbacks": callbacks,
         "batch_size": 1024,
     }
-    compatible_datasets = ["belle"]
+    compatible_datasets = [Belle]
 
     def preprocessing(self, in_data):
         """
