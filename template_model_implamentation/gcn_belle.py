@@ -1,9 +1,9 @@
 import tensorflow as tf
 from tensorflow.keras import layers
-import numpy as np
+from template import NetworkABC
 
 
-class Network:
+class Network(NetworkABC):
 
     callbacks = [
         tf.keras.callbacks.EarlyStopping(
@@ -136,9 +136,9 @@ def get_model(units=128, num_nodes=100, num_features=8, num_pdg=540, emb_size=8)
         name="embedding",
     )(pdg_input)
 
-    adjacency_l = AdjacencyMatrixFromMothers(
-        add_diagonal=True, symmetrize=True, normalize=True
-    )(adjacency_input)
+    adjacency_l = AdjacencyMatrixFromMothers(add_diagonal=True, symmetrize=True, normalize=True)(
+        adjacency_input
+    )
 
     feat_pdg_input = layers.Concatenate()([pdg_l, feature_input])
 
