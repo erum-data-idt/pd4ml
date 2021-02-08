@@ -28,7 +28,7 @@ class Network(NetworkABC):
                              verbose=1,
                              save_best_only=True),
                  tf.keras.callbacks.LearningRateScheduler(lr_schedule),
-                 tf.keras.callbacks.ProgbarLogger(),
+                 #tf.compat.v1.keras.callbacks.ProgbarLogger( ), #tf.keras.callbacks.ProgbarLogger(),
                  tf.keras.callbacks.EarlyStopping(monitor='val_acc',
                                                   min_delta =0.0001,
                                                   patience=15,
@@ -86,4 +86,32 @@ class Network(NetworkABC):
         mask = tf.keras.Input(name='mask', shape=input_shapes['mask']) if 'mask' in input_shapes else None
         outputs = _outputs(points, features, mask, setting, name='top_model')
 
-        return tf.keras.Model(inputs=[points, features, mask], outputs=outputs, name='top_model')
+        return tf.keras.Model(inputs=[points, features, mask], outputs=outputs, name='ParticleNet')
+
+    def model_lite(self, input_shapes):
+        r"""ParticleNet-Lite model from `"ParticleNet: Jet Tagging via Particle Clouds"
+    <https://arxiv.org/abs/1902.08570>`_ paper.
+    Parameters
+    ----------
+    input_shapes : dict
+        The shapes of each input (`points`, `features`, `mask`).
+        """
+        setting = _DotDict()
+        setting.num_class = 2
+        # conv_params: list of tuple in the format (K, (C1, C2, C3))
+        setting.conv_params = [
+            (7, (32, 32, 32)),
+            (7, (64, 64, 64)),
+            ]
+        # conv_pooling: 'average' or 'max'
+        setting.conv_pooling = 'average'
+        # fc_params: list of tuples in the format (C, drop_rate)
+        setting.fc_params = [(128, 0.1)]
+        setting.num_points = input_shapes['points'][0]
+
+        points = tf.keras.Input(name='points', shape=input_shapes['points'])
+        features = tf.keras.Input(name='features', shape=input_shapes['features']) if 'features' in input_shapes else None
+        mask = tf.keras.Input(name='mask', shape=input_shapes['mask']) if 'mask' in input_shapes else None
+        outputs = _outputs(points, features, mask, setting, name='ParticleNet')
+
+        return tf.keras.Model(inputs=[points, features, mask], outputs=outputs, name='ParticleNet_lite')

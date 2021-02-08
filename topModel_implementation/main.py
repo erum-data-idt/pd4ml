@@ -30,7 +30,7 @@ for ds in datasets:
 
 	input_shapes = {k:x_train[k].shape[1:] for k in x_train.X}
 	
-	model = nn.model(input_shapes)
+	model = nn.model_lite(input_shapes)
 	model.compile(**nn.compile_args)
 	history = model.fit(x = x_train.X, y = x_train.y, **nn.fit_args)
 
