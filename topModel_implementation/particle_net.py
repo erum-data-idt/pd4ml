@@ -4,6 +4,7 @@ import tensorflow as tf
 import numpy as np
 from utils_particle_net import convert, Dataset, _outputs, lr_schedule
 from template import NetworkABC
+from erum_data_data.erum_data_data import TopTagging
 
 
 class _DotDict:
@@ -40,7 +41,7 @@ class Network(NetworkABC):
                 'callbacks': callbacks
                }                      ##dictionary of the arguments to be passed to the method fit()
 
-    compatible_datasets = ['top']         ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+    compatible_datasets = [TopTagging]         ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
 
     def preprocessing(self, X, y, src_dir, ds_type):
         """
@@ -57,7 +58,7 @@ class Network(NetworkABC):
 
 
     
-    def model(self, ds, input_shapes):
+    def model(self, input_shapes):
         r"""ParticleNet model from `"ParticleNet: Jet Tagging via Particle Clouds"
         <https://arxiv.org/abs/1902.08570>`_ paper.
         Parameters
@@ -83,6 +84,6 @@ class Network(NetworkABC):
         points = tf.keras.Input(name='points', shape=input_shapes['points'])
         features = tf.keras.Input(name='features', shape=input_shapes['features']) if 'features' in input_shapes else None
         mask = tf.keras.Input(name='mask', shape=input_shapes['mask']) if 'mask' in input_shapes else None
-        outputs = _outputs(points, features, mask, setting, name=ds+'_model')
+        outputs = _outputs(points, features, mask, setting, name='top_model')
 
-        return tf.keras.Model(inputs=[points, features, mask], outputs=outputs, name=ds+'_model')
+        return tf.keras.Model(inputs=[points, features, mask], outputs=outputs, name='top_model')

@@ -22,15 +22,15 @@ datasets =  nn.compatible_datasets
 
 for ds in datasets:  
 
-	X_train, y_train  = edd.load(ds, dataset='train', cache_dir = './'+ ds, cache_subdir = 'datasets')
-	X_test, y_test = edd.load(ds, dataset='test', cache_dir = './'+ ds, cache_subdir = 'datasets')
+	X_train, y_train  = ds.load(split='train')
+	X_test, y_test = ds.load(split='test')
 
-	x_train = nn.preprocessing(X_train[0], y_train, './' + ds, 'train')
-	x_test  = nn.preprocessing(X_test[0],  y_test,  './' + ds, 'test')
+	x_train = nn.preprocessing(X_train[0], y_train, './datasets', 'train')
+	x_test  = nn.preprocessing(X_test[0],  y_test,  './datasets', 'test')
 
 	input_shapes = {k:x_train[k].shape[1:] for k in x_train.X}
 	
-	model = nn.model(ds, input_shapes)
+	model = nn.model(input_shapes)
 	model.compile(**nn.compile_args)
 	history = model.fit(x = x_train.X, y = x_train.y, **nn.fit_args)
 

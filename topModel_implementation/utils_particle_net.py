@@ -5,8 +5,8 @@ import awkward
 import uproot_methods
 import tensorflow as tf
 from tensorflow import keras
-import logging
-logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(message)s')
+#import logging
+#logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(message)s')
 
 def _transform(dataframe, start=0, stop=-1, jet_size=0.8):
     from collections import OrderedDict
@@ -101,9 +101,11 @@ def convert(X, y, destdir, basename, step=None):
         if not os.path.exists(destdir):
             os.makedirs(destdir)
         output = os.path.join(destdir, '%s_%d.awkd'%(basename, idx))
-        logging.info(output)
+        #logging.info(output)
+        print(output)
         if os.path.exists(output):
-            logging.warning('... file already exist: continue ...')
+            #logging.warning
+            print('... file already exist: continue ...')
             continue
         v=_transform(df, start=start, stop=start+step)
         awkward.save(output, v, mode='x')
@@ -143,7 +145,8 @@ class Dataset(object):
         self._load()
 
     def _load(self):
-        logging.info('Start loading file %s' % self.filepath)
+        #logging.info
+        print('Start loading file %s' % self.filepath)
         counts = None
         with awkward.load(self.filepath) as a:
             self._label = a[self.label]
@@ -159,7 +162,8 @@ class Dataset(object):
                         assert np.array_equal(counts, a[col].counts)
                     arrs.append(pad_array(a[col], self.pad_len))
                 self._values[k] = np.stack(arrs, axis=self.stack_axis)
-        logging.info('Finished loading file %s' % self.filepath)
+        #logging.info
+        print('Finished loading file %s' % self.filepath)
 
 
     def __len__(self):
@@ -306,5 +310,4 @@ def lr_schedule(epoch):
         lr *= 0.01
     elif epoch > 10:
         lr *= 0.1
-    logging.info('Learning rate: %f'%lr)
     return lr
