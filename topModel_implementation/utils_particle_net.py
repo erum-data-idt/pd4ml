@@ -83,10 +83,10 @@ def _transform(dataframe, start=0, stop=-1, jet_size=0.8):
 def convert(X, y, destdir, basename, step=None):
     cols = []
     for i in range(200):
+        cols.append('E_%d'%(i))
         cols.append('PX_%d'%(i))
         cols.append('PY_%d'%(i))
         cols.append('PZ_%d'%(i))
-        cols.append('E_%d'%(i))
 
     df = pd.DataFrame(X, index = None, columns = cols)
     label = pd.DataFrame(y, index = None, columns = ['is_signal_new'])
