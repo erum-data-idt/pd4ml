@@ -10,6 +10,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
     
 
+
+
     
 def train_plots(history, ds, save = False):
     
@@ -28,8 +30,9 @@ def train_plots(history, ds, save = False):
     plt.legend(['train', 'val'], loc='upper left')
     if save:
         plt.savefig('{}_train_loss.png'.format(ds), dpi=96)
-    plt.show()
-    
+    #plt.show()
+    plt.clf()
+
     plt.plot(history.history['acc'])
     plt.plot(history.history['val_acc'])
     plt.title(ds + ' model accuracy [training]')
@@ -38,8 +41,8 @@ def train_plots(history, ds, save = False):
     plt.legend(['train', 'val'], loc='upper left')
     if save:
         plt.savefig('{}_train_accuracy.png'.format(ds), dpi=96)
-    plt.show()
-
+#    plt.show()
+    plt.clf()
 
 def roc_auc(y_pred, y_test, ds, save = False):
     
@@ -62,8 +65,8 @@ def roc_auc(y_pred, y_test, ds, save = False):
     plt.legend(loc='best')
     if save:
         plt.savefig('{}_roc_auc.png'.format(ds), dpi=96)
-    plt.show()
-    
+    #plt.show()
+    plt.clf()
 def test_accuracy(y_pred, y_test, ds):
     
     """

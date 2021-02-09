@@ -33,16 +33,24 @@ class Network(NetworkABC):
         "batch_size": 300,
     }
 
-    compatible_datasets = [TopTagging, Spinodal, EOSL]
+    compatible_datasets = [
+                           TopTagging, 
+                           Spinodal, 
+                           EOSL
+                          ]
 
     def preprocessing(self, in_data):
         """in_data: numpy array. Input to be preprocessed
         returns flattened array.
         """
+#	for data in in_data:
+          #  if len(data.shape[1:]) >1:
+                
         if len(in_data[0].shape[1:]) > 1:
             out_data = np.reshape(in_data[0], (len(in_data[0]), in_data[0].shape[1] * in_data[0].shape[2]))
             return [out_data]
         return [in_data[0]]
+
 
     def model(self, ds, shapes, save_model_png=False):
 
