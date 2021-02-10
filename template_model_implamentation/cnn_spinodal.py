@@ -44,17 +44,17 @@ class Network(NetworkABC):
         and after the application of all the preprocessing routin, it should return the modified data
         in the desired shapes
         """
-        out_data = np.reshape(in_data, (len(in_data), 20, 20, 1))
+        out_data = np.reshape(in_data[0], (len(in_data[0]), 20, 20, 1))
 
-        return out_data
+        return [out_data]
 
-    def model(self, ds, shape, save_model_png=False):
+    def model(self, ds, shapes, save_model_png=False):
         assert ds in self.compatible_datasets
 
         model = tf.keras.Sequential()
         model.add(
             tf.keras.layers.Conv2D(
-                15, (3, 3), activation="relu", input_shape=shape, strides=(1, 1), padding="same"
+                15, (3, 3), activation="relu", input_shape=shapes[0], strides=(1, 1), padding="same"
             )
         )
         model.add(tf.keras.layers.MaxPooling2D((2, 2)))

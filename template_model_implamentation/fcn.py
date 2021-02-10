@@ -5,7 +5,7 @@ from template import NetworkABC
 import tensorflow as tf
 import numpy as np
 
-from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL
+from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Airshower, Belle
 
 
 class Network(NetworkABC):
@@ -33,18 +33,62 @@ class Network(NetworkABC):
         "batch_size": 300,
     }
 
-    compatible_datasets = [TopTagging, Spinodal, EOSL]
+    compatible_datasets = [
+                           TopTagging, 
+                           Spinodal, 
+                           EOSL,
+                           Airshower,
+                           Belle
+                          ]
+
+   
+
 
     def preprocessing(self, in_data):
-        """in_data: numpy array. Input to be preprocessed
-        returns flattened array.
+        """in_data: list of arrays. Input to be preprocessed
+        returns list of flattened array.
         """
-        if len(in_data.shape[1:]) > 1:
-            out_data = np.reshape(in_data, (len(in_data), in_data.shape[1] * in_data.shape[2]))
-            return out_data
-        return in_data
+        out_data = []
+        for data in in_data:
+            if len(data.shape[1:]) > 1:
+                size = 1
+                for i in range(1, len(data.shape)):
+                    size *= data.shape[i]  
+                out_data.append(np.reshape(data, (len(data), size)))#data.shape[1] * data.shape[2])))
+            else:
+                out_data.append(data)    
+        if len(out_data) > 2:
+            return out_data[:2]
+        return out_data
 
-    def model(self, ds, shape, save_model_png=False):
+
+    def model_all(self, ds, shapes, save_model_png=False):
+        input_layers = {}
+        dense_layers = []
+        for i, shape in enumerate(shapes):
+            if len(shape) > 0:
+                input_layers[i] = tf.keras.Input(shape = shape) 
+                dense_layers.append({})
+                dense_layers[i][0] = tf.keras.layers.Dense(256, activation = 'relu')(input_layers[i])
+                for j in range(1, 4):
+                    dense_layers[i][j] = tf.keras.layers.Dense(256, activation = 'relu')(dense_layers[i][j-1])
+        dense = {}
+        if len(input_layers) > 1:
+            merged = tf.keras.layers.Concatenate(axis=1)([dense_layers[i][3] for i in range(len(dense_layers))])
+            dense[0] = tf.keras.layers.Dense(256, activation = 'relu')(merged)
+        else: 
+            dense[0] = tf.keras.layers.Dense(256, activation = 'relu')(input_layers[0])
+        for i in range (1, 10):
+            dense[i] = tf.keras.layers.Dense(256, activation = 'relu')(dense[i-1])
+        output  = tf.keras.layers.Dense(1, activation = 'sigmoid')(dense[len(dense)-1])
+        model = tf.keras.models.Model(inputs = [input_layers[i] for i in range(len(input_layers))], outputs = output)
+        
+        return model
+        
+        
+        
+
+    def model(self, ds, shapes, save_model_png=False):
 
         """
         Builds sequential model.
@@ -56,7 +100,7 @@ class Network(NetworkABC):
         assert ds in self.compatible_datasets
 
         model = tf.keras.Sequential()
-        model.add(tf.keras.Input(shape=shape))
+        model.add(tf.keras.Input(shape=shapes[0]))
         tf.keras.layers.BatchNormalization()
         for _ in range(15):
             model.add(tf.keras.layers.Dense(256, activation="relu"))  # add hidden layers
