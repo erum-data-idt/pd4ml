@@ -53,15 +53,15 @@ class Network(NetworkABC):
         v = convert(X)
         dataset = Dataset(v, data_format='channel_last')
         #   write your preprocessing routine here
-        return dataset
+        return dataset.X
 
-    def get_shapes(self, dataset):
+    def get_shapes(self, input_dataset):
         """
         Method should take as an input the list of datasets to be used as an iput for the model
         and after the application of all the preprocessing routine, it should return the modified data
         in the desired shapes
         """
-        input_shapes = {k:dataset[k].shape[1:] for k in dataset.X}
+        input_shapes = {k:input_dataset[k].shape[1:] for k in input_dataset}
         return input_shapes
 
 
