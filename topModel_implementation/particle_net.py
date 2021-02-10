@@ -18,7 +18,7 @@ class Network(NetworkABC):
 
 
     metrics   = [tf.keras.metrics.BinaryAccuracy(name = "acc")]  ##list of metrics to be used
-    compile_args = {'loss':'categorical_crossentropy',
+    compile_args = {'loss':'binary_crossentropy',#'categorical_crossentropy'
                     'optimizer':tf.keras.optimizers.Adam(learning_rate=lr_schedule(0)),
                     'metrics': metrics
                    }                      ##dictionary of the arguments to be passed to the method compile()
@@ -43,16 +43,16 @@ class Network(NetworkABC):
 
     compatible_datasets = [TopTagging]         ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
 
-    def preprocessing(self, X, y, src_dir, ds_type):
+    def preprocessing(self, X):
         """
         Method should take as an input the list of datasets to be used as an iput for the model
-        and after the application of all the preprocessing routin, it should return the modified data
+        and after the application of all the preprocessing routine, it should return the modified data
         in the desired shapes
         """
         X = np.reshape(X, (len(X), (X.shape[1]*X.shape[2])))
-        path = convert(X, y, src_dir, basename='{}_file'.format(ds_type))
-        dataset = Dataset(path, data_format='channel_last')
-        #   write your preprocessing routin here
+        v = convert(X)
+        dataset = Dataset(v, data_format='channel_last')
+        #   write your preprocessing routine here
         return dataset
 
 
