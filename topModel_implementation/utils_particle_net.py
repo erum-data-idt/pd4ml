@@ -12,7 +12,12 @@ def _transform(dataframe, start=0, stop=-1, jet_size=0.8):
     from collections import OrderedDict
     v = OrderedDict()
 
-    df = dataframe.iloc[start:stop]
+    if stop==-1:
+        #df = dataframe.iloc[start:dataframe.shape[0]]
+        df = dataframe.iloc[:]
+    else:
+        df = dataframe.iloc[start:stop]
+    #df = dataframe.iloc[start:stop]#this skips the last event if stop=-1
     def _col_list(prefix, max_particles=200):
         return ['%s_%d'%(prefix,i) for i in range(max_particles)]
     
@@ -77,7 +82,6 @@ def _transform(dataframe, start=0, stop=-1, jet_size=0.8):
         return img
 
 #     v['img'] = _make_image('part_ptrel', v)
-    print(type(v))
     return v
 
 def convert(X, step=None):
