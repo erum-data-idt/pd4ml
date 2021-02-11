@@ -25,25 +25,30 @@ for ds in datasets:
 	X_train, y_train  = ds.load(split='train')
 	X_test, y_test = ds.load(split='test')
 
-	x_train = nn.preprocessing(X_train[0], y_train, './datasets', 'train')
-	x_test  = nn.preprocessing(X_test[0],  y_test,  './datasets', 'test')
-
-	input_shapes = {k:x_train[k].shape[1:] for k in x_train.X}
+	#max_e = 100000#<-- this trains already well#1000#-1#100000
+	#max_t = 10000#-1#100000
+	#X_train[0] = X_train[0][0:max_e]
+	#X_test[0] = X_test[0][0:max_t]
+	#y_train = y_train[0:max_e]
+	#y_test = y_test[0:max_t]
+	x_train = nn.preprocessing(X_train[0])
+	x_test  = nn.preprocessing(X_test[0])
 	
-	model = nn.model_lite(input_shapes)
+	model = nn.model_lite(nn.get_shapes(x_train))
 	model.compile(**nn.compile_args)
-	history = model.fit(x = x_train.X, y = x_train.y, **nn.fit_args)
+	history = model.fit(x = x_train, y = y_train, **nn.fit_args)
 
 	##	From here on, one should be able to use already defined methods as showed in the following lines. 
 	##	Let us know if you face any issues with that.
 
 	#training history plots
-	train_plots(history, ds, True)
+	label = "plot"
+	train_plots(history, label, True)
 
 	#evaluation plots and scores
-	y_pred = model.predict(x_test.X).ravel()
-	roc_auc(y_pred, x_test.y, ds, True)
-	test_accuracy(y_pred, x_test.y, ds)
-	test_f1_score(y_pred, x_test.y, ds)
+	y_pred = model.predict(x_test).ravel()
+	roc_auc(y_pred, y_test, label, True)
+	test_accuracy(y_pred, y_test, label)
+	test_f1_score(y_pred, y_test, label)
 
 

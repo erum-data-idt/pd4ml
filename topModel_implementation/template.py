@@ -42,6 +42,16 @@ class NetworkABC(metaclass=ABCMeta):
         # write your preprocessing routin here
         return in_data
 
+    def get_shapes(self, in_data):
+        """
+        Method should take as an input the datasets to be used as an input for the model
+        and compute their shapes
+        """
+
+        # write your shape calculation here
+        shapes = [] 
+        return shapes
+
     @abstractmethod
     def model(self, ds, shapes=None):
         """

@@ -12,7 +12,12 @@ def _transform(dataframe, start=0, stop=-1, jet_size=0.8):
     from collections import OrderedDict
     v = OrderedDict()
 
-    df = dataframe.iloc[start:stop]
+    if stop==-1:
+        #df = dataframe.iloc[start:dataframe.shape[0]]
+        df = dataframe.iloc[:]
+    else:
+        df = dataframe.iloc[start:stop]
+    #df = dataframe.iloc[start:stop]#this skips the last event if stop=-1
     def _col_list(prefix, max_particles=200):
         return ['%s_%d'%(prefix,i) for i in range(max_particles)]
     
@@ -35,8 +40,8 @@ def _transform(dataframe, start=0, stop=-1, jet_size=0.8):
     jet_p4 = p4.sum()
 
     # outputs
-    _label = df['is_signal_new'].values
-    v['label'] = np.stack((_label, 1-_label), axis=-1)
+    ##_label = df['is_signal_new'].values
+    ##v['label'] = np.stack((_label, 1-_label), axis=-1)
     #v['train_val_test'] = df['ttv'].values
     
     v['jet_pt'] = jet_p4.pt
@@ -77,10 +82,9 @@ def _transform(dataframe, start=0, stop=-1, jet_size=0.8):
         return img
 
 #     v['img'] = _make_image('part_ptrel', v)
-    print(type(v))
     return v
 
-def convert(X, y, destdir, basename, step=None):
+def convert(X, step=None):
     cols = []
     for i in range(200):
         cols.append('E_%d'%(i))
@@ -89,27 +93,31 @@ def convert(X, y, destdir, basename, step=None):
         cols.append('PZ_%d'%(i))
 
     df = pd.DataFrame(X, index = None, columns = cols)
-    label = pd.DataFrame(y, index = None, columns = ['is_signal_new'])
-    df = pd.concat([df, label], axis = 1)
-    if step is None:
-        step = df.shape[0]
-    idx=-1
-    while True:
-        idx+=1
-        start=idx*step
-        if start>=df.shape[0]: break
-        if not os.path.exists(destdir):
-            os.makedirs(destdir)
-        output = os.path.join(destdir, '%s_%d.awkd'%(basename, idx))
-        #logging.info(output)
-        print(output)
-        if os.path.exists(output):
-            #logging.warning
-            print('... file already exist: continue ...')
-            continue
-        v=_transform(df, start=start, stop=start+step)
-        awkward.save(output, v, mode='x')
-    return output
+    ##label = pd.DataFrame(y, index = None, columns = ['is_signal_new'])
+    ##df = pd.concat([df, label], axis = 1)
+
+    ##Intermediate step: write awkd
+    #if step is None:
+    #    step = df.shape[0]
+    #idx=-1
+    #while True:
+    #    idx+=1
+    #    start=idx*step
+    #    if start>=df.shape[0]: break
+    #    if not os.path.exists(destdir):
+    #        os.makedirs(destdir)
+    #    output = os.path.join(destdir, '%s_%d.awkd'%(basename, idx))
+    #    #logging.info(output)
+    #    print(output)
+    #    if os.path.exists(output):
+    #        #logging.warning
+    #        print('... file already exist: continue ...')
+    #        continue
+    #    v=_transform(df, start=start, stop=start+step)
+    #    awkward.save(output, v, mode='x')
+    #return output
+    v = _transform(df)
+    return v
 
 
 
@@ -129,68 +137,78 @@ def pad_array(a, maxlen, value=0., dtype='float32'):
 
 class Dataset(object):
 
-    def __init__(self, filepath, feature_dict = {}, label='label', pad_len=100, data_format='channel_first'):
-        self.filepath = filepath
+    def __init__(self, vec, feature_dict = {}, pad_len=100, data_format='channel_first'):
+        self.vec = vec
         self.feature_dict = feature_dict
         if len(feature_dict)==0:
             feature_dict['points'] = ['part_etarel', 'part_phirel']
             feature_dict['features'] = ['part_pt_log', 'part_e_log', 'part_etarel', 'part_phirel']
             feature_dict['mask'] = ['part_pt_log']
-        self.label = label
         self.pad_len = pad_len
         assert data_format in ('channel_first', 'channel_last')
         self.stack_axis = 1 if data_format=='channel_first' else -1
         self._values = {}
-        self._label = None
         self._load()
 
     def _load(self):
         #logging.info
-        print('Start loading file %s' % self.filepath)
+        #print('Start loading file %s' % self.filepath)
         counts = None
-        with awkward.load(self.filepath) as a:
-            self._label = a[self.label]
-            for k in self.feature_dict:
-                cols = self.feature_dict[k]
-                if not isinstance(cols, (list, tuple)):
-                    cols = [cols]
-                arrs = []
-                for col in cols:
-                    if counts is None:
-                        counts = a[col].counts
-                    else:
-                        assert np.array_equal(counts, a[col].counts)
-                    arrs.append(pad_array(a[col], self.pad_len))
-                self._values[k] = np.stack(arrs, axis=self.stack_axis)
+        a = self.vec
+        for k in self.feature_dict:
+            cols = self.feature_dict[k]
+            if not isinstance(cols, (list, tuple)):
+                cols = [cols]
+            arrs = []
+            for col in cols:
+                if counts is None:
+                    counts = a[col].counts
+                else:
+                    assert np.array_equal(counts, a[col].counts)
+                arrs.append(pad_array(a[col], self.pad_len))
+            self._values[k] = np.stack(arrs, axis=self.stack_axis)
         #logging.info
-        print('Finished loading file %s' % self.filepath)
+
+        #with awkward.load(self.filepath) as a:
+        #    self._label = a[self.label]
+        #    for k in self.feature_dict:
+        #        cols = self.feature_dict[k]
+        #        if not isinstance(cols, (list, tuple)):
+        #            cols = [cols]
+        #        arrs = []
+        #        for col in cols:
+        #            if counts is None:
+        #                counts = a[col].counts
+        #            else:
+        #                assert np.array_equal(counts, a[col].counts)
+        #            arrs.append(pad_array(a[col], self.pad_len))
+        #        self._values[k] = np.stack(arrs, axis=self.stack_axis)
+        #logging.info
+        #print('Finished loading file %s' % self.filepath)
 
 
-    def __len__(self):
-        return len(self._label)
+    #def __len__(self):
+    #    return len(self._label)
 
     def __getitem__(self, key):
-        if key==self.label:
-            return self._label
-        else:
-            return self._values[key]
+        return self._values[key]
     
     @property
     def X(self):
         return self._values
     
-    @property
-    def y(self):
-        return self._label
+    #@property
+    #def y(self):
+    #    return self._label
 
-    def shuffle(self, seed=None):
-        if seed is not None:
-            np.random.seed(seed)
-        shuffle_indices = np.arange(self.__len__())
-        np.random.shuffle(shuffle_indices)
-        for k in self._values:
-            self._values[k] = self._values[k][shuffle_indices]
-        self._label = self._label[shuffle_indices]
+    #def shuffle(self, seed=None):
+    #    if seed is not None:
+    #        np.random.seed(seed)
+    #    shuffle_indices = np.arange(self.__len__())
+    #    np.random.shuffle(shuffle_indices)
+    #    for k in self._values:
+    #        self._values[k] = self._values[k][shuffle_indices]
+    #    self._label = self._label[shuffle_indices]
         
 
 # A shape is (N, P_A, C), B shape is (N, P_B, C)
@@ -300,7 +318,8 @@ def _outputs(points, features=None, mask=None, setting=None, name='particle_net'
                 x = keras.layers.Dense(units, activation='relu')(x)
                 if drop_rate is not None and drop_rate > 0:
                     x = keras.layers.Dropout(drop_rate)(x)
-            out = keras.layers.Dense(setting.num_class, activation='softmax')(x)
+            #out = keras.layers.Dense(setting.num_class, activation='softmax')(x)#for categorical_crossentropy
+            out = keras.layers.Dense(1, activation='sigmoid')(x)
             return out  # (N, num_classes)
         else:
             return pool
