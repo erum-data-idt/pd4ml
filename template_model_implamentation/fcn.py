@@ -64,7 +64,7 @@ class Network(NetworkABC):
     def get_shapes(self, in_data):
         return [x.shape[1:] for x in in_data]
 
-    def model_all(self, ds, shapes, save_model_png=False):
+    def model(self, ds, shapes, save_model_png=False):
         input_layers = {}
         dense_layers = []
         for i, shape in enumerate(shapes):
@@ -86,12 +86,8 @@ class Network(NetworkABC):
         model = tf.keras.models.Model(inputs = [input_layers[i] for i in range(len(input_layers))], outputs = output)
         
         return model
-        
-        
-        
->>>>>>> 69c4fb5413a4164e28a6561c6d041c728b041fa2
 
-    def model(self, ds, shapes, save_model_png=False):
+    def model_old(self, ds, shapes, save_model_png=False):
 
         """
         Builds sequential model.

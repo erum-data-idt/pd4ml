@@ -2,10 +2,10 @@
 ##	William Korcari: william.korcari@desy.de
 
 ## import of the models
-#from fcn import Network		    	#import your model function
+from fcn import Network		    	#import your model function
 #from gcn_belle import Network
 #from cnn_spinodal import Network
-from particle_net import Network
+#from particle_net import Network
 ##	utils.py is the file that contains all the self-built methods of this script.
 from utils import train_plots
 from utils import roc_auc
@@ -28,7 +28,7 @@ for ds in datasets:
     x_test = nn.preprocessing(X_test)
     
      
-    model = nn.model_lite(ds, shapes=nn.get_shapes(x_train))
+    model = nn.model(ds, shapes=nn.get_shapes(x_train))
     model.compile(**nn.compile_args)
     history = model.fit(x=x_train, y=y_train, **nn.fit_args)
 
