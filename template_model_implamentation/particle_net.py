@@ -322,7 +322,7 @@ class Network(NetworkABC):
 
 
     
-    def model(self, ds, input_shapes):
+    def model(self, ds, shapes):
         r"""ParticleNet model from `"ParticleNet: Jet Tagging via Particle Clouds"
         <https://arxiv.org/abs/1902.08570>`_ paper.
         Parameters
@@ -343,16 +343,16 @@ class Network(NetworkABC):
         setting.conv_pooling = 'average'
         # fc_params: list of tuples in the format (C, drop_rate)
         setting.fc_params = [(256, 0.1)]
-        setting.num_points = input_shapes['points'][0]
+        setting.num_points = shapes['points'][0]
 
-        points = tf.keras.Input(name='points', shape=input_shapes['points'])
-        features = tf.keras.Input(name='features', shape=input_shapes['features']) if 'features' in input_shapes else None
-        mask = tf.keras.Input(name='mask', shape=input_shapes['mask']) if 'mask' in input_shapes else None
+        points = tf.keras.Input(name='points', shape=shapes['points'])
+        features = tf.keras.Input(name='features', shape=shapes['features']) if 'features' in shapes else None
+        mask = tf.keras.Input(name='mask', shape=shapes['mask']) if 'mask' in shapes else None
         outputs = _outputs(points, features, mask, setting, name='top_model')
 
         return tf.keras.Model(inputs=[points, features, mask], outputs=outputs, name='ParticleNet_{}'.format(ds.name))
 
-    def model_lite(self, ds, input_shapes):
+    def model_lite(self, ds, shapes):
         r"""ParticleNet-Lite model from `"ParticleNet: Jet Tagging via Particle Clouds"
     <https://arxiv.org/abs/1902.08570>`_ paper.
     Parameters
@@ -371,11 +371,11 @@ class Network(NetworkABC):
         setting.conv_pooling = 'average'
         # fc_params: list of tuples in the format (C, drop_rate)
         setting.fc_params = [(128, 0.1)]
-        setting.num_points = input_shapes['points'][0]
+        setting.num_points = shapes['points'][0]
 
-        points = tf.keras.Input(name='points', shape=input_shapes['points'])
-        features = tf.keras.Input(name='features', shape=input_shapes['features']) if 'features' in input_shapes else None
-        mask = tf.keras.Input(name='mask', shape=input_shapes['mask']) if 'mask' in input_shapes else None
+        points = tf.keras.Input(name='points', shape=shapes['points'])
+        features = tf.keras.Input(name='features', shape=shapes['features']) if 'features' in shapes else None
+        mask = tf.keras.Input(name='mask', shape=shapes['mask']) if 'mask' in shapes else None
         outputs = _outputs(points, features, mask, setting, name='ParticleNet')
 
         return tf.keras.Model(inputs=[points, features, mask], outputs=outputs, name='ParticleNet_lite')
