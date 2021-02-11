@@ -42,6 +42,9 @@ class Network(NetworkABC):
         x_pdg = in_data[0][:, :, -1]
         x_adjacency = in_data[1]
         return [x_adjacency, x_feature, x_pdg]
+    
+    def get_shapes(self, in_data):
+        return [x.shape[1:] for x in in_data]
 
     def model(self, ds, shapes=None):
         """
