@@ -2,9 +2,9 @@
 ##	William Korcari: william.korcari@desy.de
 
 ## import of the models
-from fcn import Network		    	#import your model function
+#from fcn import Network		    	#import your model function
 #from gcn_belle import Network
-#from cnn_spinodal import Network
+from cnn_spinodal import Network
 #from particle_net import Network
 ##	utils.py is the file that contains all the self-built methods of this script.
 from utils import train_plots
@@ -41,5 +41,5 @@ for ds in datasets:
     # evaluation plots and scores
     y_pred = model.predict(x_test).ravel()
     roc_auc(y_pred, y_test, ds.name, True)
-    test_accuracy(y_pred, y_test, ds.name)
-    test_f1_score(y_pred, y_test, ds.name)
+    test_accuracy(y_pred, y_test, ds.name, nn.model_name)
+    test_f1_score(y_pred, y_test, ds.name, nn.model_name)

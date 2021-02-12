@@ -5,13 +5,13 @@ from erum_data_data.erum_data_data import Belle
 
 
 class Network(NetworkABC):
-
+    model_name = '_gcn_belle_'
     callbacks = [
         tf.keras.callbacks.EarlyStopping(
             monitor="val_loss", min_delta=0.0001, patience=15, restore_best_weights=True
         ),
         tf.keras.callbacks.ModelCheckpoint(
-            "./", monitor="val_loss", save_best_only=True, save_weights_only=True
+            "./gcn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
         ),
     ]
     metrics = [

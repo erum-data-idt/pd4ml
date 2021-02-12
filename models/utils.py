@@ -10,6 +10,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
     
 
+
+
     
 def train_plots(history, ds, save = False):
     
@@ -28,8 +30,9 @@ def train_plots(history, ds, save = False):
     plt.legend(['train', 'val'], loc='upper left')
     if save:
         plt.savefig('{}_train_loss.png'.format(ds), dpi=96)
-    plt.show()
-    
+    #plt.show()
+    plt.clf()
+
     plt.plot(history.history['acc'])
     plt.plot(history.history['val_acc'])
     plt.title(ds + ' model accuracy [training]')
@@ -38,8 +41,8 @@ def train_plots(history, ds, save = False):
     plt.legend(['train', 'val'], loc='upper left')
     if save:
         plt.savefig('{}_train_accuracy.png'.format(ds), dpi=96)
-    plt.show()
-
+#    plt.show()
+    plt.clf()
 
 def roc_auc(y_pred, y_test, ds, save = False):
     
@@ -62,9 +65,9 @@ def roc_auc(y_pred, y_test, ds, save = False):
     plt.legend(loc='best')
     if save:
         plt.savefig('{}_roc_auc.png'.format(ds), dpi=96)
-    plt.show()
-    
-def test_accuracy(y_pred, y_test, ds):
+    #plt.show()
+    plt.clf()
+def test_accuracy(y_pred, y_test, ds, model_name):
     
     """
     Returns accuracy score.
@@ -75,9 +78,14 @@ def test_accuracy(y_pred, y_test, ds):
     
     from sklearn.metrics import accuracy_score
     rounded_pred = np.around(y_pred)
-    print("Test accuracy score for {} dataset is: {}".format(ds, accuracy_score(y_test, rounded_pred )))
-    
-def test_f1_score(y_pred, y_test, ds):
+    _str = "Test accuracy score for {} dataset is: {}".format(ds, accuracy_score(y_test, rounded_pred ))
+    print(_str)
+    with open('scores{}{}.txt'.format(model_name, ds), 'a') as file:
+        file.write(_str)
+
+
+
+def test_f1_score(y_pred, y_test, ds, model_name):
     
     """
     Returns f1 score.
@@ -88,5 +96,7 @@ def test_f1_score(y_pred, y_test, ds):
     
     from sklearn.metrics import f1_score
     rounded_pred = np.around(y_pred)
-    print("Test F1 score for {} dataset is: {}".format(ds, f1_score(y_test, rounded_pred )))
-
+    _str = "Test F1 score for {} dataset is: {}".format(ds, f1_score(y_test, rounded_pred ))
+    print(_str)
+    with open('scores{}{}.txt'.format(model_name, ds), 'a') as file:
+        file.write(_str)

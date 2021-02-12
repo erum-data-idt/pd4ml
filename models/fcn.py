@@ -9,9 +9,11 @@ from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Airshower,
 
 
 class Network(NetworkABC):
+    
+    model_name = '_fcn_'
 
     metrics = [tf.keras.metrics.BinaryAccuracy(name="acc"), tf.keras.metrics.AUC(name="AUC")]
-
+    
     compile_args = {
         "optimizer": tf.keras.optimizers.Adam(0.001),
         "loss": tf.keras.losses.BinaryCrossentropy(),
@@ -22,7 +24,7 @@ class Network(NetworkABC):
             monitor="val_loss", min_delta=0.0001, patience=15, restore_best_weights=True
         ),
         tf.keras.callbacks.ModelCheckpoint(
-            "./", monitor="val_loss", save_best_only=True, save_weights_only=True
+            "./fcn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
         ),
     ]
     fit_args = {

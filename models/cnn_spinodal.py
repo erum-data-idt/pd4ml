@@ -8,13 +8,13 @@ from erum_data_data.erum_data_data import Spinodal
 class Network(NetworkABC):
     def __init__(self):
         pass
-
+    model_name = '_cnn_spinodal_'
     callbacks = [
         tf.keras.callbacks.EarlyStopping(
             monitor="val_loss", min_delta=0.0001, patience=15, restore_best_weights=True
         ),
         tf.keras.callbacks.ModelCheckpoint(
-            "./", monitor="val_loss", save_best_only=True, save_weights_only=True
+            "./cnn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
         ),
     ]  ##list of callbacks to be used in model.
     metrics = [
