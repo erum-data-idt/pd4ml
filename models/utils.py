@@ -2,6 +2,8 @@
 ##  William.
 
 
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import roc_curve
@@ -67,6 +69,7 @@ def roc_auc(y_pred, y_test, ds, save = False):
         plt.savefig('{}_roc_auc.png'.format(ds), dpi=96)
     #plt.show()
     plt.clf()
+
 def test_accuracy(y_pred, y_test, ds, model_name):
     
     """
@@ -78,11 +81,17 @@ def test_accuracy(y_pred, y_test, ds, model_name):
     
     from sklearn.metrics import accuracy_score
     rounded_pred = np.around(y_pred)
-    _str = "Test accuracy score for {} dataset is: {}".format(ds, accuracy_score(y_test, rounded_pred ))
+    _str = "Test accuracy score for {} dataset is: {} \n".format(ds, accuracy_score(y_test, rounded_pred ))
     print(_str)
+
+    fpr_keras, tpr_keras, thresholds_keras = roc_curve(y_test, y_pred)
+    auc_keras = auc(fpr_keras, tpr_keras)
+    _r = "AUC: {:.4f} \n".format(auc_keras)
+    print(_r)
+
     with open('scores{}{}.txt'.format(model_name, ds), 'a') as file:
         file.write(_str)
-
+        file.write(_r)
 
 
 def test_f1_score(y_pred, y_test, ds, model_name):
@@ -96,7 +105,7 @@ def test_f1_score(y_pred, y_test, ds, model_name):
     
     from sklearn.metrics import f1_score
     rounded_pred = np.around(y_pred)
-    _str = "Test F1 score for {} dataset is: {}".format(ds, f1_score(y_test, rounded_pred ))
+    _str = "Test F1 score for {} dataset is: {} \n".format(ds, f1_score(y_test, rounded_pred ))
     print(_str)
     with open('scores{}{}.txt'.format(model_name, ds), 'a') as file:
         file.write(_str)
