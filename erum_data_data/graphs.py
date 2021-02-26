@@ -54,7 +54,11 @@ class LoadGraph:
         max_part = 200
         max_part_pad = 100
 
-        X[0] = X[0][:,0:max_part,:]
+        #Lisa
+        print("reduced size for testing:")
+        X[0] = X[0][0:10000,0:max_part,:]
+        y = y[0:10000]
+        #X[0] = X[0][:,0:max_part,:]
         X = np.reshape(X[0], (len(X[0]), (X[0].shape[1]*X[0].shape[2])))
         v = convert(X,max_part)
         feature_dict = {}
@@ -63,9 +67,9 @@ class LoadGraph:
         feature_dict['mask'] = ['part_pt_log']
         data_format='channel_last'
         stack_axis = 1 if data_format=='channel_first' else -1
-        X_feats, X_adj, X_mask = load_top(v,feature_dict,K,max_part_pad,stack_axis):
+        X_feats, X_adj = load_top(v,feature_dict,K,max_part_pad,stack_axis)
         
-        return X_feats, X_adj, X_mask
+        return X_feats, X_adj, y
         
         
         
@@ -318,4 +322,4 @@ def load_top(v,feature_dict,K,pad_len,stack_axis):
         temp_adj = to_adj(values['points'][start:start+step,:,:],values['mask'][start:start+step,:,:],K)
         full_arr.append(temp_adj)
     values['adj_matrix'] = np.vstack(full_arr)
-    return values['features'], values['adj_matrix'], values['mask']
+    return values['features'], values['adj_matrix']
