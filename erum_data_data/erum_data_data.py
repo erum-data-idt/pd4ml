@@ -1,4 +1,5 @@
 from .dataset import Dataset
+from .graphs import LoadGraph
 
 
 class TopTagging(Dataset):
@@ -54,6 +55,7 @@ class Spinodal(Dataset):
     filename = "2_spinodal_29k.npz"
     url = "https://desycloud.desy.de/index.php/s/zZCCSfwwEkT5Pgk/download"
     md5 = "c22326822d9bac7c074467ccccc6fe4f"
+    load_graph = LoadGraph.spinodal_graph
 
 
 class EOSL(Dataset):
@@ -76,6 +78,7 @@ class EOSL(Dataset):
     filename = "3_EOSL_or_EOSQ_180k.npz"
     url = "https://desycloud.desy.de/index.php/s/DT7sWm6rNR5zss9/download"
     md5 = "be5563e787f856bd6b2f9fe171277bc3"
+    load_graph = LoadGraph.eosl_graph
 
 
 class Airshower(Dataset):
