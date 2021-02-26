@@ -2,9 +2,10 @@
 ##	William Korcari: william.korcari@desy.de
 
 ## import of the models
+from eos_cnn import Network
 #from fcn import Network		    	#import your model function
 #from gcn_belle import Network
-from cnn_spinodal import Network
+#from cnn_spinodal import Network
 #from particle_net import Network
 ##	utils.py is the file that contains all the self-built methods of this script.
 from utils import train_plots
