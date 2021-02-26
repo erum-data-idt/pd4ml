@@ -33,6 +33,7 @@ class TopTagging(Dataset):
     filename = "1_top_tagging_2M.npz"
     url = "https://desycloud.desy.de/index.php/s/aZqyNSg4B7nn8qQ/download"
     md5 = "708a8369d75ceff2229bd8c46b47afea"
+    load_graph = LoadGraph.TopTagging_graph
 
 
 class Spinodal(Dataset):
