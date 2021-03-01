@@ -126,19 +126,24 @@ class Network(NetworkABC, OptsMixin):
     compatible_datasets = [Airshower]
 
     def preprocessing(self, in_data):
-        time, std = norm_time(in_data["time"])
+        time, _ = norm_time(in_data["time"], self.std)
         signal = norm_signal(in_data["signal"])
-        # TODO:
-        # if test preprocessing reuse `std` from train set
-        # à la:
-        # time_test, _ = norm_time(in_data["time"], std)
         return [signal, time]
 
     @cached_property
+    def load_train(self):
+        return Airshower.load(split="train")
+
+    @cached_property
     def stats(self):
-        # cache, since `Airshower.load` is expensive
-        _, y_train = Airshower.load(split="train")
+        _, y_train = self.load_train
         return dict(std=np.std(y_train), mean=np.mean(y_train))
+
+    @cached_property
+    def std(self):
+        x_train, _ = self.load_train
+        _, std = norm_time(x_train["time"])
+        return std
 
     def get_shapes(self, in_data):
         # assume (see: preprocessing):
