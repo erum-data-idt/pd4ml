@@ -2,12 +2,7 @@
 ##	William Korcari: william.korcari@desy.de
 
 ## import of the models
-#from fcn import Network		    	#import your model function
 from simple_graph_net import Network
-#from simple_graph_net_belle2 import Network
-#from gcn_belle import Network
-#from cnn_spinodal import Network
-#from particle_net import Network
 ##	utils.py is the file that contains all the self-built methods of this script.
 from utils import train_plots
 from utils import roc_auc
@@ -24,15 +19,9 @@ datasets = nn.compatible_datasets
 
 for ds in datasets:
 
-    X_feats, X_adj, y_train = ds.load_graph('train', path = './datasets')
-    x_train = {}
-    x_train['features'] = X_feats
-    x_train['adj_matrix'] = X_adj
+    x_train, y_train = ds.load_graph('train', path = './datasets')
 
-    X_feats, X_adj, y_test = ds.load_graph('test', path = './datasets')
-    x_test = {}
-    x_test['features'] = X_feats
-    x_test['adj_matrix'] = X_adj
+    x_test, y_test = ds.load_graph('test', path = './datasets')
 
     model = nn.model(ds, shapes=nn.get_shapes(x_train))
     model.compile(**nn.compile_args)
@@ -43,7 +32,7 @@ for ds in datasets:
     ##	Let us know if you face any issues with that.
 
     # training history plots
-    label = 'test_graph'
+    label = '_test_graph'
     # evaluation plots and scores
     y_pred = model.predict(x_test).ravel()
     test_accuracy(y_pred, y_test, ds.name+label, nn.model_name)
