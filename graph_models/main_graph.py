@@ -22,7 +22,7 @@ for ds in datasets:
     x_train, y_train = ds.load_graph('train', path = './datasets')
 
     x_test, y_test = ds.load_graph('test', path = './datasets')
-
+    
     model = nn.model(ds, shapes=nn.get_shapes(x_train))
     model.compile(**nn.compile_args)
     print(model.summary())

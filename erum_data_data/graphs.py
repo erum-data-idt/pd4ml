@@ -17,12 +17,12 @@ class LoadGraph:
         
         X,y = Spinodal.load(split, path, force_download)
         
-        X_feats = X[0]
+        X_adj = _adjacency_matrix_img(X[0])
         
-        X_adj = _adjacency_matrix_img(X_feats)
+        X_feats = X[0].reshape(X[0].shape[0],X[0].shape[1]**2,1)
         
         X_graph = {}
-        X_graph['features'] = X[0]
+        X_graph['features'] = X_feats
         X_graph['adj_matrix'] = X_adj
         
         return X_graph, y
@@ -36,12 +36,12 @@ class LoadGraph:
         
         X,y = EOSL.load(split, path, force_download)
         
-        X_feats = X[0]
+        X_adj = _adjacency_matrix_img(X[0])
         
-        X_adj = _adjacency_matrix_img(X_feats)
+        X_feats = X[0].reshape(X[0].shape[0],X[0].shape[1]**2,1)
         
         X_graph = {}
-        X_graph['features'] = X[0]
+        X_graph['features'] = X_feats
         X_graph['adj_matrix'] = X_adj
         
         return X_graph, y

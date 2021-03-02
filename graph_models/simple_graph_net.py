@@ -54,7 +54,7 @@ class Network(NetworkABC):
                 'callbacks': callbacks
                }                      ##dictionary of the arguments to be passed to the method fit()
 
-    compatible_datasets = [TopTagging]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+    compatible_datasets = [EOSL]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
 
     '''
     def preprocessing(self, X):
