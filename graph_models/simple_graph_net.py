@@ -116,7 +116,7 @@ class Network(NetworkABC):
         for i in range(3):
         #for i in range(1):
             p = tf.keras.layers.Dense(units, activation="relu")(p)
-            p = tf.keras.layers.Dropout(0.2)(p)
+            #p = tf.keras.layers.Dropout(0.2)(p)
         
         #new to avoid overfitting
         #p = tf.keras.layers.AveragePooling1D(pool_size=2, data_format="channels_first")(p)
