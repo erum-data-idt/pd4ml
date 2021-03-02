@@ -80,7 +80,7 @@ class EOSL(Dataset):
 
 class Airshower(Dataset):
     """
-    Airshower Proton vs Iron Classification
+    Airshower Regression task: Shower maximum
 
     Based on https://doi.org/10.1016/j.astropartphys.2017.10.006
 
@@ -100,6 +100,7 @@ class Airshower(Dataset):
         - 70k events (airshowers)
         - 9x9 = 81 ground detector stations
         - 1 starting time of the signal trace (arrival time of first particles at each station)
+        - padding: (-1) padding for instances that the detector / or timestep did not detect a particle
 
     - third set of input data
         - detector geometry - for reference if needed
@@ -108,46 +109,14 @@ class Airshower(Dataset):
 
     ----------------------------------
     Label:
-    Proton (1) vs. Iron (0) as shower origin particle.
-    Proton to Iron ratio in test & training set is 1:1.
+    "Xmax" = shower maximum
+    For a regression task.
     """
 
     name = "Airshower"
-    filename = "4_airshower_100k.npz"
-    url = "https://desycloud.desy.de/index.php/s/Le5MZCGar7ZEm9f/download"
-    md5 = "b3afa0efe9f4c6a5b936364cd52b1904"
-
-
-class LHCO(Dataset):
-    """
-    R&D Dataset for LHC Olympics 2020 Anomaly Detection Challenge
-
-    Classification between 1M QCD dijet events and 100k W'->XY events. Hence this dataset is unbalanced with a label 0 to 1 ratio of 10:1.
-
-    More information from the authors: https://zenodo.org/record/4287694#.X9o1_C1Q1pR
-    The dataset 'events_anomalydetection_v2.features.h5' was used and split into two a training set (70%) and a test set (30%).
-
-    ----------------------------------
-    Dataset shape:
-    - one numpy array of the shape (no. of events, 14)
-        - 14 features, namely:
-
-            The features (calculated using fastjet plugins) are the 3-momenta, invariant masses,
-            and n-jettiness variables tau1, tau2 and tau3 for the highest pT jet (j1)
-            and the second highest pT jet (j2):
-
-            'pxj1', 'pyj1', 'pzj1', 'mj1', 'tau1j1', 'tau2j1', 'tau3j1',
-            'pxj2', 'pyj2', 'pzj2', 'mj2', 'tau1j2', 'tau2j2', 'tau3j2'
-
-    ----------------------------------
-    Label:
-    0: QCD dijet event, 1: W'-> XY event (ratio: 10:1)
-    """
-
-    name = "LHCO"
-    filename = "5_LHCOlympics2020_features_1_1M.npz"
-    url = "https://desycloud.desy.de/index.php/s/4DaZCFgmZ83o9FT/download"
-    md5 = "d9a29ff15679c7034b7acf58e82afa0f"
+    filename = "4_airshower_100k_regression.npz"
+    url = "https://desycloud.desy.de/index.php/s/YHa79Gx94CbPx8Q/download"
+    md5 = "367dc93bec6111a1990f85cc8ff58d1f"
 
 
 class Belle(Dataset):
