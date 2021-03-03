@@ -3,10 +3,11 @@
 
 ## import of the models
 from eos_cnn import Network
-#from fcn import Network		    	#import your model function
-#from gcn_belle import Network
-#from cnn_spinodal import Network
-#from particle_net import Network
+
+# from fcn import Network		    	#import your model function
+# from gcn_belle import Network
+# from cnn_spinodal import Network
+# from particle_net import Network
 ##	utils.py is the file that contains all the self-built methods of this script.
 from utils import train_plots
 from utils import roc_auc
@@ -14,6 +15,8 @@ from utils import test_accuracy
 from utils import test_f1_score
 
 from os import chdir
+from benchmark.benchmark import Benchmark
+
 #########################################
 #####  EXAMPLE IMPLEMENTATION OF FCN  ###
 
@@ -27,11 +30,15 @@ for ds in datasets:
     X_test, y_test = ds.load(split="test")
     x_train = nn.preprocessing(X_train)
     x_test = nn.preprocessing(X_test)
-    
-     
+
     model = nn.model(ds, shapes=nn.get_shapes(x_train))
     model.compile(**nn.compile_args)
     history = model.fit(x=x_train, y=y_train, **nn.fit_args)
+
+    benchmark = Benchmark(dataset=ds.name, network=f"{ds.name}_DNN")
+    benchmark.snapshot(history=history.history)
+    # print summary table or all recorded trainings
+    benchmark.summary_report()
 
     ##	From here on, one should be able to use already defined methods as showed in the following lines.
     ##	Let us know if you face any issues with that.
