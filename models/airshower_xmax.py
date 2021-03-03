@@ -75,32 +75,32 @@ def norm_signal(signal):
     return signal
 
 
-class OptsMixin:
+class Network(NetworkABC):
+    compatible_datasets = [Airshower]
+
     @property
     def callbacks(self):
-        return super().callbacks.append(
-            [
-                tf.keras.callbacks.ReduceLROnPlateau(
-                    monitor="val_loss",
-                    factor=0.5,
-                    patience=4,
-                    verbose=1,
-                    mode="auto",
-                    min_delta=0,
-                    min_lr=1e-4,
-                ),
-                tf.keras.callbacks.EarlyStopping(
-                    monitor="val_loss",
-                    min_delta=0.0001,
-                    patience=10,
-                    restore_best_weights=True,
-                ),
-            ]
-        )
+        return [
+            tf.keras.callbacks.ReduceLROnPlateau(
+                monitor="val_loss",
+                factor=0.5,
+                patience=4,
+                verbose=1,
+                mode="auto",
+                min_delta=0,
+                min_lr=1e-4,
+            ),
+            tf.keras.callbacks.EarlyStopping(
+                monitor="val_loss",
+                min_delta=0.0001,
+                patience=10,
+                restore_best_weights=True,
+            ),
+        ]
 
     @property
     def metrics(self):
-        return super().metrics.append(resolution)
+        return [resolution]
 
     @property
     def compile_args(self):
@@ -116,33 +116,30 @@ class OptsMixin:
             super().fit_args,
             batch_size=32,
             epochs=50,
-            verbose=2,
+            verbose=1,
             validation_split=0.1,
             shuffle=True,
         )
 
-
-class Network(NetworkABC, OptsMixin):
-    compatible_datasets = [Airshower]
-
     def preprocessing(self, in_data):
-        time, _ = norm_time(in_data["time"], self.std)
-        signal = norm_signal(in_data["signal"])
+        signal, time, _ = in_data
+        time, _ = norm_time(time, self.std)
+        signal = norm_signal(signal)
         return [signal, time]
 
     @cached_property
-    def load_train(self):
-        return Airshower.load(split="train")
-
-    @cached_property
     def stats(self):
-        _, y_train = self.load_train
-        return dict(std=np.std(y_train), mean=np.mean(y_train))
+        _, y_train = Airshower.load(split="train")
+        return dict(
+            std=np.std(y_train),
+            mean=np.mean(y_train),
+        )
 
     @cached_property
     def std(self):
-        x_train, _ = self.load_train
-        _, std = norm_time(x_train["time"])
+        x_train, _ = Airshower.load(split="train")
+        _, time, _ = x_train
+        _, std = norm_time(time)
         return std
 
     def get_shapes(self, in_data):
@@ -151,7 +148,7 @@ class Network(NetworkABC, OptsMixin):
         #   in_data[1] := time
         return [in_data[0].shape[1:], in_data[1].shape[1:]]
 
-    def model(self, ds, shapes, save_model_png=False):
+    def model(self, ds, shapes):
         assert ds in self.compatible_datasets
 
         # Input Cube from time traces
