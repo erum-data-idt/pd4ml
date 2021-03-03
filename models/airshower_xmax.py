@@ -2,6 +2,7 @@ from functools import cached_property
 from template import NetworkABC
 import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as plt
 
 from erum_data_data.erum_data_data import Airshower
 
@@ -165,3 +166,21 @@ class Network(NetworkABC):
         x = tf.keras.layers.Dense(1)(x)
         output = NormToLabel(self.stats)(x)
         return tf.keras.Model(inputs=[sig_in, time_in], outputs=output)
+
+    def evaluation(self, **kwargs):
+        history = kwargs.pop("history")
+        dataset_name = kwargs.pop("dataset_name")
+        plot_loss(history, dataset_name, True)
+
+
+def plot_loss(history, ds, save=False):
+    plt.plot(history.history["loss"])
+    plt.plot(history.history["val_loss"])
+    plt.title(ds + " model loss [training]")
+    plt.ylabel("loss")
+    plt.xlabel("epoch")
+    plt.legend(["train", "val"], loc="upper left")
+    if save:
+        plt.savefig(f"{ds}_train_loss.png", dpi=96)
+    # plt.show()
+    plt.clf()
