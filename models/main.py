@@ -11,6 +11,7 @@ from eos_cnn import Network
 # from gcn_belle import Network
 # from cnn_spinodal import Network
 # from particle_net import Network
+from benchmark.benchmark import Benchmark
 
 #########################################
 #####  EXAMPLE IMPLEMENTATION OF FCN  ###
@@ -31,6 +32,10 @@ for ds in datasets:
     print(model.summary())
     history = model.fit(x=x_train, y=y_train, **nn.fit_args)
 
+    benchmark = Benchmark(dataset=ds.name, network=f"{ds.name}_DNN")
+    benchmark.snapshot(history=history.history)
+    # print summary table or all recorded trainings
+    benchmark.summary_report()
     # From here on, one should be able to use already
     # defined methods as shown in the following lines.
     # Let us know if you face any issues with that.
