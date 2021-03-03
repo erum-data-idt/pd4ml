@@ -82,7 +82,7 @@ class Benchmark:
             dict(
                 filename="history.json",
                 mode="w",
-                content=lambda self: history,
+                content=lambda self: {k: [v[-1]] for k, v in history.items()},
             ),
         )
         info = HistoryInfo(cwd=self.cwd)
@@ -108,8 +108,7 @@ class Benchmark:
         for rec in self.records:
             history = pd.read_json(os.path.join(self.wd, rec, "history.json"))
             history["Timestamp"] = rec
-            # report only best: `.max()`
-            data = data.append(history.max(), ignore_index=True)
+            data = data.append(history, ignore_index=True)
         order = ["Timestamp"] + sorted(list(set(data.columns) - {"Timestamp"}))
         data = data.reindex(order, axis=1)
         data = data.sort_values(by=sort_by, ascending=False)
