@@ -1,5 +1,5 @@
 import pandas as pd
-import awkward
+import awkward0 as awkward
 import uproot_methods
 import multiprocessing as mp
 import platform
