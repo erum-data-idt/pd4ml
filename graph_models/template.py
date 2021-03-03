@@ -2,7 +2,6 @@
 # out the implementation of our models in the same framework.
 from abc import ABCMeta, abstractmethod
 from typing import List, Dict
-from utils import train_plots, roc_auc, test_accuracy, test_f1_score
 
 
 class NetworkABC(metaclass=ABCMeta):
@@ -42,7 +41,6 @@ class NetworkABC(metaclass=ABCMeta):
 
         # write your preprocessing routin here
         return in_data
-
     @abstractmethod
     def get_shapes(self, in_data):
         """
@@ -51,8 +49,7 @@ class NetworkABC(metaclass=ABCMeta):
         """
 
         # write your shape calculation here
-        pass
-
+        pass 
     @abstractmethod
     def model(self, ds, shapes=None):
         """
@@ -61,17 +58,3 @@ class NetworkABC(metaclass=ABCMeta):
         """
         # write your model here
         pass
-
-    def evaluation(self, **kwargs):
-        model = kwargs.pop("model")
-        history = kwargs.pop("history")
-        dataset_name = kwargs.pop("dataset_name")
-        x_test = kwargs.pop("x_test")
-        y_test = kwargs.pop("y_test")
-        train_plots(history, dataset_name, True)
-
-        # evaluation plots and scores
-        y_pred = model.predict(x_test).ravel()
-        roc_auc(y_pred, y_test, dataset_name, True)
-        test_accuracy(y_pred, y_test, dataset_name, self.model_name)
-        test_f1_score(y_pred, y_test, dataset_name, self.model_name)

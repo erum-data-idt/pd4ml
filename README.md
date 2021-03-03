@@ -50,9 +50,15 @@ In the folder `template_model_implamentation` multiple model implementations can
 
 ---
 
-### Simple Fully-Connected Network Implementation
+### Graph network:
 
-A simple model implementation in a jupyter notebook can be found in the folder `simple_model`. To run the notebook one needs to additionally install at least [tensorflow](https://www.tensorflow.org/) version >= 2.0 and [scikit](https://scikit-learn.org/stable/) >= 0.22. 
+Loading the data as a Graph (with features and an adjacency matrix):
+```python
+from erum_data_data import Spinodal   # or any other dataset
+x_train, y_train = Spinodal.load_graph('train', path = './datasets')
+```
+
+`x_train` is dictionary with the contents `features` and `adj_matrix` 
 
 ---
 
