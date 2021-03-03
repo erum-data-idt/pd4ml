@@ -32,7 +32,7 @@ for ds in datasets:
     print(model.summary())
     history = model.fit(x=x_train, y=y_train, **nn.fit_args)
 
-    benchmark = Benchmark(dataset=ds.name, network=f"{ds.name}_DNN")
+    benchmark = Benchmark(dataset=ds.name, network=model.name)
     benchmark.snapshot(history=history.history)
     # print summary table or all recorded trainings
     benchmark.summary_report()
