@@ -155,3 +155,4 @@ class Belle(Dataset):
     url = "https://desycloud.desy.de/index.php/s/RKB4z3mMcPPY982/download"
     md5 = "85b10c9df3903455ab247a0ab4b51e5f"
     load_graph = LoadGraph.belle_graph
+    load_graph_tf_data = lambda *args, **kwargs: LoadGraph.belle_graph(*args, **kwargs, as_tf_data=True)

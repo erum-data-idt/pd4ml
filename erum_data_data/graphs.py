@@ -142,10 +142,13 @@ class LoadGraph:
                     .map(transform)
                 )
 
-            split_at = int(len(y) * (1 - validation_split))
-            ds_train = from_tensor_slices(slice(None, split_at))
-            ds_val = from_tensor_slices(slice(split_at, None))
-            return ds_train, ds_val
+            if validation_split is not None:
+                split_at = int(len(y) * (1 - validation_split))
+                ds_train = from_tensor_slices(slice(None, split_at))
+                ds_val = from_tensor_slices(slice(split_at, None))
+                return ds_train, ds_val
+            else:
+                return from_tensor_slices(slice(None))
 
 
 def _adjacency_matrix_img(inputs):

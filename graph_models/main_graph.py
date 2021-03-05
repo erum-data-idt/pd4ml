@@ -19,22 +19,35 @@ datasets = nn.compatible_datasets
 
 for ds in datasets:
 
-    x_train, y_train = ds.load_graph('train', path = './datasets')
-
-    x_test, y_test = ds.load_graph('test', path = './datasets')
-    
-    model = nn.model(ds, shapes=nn.get_shapes(x_train))
-    model.compile(**nn.compile_args)
-    print(model.summary())
-    history = model.fit(x=x_train, y=y_train, **nn.fit_args)
+    if not hasattr(ds, "load_graph_tf_data"):
+        x_train, y_train = ds.load_graph('train', path = './datasets')
+        x_test, y_test = ds.load_graph('test', path = './datasets')
+        model = nn.model(ds, shapes=nn.get_shapes(x_train))
+        model.compile(**nn.compile_args)
+        print(model.summary())
+        history = model.fit(x=x_train, y=y_train, **nn.fit_args)
+        y_pred = model.predict(x_test).ravel()
+    else:
+        fit_args = dict(nn.fit_args)
+        batch_args = dict(
+            validation_split=fit_args.pop("validation_split"),
+            batch_size=fit_args.pop("batch_size")
+        )
+        tf_ds_train, tf_ds_val = ds.load_graph_tf_data('train', path = './datasets', **batch_args)
+        tf_ds_test = ds.load_graph_tf_data('test', path = './datasets', **batch_args)
+        example_batch = next(iter(tf_ds_train))
+        model = nn.model(ds, shapes=nn.get_shapes(example_batch[0]))
+        model.compile(**nn.compile_args)
+        print(model.summary())
+        history = model.fit(tf_ds_train, validation_data=tf_ds_val, **fit_args)
+        y_pred = model.predict(ds_test.map(lambda x, y: x)).ravel()
+        y_test = np.concatenate([batch.numpy() for batch in ds_val.map(lambda x, y: y)])
 
     ##	From here on, one should be able to use already defined methods as showed in the following lines.
     ##	Let us know if you face any issues with that.
 
-    # training history plots
     label = '_test_graph'
-    # evaluation plots and scores
-    y_pred = model.predict(x_test).ravel()
+
     test_accuracy(y_pred, y_test, ds.name+label, nn.model_name)
     test_f1_score(y_pred, y_test, ds.name+label, nn.model_name)
 
