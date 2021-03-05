@@ -99,7 +99,7 @@ class LoadGraph:
             y = y[:max_entries]
 
         X_graph = {}
-        X_graph['adjacency'] = _belle.adjacency_matrix_from_mothers_np(X[1].astype(np.int8))
+        X_graph['adj_matrix'] = _belle.adjacency_matrix_from_mothers_np(X[1].astype(np.int8))
         X_graph['features'] = np.concatenate(
             [
                 X[0][:, :, :-1],
