@@ -6,7 +6,7 @@ import awkward
 import uproot_methods
 
 from template import NetworkABC
-from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL
+from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Belle
 
 def lr_schedule(epoch):
     lr = 1e-3
@@ -54,7 +54,7 @@ class Network(NetworkABC):
                 'callbacks': callbacks
                }                      ##dictionary of the arguments to be passed to the method fit()
 
-    compatible_datasets = [EOSL]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+    compatible_datasets = [Belle]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
 
     '''
     def preprocessing(self, X):
