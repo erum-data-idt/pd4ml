@@ -1,4 +1,5 @@
 import numpy as np
+import tensorflow as tf
 from .tt_graph_utils import load_top, convert
 from . import belle_graph_utils as _belle
 
@@ -87,7 +88,10 @@ class LoadGraph:
         path="./datasets",
         force_download=False,
         num_pdg=182,
-        max_entries=None
+        max_entries=None,
+        as_tf_data=False,
+        batch_size=1024,
+        validation_split=0.2,
     ):
         from erum_data_data import Belle
 
@@ -98,17 +102,50 @@ class LoadGraph:
             X = [x_i[:max_entries] for x_i in X]
             y = y[:max_entries]
 
-        X_graph = {}
-        X_graph['adj_matrix'] = _belle.adjacency_matrix_from_mothers_np(X[1].astype(np.int8))
-        X_graph['features'] = np.concatenate(
-            [
-                X[0][:, :, :-1],
-                _belle.np_onehot(_belle.remap_pdg(X[0][:, :, -1]), num_pdg)
-            ],
-            axis=-1
-        )
+        if not as_tf_data:
+            X_graph = {}
+            X_graph['adj_matrix'] = _belle.adjacency_matrix_from_mothers_np(X[1].astype(np.int8))
+            X_graph['features'] = np.concatenate(
+                [
+                    X[0][:, :, :-1],
+                    _belle.np_onehot(_belle.remap_pdg(X[0][:, :, -1]), num_pdg)
+                ],
+                axis=-1
+            )
+            return X_graph, y
+        else:
 
-        return X_graph, y
+            def tensor_slices(slicing):
+                return {
+                    "mother_indices" : X[1][slicing],
+                    "pdg" : _belle.remap_pdg(X[0][slicing][:, :, -1]),
+                    "features" : X[0][slicing][:, :, :-1],
+                }
+
+            def transform(*ds):
+                return (
+                    {
+                        "adj_matrix" : _belle.adjacency_matrix_from_mothers_tf(ds[0]["mother_indices"]),
+                        "features" : tf.concat(
+                            [ds[0]["features"], tf.one_hot(ds[0]["pdg"], num_pdg)], axis=-1
+                        )
+                    },
+                    ds[1]
+                )
+
+            def from_tensor_slices(slicing):
+                return (
+                    tf.data.Dataset.from_tensor_slices(
+                        (tensor_slices(slicing), y[slicing])
+                    )
+                    .batch(batch_size)
+                    .map(transform)
+                )
+
+            split_at = int(len(y) * (1 - validation_split))
+            ds_train = from_tensor_slices(slice(None, split_at))
+            ds_val = from_tensor_slices(slice(split_at, None))
+            return ds_train, ds_val
 
 
 def _adjacency_matrix_img(inputs):

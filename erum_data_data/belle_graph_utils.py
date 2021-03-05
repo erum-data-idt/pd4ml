@@ -1,4 +1,5 @@
 import numpy as np
+import tensorflow as tf
 
 """
 Some helper functions for the graph version of the Belle dataset
@@ -20,6 +21,34 @@ def adjacency_matrix_from_mothers_np(mother_indices, symmetrize=True, add_diagon
             0
         )
     adj[adj > 1] = 1
+    return adj
+
+
+def adjacency_matrix_from_mothers_tf(mother_indices, symmetrize=True, add_diagonal=True):
+    """
+    Like `adjacency_matrix_from_mothers_np`, but using tensorflow
+    """
+    shape = tf.shape(mother_indices)
+    N = shape[1]
+    bs = shape[0]
+    inputs = mother_indices
+
+    idx = tf.where(inputs < 0, tf.cast(N, dtype=tf.int64), inputs)
+    adj = tf.one_hot(tf.cast(idx, dtype=tf.int32), N + 1)[:, :, :-1]
+
+    if symmetrize:
+        adj = adj + tf.linalg.matrix_transpose(adj)
+
+    if add_diagonal:
+        diagonal = tf.broadcast_to(tf.eye(N), (bs, N, N))
+        diagonal = tf.where(
+            tf.repeat(tf.reshape(inputs != -1, (bs, N, 1)), N, axis=2),
+            diagonal,
+            tf.zeros_like(adj),
+        )
+        adj = adj + diagonal
+
+    adj = tf.cast(adj != 0, dtype=tf.float32)
     return adj
 
 
