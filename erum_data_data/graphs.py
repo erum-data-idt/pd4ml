@@ -1,5 +1,4 @@
 import numpy as np
-import tensorflow as tf
 from .tt_graph_utils import load_top, convert
 from . import belle_graph_utils as _belle
 
@@ -114,6 +113,8 @@ class LoadGraph:
             )
             return X_graph, y
         else:
+
+            import tensorflow as tf
 
             def tensor_slices(slicing):
                 return {

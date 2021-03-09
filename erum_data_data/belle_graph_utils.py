@@ -1,5 +1,4 @@
 import numpy as np
-import tensorflow as tf
 
 """
 Some helper functions for the graph version of the Belle dataset
@@ -28,6 +27,8 @@ def adjacency_matrix_from_mothers_tf(mother_indices, symmetrize=True, add_diagon
     """
     Like `adjacency_matrix_from_mothers_np`, but using tensorflow
     """
+    import tensorflow as tf
+
     shape = tf.shape(mother_indices)
     N = shape[1]
     bs = shape[0]
