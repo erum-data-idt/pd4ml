@@ -179,3 +179,25 @@ def _adjacency_matrix_img(inputs):
             adj[i][i-1] = 1
     adj = np.broadcast_to(adj, [bs, N, N])
     return adj
+
+
+def test_belle_graphs_tf_np_consistency():
+
+    from collections import defaultdict
+
+    max_entries = 1000
+    x_train, y_train = LoadGraph.belle_graph('train', path = './datasets', max_entries=max_entries)
+    ds_train = LoadGraph.belle_graph(
+        'train',
+        path = './datasets',
+        validation_split=None,
+        max_entries=max_entries,
+        batch_size=64,
+        as_tf_data=True
+    )
+    x_train_tf = defaultdict(list)
+    for batch in ds_train:
+        for k in x_train:
+            x_train_tf[k].append(batch[0][k].numpy())
+    for k in x_train_tf:
+        assert (x_train[k] == np.concatenate(x_train_tf[k])).all()
