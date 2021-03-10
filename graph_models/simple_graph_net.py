@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 
 from template import NetworkABC
-from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL
+from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Belle
 
 
 
@@ -37,7 +37,8 @@ class Network(NetworkABC):
                 'callbacks': callbacks
                }                      ##dictionary of the arguments to be passed to the method fit()
 
-    compatible_datasets = [Spinodal]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+    
+    compatible_datasets = [Belle]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
 
     '''
     def preprocessing(self, X):
