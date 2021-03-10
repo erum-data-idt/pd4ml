@@ -18,7 +18,7 @@ class LoadGraph:
         
         X,y = Spinodal.load(split, path, force_download)
         
-        X_adj = _adjacency_matrix_img(X[0])
+        X_adj = _adjacency_matrix_img_8connected(X[0])
         
         X_feats = X[0].reshape(X[0].shape[0],X[0].shape[1]**2,1)
         
@@ -37,7 +37,7 @@ class LoadGraph:
         
         X,y = EOSL.load(split, path, force_download)
         
-        X_adj = _adjacency_matrix_img(X[0])
+        X_adj = _adjacency_matrix_img_8connected(X[0])
         
         X_feats = X[0].reshape(X[0].shape[0],X[0].shape[1]**2,1)
         
@@ -152,9 +152,13 @@ class LoadGraph:
                 return from_tensor_slices(slice(None))
 
 
+              
+              
+ ## helper functions             
+              
 def _adjacency_matrix_img(inputs):
     """
-    calculate adjacency matrix for images
+    calculate 4-connected adjacency matrix for images
     """
     
     shape = inputs.shape
@@ -164,7 +168,6 @@ def _adjacency_matrix_img(inputs):
 
     adj = np.zeros((N, N), dtype='int8')
     for i in range(N):
-        adj[i][i] = 1
         if i+1 < N and (i+1)%n!=0:
             adj[i][i+1] = 1
             adj[i+1][i] = 1
@@ -179,12 +182,52 @@ def _adjacency_matrix_img(inputs):
             adj[i][i-1] = 1
     adj = np.broadcast_to(adj, [bs, N, N])
     return adj
+  
+def _adjacency_matrix_img_8connected(inputs):
+    """
+    calculate the 8-connected adjacency matrix for images
+    """
+    
+    shape = inputs.shape
+    n = shape[1]
+    N = n*n
+    bs = shape[0]
+
+    adj = np.zeros((N, N), dtype='int8')
+    for i in range(N):
+        if i+1 < N and (i+1)%n!=0:
+            adj[i][i+1] = 1
+            adj[i+1][i] = 1
+        if i+n < N:
+            adj[i+n][i] = 1
+            adj[i][i+n] = 1
+        if i-n > 0:
+            adj[i-n][i] = 1
+            adj[i][i-n] = 1
+        if i-1 > 0 and (i)%n!=0:
+            adj[i-1][i] = 1
+            adj[i][i-1] = 1
+            
+        if i-n > 0 and (i)%n!=0:
+            adj[i-(n+1)][i] = 1
+            adj[i][i-(n+1)] = 1
+        if i-n > 0 and i+1 < N and (i+1)%n!=0:
+            adj[i-(n-1)][i] = 1
+            adj[i][i-(n-1)] = 1
+        if i+n < N and i-1 >= 0 and (i)%n!=0:
+            adj[i+(n-1)][i] = 1
+            adj[i][i+(n-1)] = 1
+        if i+n < N and (i+1)%n!=0:
+            adj[i+(n+1)][i] = 1
+            adj[i][i+(n+1)] = 1
+    adj = np.broadcast_to(adj, [bs, N, N])
+    return adj  
 
 
 def test_belle_graphs_tf_np_consistency():
 
     from collections import defaultdict
-
+    
     max_entries = 1000
     x_train, y_train = LoadGraph.belle_graph('train', path = './datasets', max_entries=max_entries)
     ds_train = LoadGraph.belle_graph(
@@ -201,3 +244,6 @@ def test_belle_graphs_tf_np_consistency():
             x_train_tf[k].append(batch[0][k].numpy())
     for k in x_train_tf:
         assert (x_train[k] == np.concatenate(x_train_tf[k])).all()
+
+        
+

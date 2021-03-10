@@ -1,26 +1,9 @@
-import os
 import tensorflow as tf
 import numpy as np
-import pandas as pd
-import awkward
-import uproot_methods
 
 from template import NetworkABC
 from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Belle
 
-def lr_schedule(epoch):
-    lr = 1e-3
-    if epoch > 20:
-        lr *= 0.01
-    elif epoch > 10:
-        lr *= 0.1
-    return lr
-
-
-
-
-class _DotDict:
-    pass
 
 
 class Network(NetworkABC):
@@ -33,7 +16,7 @@ class Network(NetworkABC):
 
     metrics   = [tf.keras.metrics.BinaryAccuracy(name = "acc")]  ##list of metrics to be used
     compile_args = {'loss':'binary_crossentropy',#'categorical_crossentropy'
-                    'optimizer':tf.keras.optimizers.Adam(learning_rate=lr_schedule(0)),
+                    'optimizer':tf.keras.optimizers.Adam(learning_rate=1e-3),
                     'metrics': metrics
                    }                      ##dictionary of the arguments to be passed to the method compile()
 
@@ -41,19 +24,20 @@ class Network(NetworkABC):
                              monitor='val_acc',
                              verbose=1,
                              save_best_only=True),
-                 tf.keras.callbacks.LearningRateScheduler(lr_schedule),
+                 #tf.keras.callbacks.LearningRateScheduler(lr_schedule),
                  tf.keras.callbacks.EarlyStopping(monitor='val_acc',
                                                   min_delta =0.0001,
                                                   patience=15,
                                                   restore_best_weights = True),
                 ]                                              ##list of callbacks to be used in model.
     fit_args = {'batch_size': 1024,
-                'epochs': 100,
+                'epochs': 200,
                 'validation_split': 0.2,
                 'shuffle': True,
                 'callbacks': callbacks
                }                      ##dictionary of the arguments to be passed to the method fit()
 
+    
     compatible_datasets = [Belle]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
 
     '''
