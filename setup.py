@@ -14,6 +14,8 @@ setup(
         "six >= 1.10.0",
         "rich >= 9.10.0",
         "requests >= 2.24.0",
+        "pandas >= 1.2.2",
+        "uproot-methods >= 0.9.2",
     ],
     python_requires="~=3.8",
     zip_safe=False,
