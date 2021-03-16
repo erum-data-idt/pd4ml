@@ -2,6 +2,7 @@ from template import NetworkABC
 
 import tensorflow as tf
 import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 from erum_data_data.erum_data_data import EOSL
 
@@ -27,12 +28,24 @@ class Network(NetworkABC):
 				'validation_split': 0.2,
 				'callbacks': callbacks
 				}
+
+	def __init__(self):
+		self.scaler = 0
+	
+	def init_preprocessing(self, x_train):
+		x_train = x_train[0].reshape(x_train[0].shape[0], x_train[0].shape[1]* x_train[0].shape[2])
+		self.scaler =  StandardScaler().fit(x_train)
+		
+
 	def preprocessing(self, x):
-		x = x[0]
+		scaler = self.scaler
+		shapes = x[0].shape
+		x = scaler.transform(x[0].reshape(shapes[0], shapes[1]* shapes[2]))
 		if tf.keras.backend.image_data_format() == 'channels_first':
-			x = x.reshape(x.shape[0], 1, x.shape[1], x.shape[2])
+			x = x.reshape(shapes[0], 1, shapes[1], shapes[2])
+		
 		else:
-			x = x.reshape(x.shape[0], x.shape[1], x.shape[2], 1)
+			x = x.reshape(shapes[0], shapes[1], shapes[2], 1)
 		return x
 
 	def get_shapes(self, x):
