@@ -33,6 +33,7 @@ class TopTagging(Dataset):
     filename = "1_top_tagging_2M.npz"
     url = "https://desycloud.desy.de/index.php/s/aZqyNSg4B7nn8qQ/download"
     md5 = "708a8369d75ceff2229bd8c46b47afea"
+    task = 'classification'
     load_graph = LoadGraph.TopTagging_graph
 
 
@@ -56,6 +57,7 @@ class Spinodal(Dataset):
     filename = "2_spinodal_29k.npz"
     url = "https://desycloud.desy.de/index.php/s/zZCCSfwwEkT5Pgk/download"
     md5 = "c22326822d9bac7c074467ccccc6fe4f"
+    task = 'classification'
     load_graph = LoadGraph.spinodal_graph
 
 
@@ -79,6 +81,7 @@ class EOSL(Dataset):
     filename = "3_EOSL_or_EOSQ_180k.npz"
     url = "https://desycloud.desy.de/index.php/s/DT7sWm6rNR5zss9/download"
     md5 = "be5563e787f856bd6b2f9fe171277bc3"
+    task = 'classification'
     load_graph = LoadGraph.eosl_graph
 
 
@@ -121,7 +124,7 @@ class Airshower(Dataset):
     filename = "4_airshower_100k_regression.npz"
     url = "https://desycloud.desy.de/index.php/s/YHa79Gx94CbPx8Q/download"
     md5 = "367dc93bec6111a1990f85cc8ff58d1f"
-
+    task = 'regression'
 
 class Belle(Dataset):
     """
@@ -154,5 +157,9 @@ class Belle(Dataset):
     filename = "6_belle_selective_400k.npz"
     url = "https://desycloud.desy.de/index.php/s/RKB4z3mMcPPY982/download"
     md5 = "85b10c9df3903455ab247a0ab4b51e5f"
+<<<<<<< HEAD
+    task = 'classification'
+=======
     load_graph = LoadGraph.belle_graph
     load_graph_tf_data = lambda *args, **kwargs: LoadGraph.belle_graph(*args, **kwargs, as_tf_data=True)
+>>>>>>> 24951d6980a07e820d988c7a5457a6a5220a5da1
