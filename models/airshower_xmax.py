@@ -3,7 +3,7 @@ from template import NetworkABC
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-
+from sklearn.metrics import mean_squared_error as MSE
 from erum_data_data.erum_data_data import Airshower
 
 
@@ -171,7 +171,19 @@ class Network(NetworkABC):
         history = kwargs.pop("history")
         dataset_name = kwargs.pop("dataset_name")
         plot_loss(history, dataset_name, True)
+        x_test = kwargs.pop("x_test")
+        y_test = kwargs.pop("y_test")
+        model  = kwargs.pop("model")
+        y_pred = model.predict(x_test)
+        test_predict(y_test, y_pred)
 
+
+def test_predict(y_test, y_pred):
+    _str = "Test MSE score for Airshower dataset is: {} \n".format(MSE(y_test, y_pred))
+    print(_str)
+    with open('scores_Airshower.txt', 'a') as file:
+        file.write(_str)
+    
 
 def plot_loss(history, ds, save=False):
     plt.plot(history.history["loss"])
