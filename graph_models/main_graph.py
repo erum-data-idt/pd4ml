@@ -40,3 +40,4 @@ for ds in datasets:
 
     train_plots(history, ds.name+label, True)
     roc_auc(y_pred, y_test, ds.name+label, True)
+    del history
