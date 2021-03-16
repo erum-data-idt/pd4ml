@@ -61,7 +61,10 @@ class NetworkABC(metaclass=ABCMeta):
         """
         # write your model here
         pass
-
+    
+    def init_preprocessing(self, x_train):
+        pass
+    
     def evaluation(self, **kwargs):
         model = kwargs.pop("model")
         history = kwargs.pop("history")
