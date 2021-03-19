@@ -169,8 +169,8 @@ class Network(NetworkABC):
 
     def evaluation(self, **kwargs):
         history = kwargs.pop("history")
-        dataset_name = kwargs.pop("dataset_name")
-        plot_loss(history, dataset_name, True)
+        dataset = kwargs.pop("dataset")
+        plot_loss(history, dataset.name, True)
         x_test = kwargs.pop("x_test")
         y_test = kwargs.pop("y_test")
         model  = kwargs.pop("model")

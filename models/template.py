@@ -73,13 +73,13 @@ class NetworkABC(metaclass=ABCMeta):
     def evaluation(self, **kwargs):
         model = kwargs.pop("model")
         history = kwargs.pop("history")
-        dataset_name = kwargs.pop("dataset_name")
+        dataset = kwargs.pop("dataset")
         x_test = kwargs.pop("x_test")
         y_test = kwargs.pop("y_test")
-        train_plots(history, dataset_name, True)
+        train_plots(history, dataset.name, True)
 
         # evaluation plots and scores
         y_pred = model.predict(x_test).ravel()
-        roc_auc(y_pred, y_test, dataset_name, True)
-        test_accuracy(y_pred, y_test, dataset_name, self.model_name)
-        test_f1_score(y_pred, y_test, dataset_name, self.model_name)
+        roc_auc(y_pred, y_test, dataset.name, True)
+        test_accuracy(y_pred, y_test, dataset.name, self.model_name)
+        test_f1_score(y_pred, y_test, dataset.name, self.model_name)

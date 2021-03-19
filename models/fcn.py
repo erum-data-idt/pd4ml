@@ -104,3 +104,36 @@ class Network(NetworkABC):
         
         return model
 
+    def evaluation(self, **kwargs):
+	
+        dataset = kwargs.pop("dataset")
+        if dataset.task == "classification":
+            super().evaluation(**kwargs)
+        else:
+            history = kwargs.pop("history")
+            plot_loss(history, dataset.name, True)
+            x_test = kwargs.pop("x_test")
+            y_test = kwargs.pop("y_test")
+            model  = kwargs.pop("model")
+            y_pred = model.predict(x_test)
+            test_predict(y_test, y_pred)
+
+
+def test_predict(y_test, y_pred):
+    _str = "Test MSE score for Airshower dataset is: {} \n".format(MSE(y_test, y_pred))
+    print(_str)
+    with open('scores_Airshower.txt', 'a') as file:
+        file.write(_str)
+
+
+def plot_loss(history, ds, save=False):
+    plt.plot(history.history["loss"])
+    plt.plot(history.history["val_loss"])
+    plt.title(ds + " model loss [training]")
+    plt.ylabel("loss")
+    plt.xlabel("epoch")
+    plt.legend(["train", "val"], loc="upper left")
+    if save:
+        plt.savefig(f"{ds}_train_loss.png", dpi=96)
+    # plt.show()
+    plt.clf()

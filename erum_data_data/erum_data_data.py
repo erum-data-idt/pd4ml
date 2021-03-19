@@ -157,9 +157,6 @@ class Belle(Dataset):
     filename = "6_belle_selective_400k.npz"
     url = "https://desycloud.desy.de/index.php/s/RKB4z3mMcPPY982/download"
     md5 = "85b10c9df3903455ab247a0ab4b51e5f"
-<<<<<<< HEAD
     task = 'classification'
-=======
     load_graph = LoadGraph.belle_graph
     load_graph_tf_data = lambda *args, **kwargs: LoadGraph.belle_graph(*args, **kwargs, as_tf_data=True)
->>>>>>> 24951d6980a07e820d988c7a5457a6a5220a5da1
