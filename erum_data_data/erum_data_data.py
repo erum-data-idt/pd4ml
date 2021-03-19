@@ -80,7 +80,7 @@ class EOSL(Dataset):
     name = "EOSL"
     filename = "3_EOSL_or_EOSQ_180k.npz"
     url = "https://desycloud.desy.de/index.php/s/DT7sWm6rNR5zss9/download"
-    md5 = "be5563e787f856bd6b2f9fe171277bc3"
+    md5 = "c070a9743163c3f467ceb87ac4e19fd1"
     task = 'classification'
     load_graph = LoadGraph.eosl_graph
 
