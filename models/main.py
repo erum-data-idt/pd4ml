@@ -3,10 +3,10 @@
 
 ## import of the models
 from fcn import Network  
-# from airshower_xmax import Network
-# from gcn_belle import Network
-# from cnn_spinodal import Network
-# from particle_net import Network
+#from airshower_xmax import Network
+#from gcn_belle import Network
+#from cnn_spinodal import Network
+#from particle_net import Network
 #from eos_cnn import Network
 #from benchmark.benchmark import Benchmark
 
@@ -27,7 +27,7 @@ for ds in datasets:
     x_test = nn.preprocessing(X_test)
     
     model = nn.model(ds, shapes=nn.get_shapes(x_train))
-    model.compile(**nn.compile_args)
+    model.compile(**nn.compile_args(ds.task))
     print(model.summary())
     history = model.fit(x=x_train, y=y_train, **nn.fit_args)
 

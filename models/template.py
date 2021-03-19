@@ -6,24 +6,23 @@ from utils import train_plots, roc_auc, test_accuracy, test_f1_score
 
 
 class NetworkABC(metaclass=ABCMeta):
-    @property
+    def __init__(self):
+        self._task = None
+    @property    
     def callbacks(self) -> List:
         # list of callbacks to be used in model.
         return []
 
-    @property
     def metrics(self) -> List:
         # list of metrics to be used
         return []
 
-    @property
     def compile_args(self) -> Dict:
         # dictionary of the arguments to be passed to the method compile()
-        return {"metrics": self.metrics}
-
+        return {"metrics": self.metrics()}
     @property
     def fit_args(self) -> Dict:
-        # dictionary of the arguments to be passed to the method fit()
+        # r dictionary of the arguments to be passed to the method fit()
         return {"callbacks": self.callbacks}
 
     @property
@@ -64,7 +63,13 @@ class NetworkABC(metaclass=ABCMeta):
     
     def init_preprocessing(self, x_train):
         pass
-    
+    @property
+    def task(self): 
+        return self._task
+    @task.setter
+    def task(self, value):
+        self._task = value
+
     def evaluation(self, **kwargs):
         model = kwargs.pop("model")
         history = kwargs.pop("history")

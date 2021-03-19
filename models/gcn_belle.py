@@ -14,14 +14,14 @@ class Network(NetworkABC):
             "./gcn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
         ),
     ]
-    metrics = [
+    def metrics(self, task): return [
         tf.keras.metrics.BinaryAccuracy(name="acc"),
         tf.keras.metrics.AUC(name="AUC"),
     ]
-    compile_args = {
+    def compile_args(self, task): return {
         "optimizer": tf.keras.optimizers.Adam(0.001),
         "loss": tf.keras.losses.BinaryCrossentropy(),
-        "metrics": metrics,
+        "metrics": self.metrics(task),
     }
     fit_args = {
         "shuffle": True,

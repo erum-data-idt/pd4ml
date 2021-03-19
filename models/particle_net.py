@@ -274,10 +274,10 @@ class Network(NetworkABC):
         pass
 
 
-    metrics   = [tf.keras.metrics.BinaryAccuracy(name = "acc")]  ##list of metrics to be used
-    compile_args = {'loss':'binary_crossentropy',#'categorical_crossentropy'
+    def metrics(self, task): return [tf.keras.metrics.BinaryAccuracy(name = "acc")]  ##list of metrics to be used
+    def compile_args(self, task): return {'loss':'binary_crossentropy',#'categorical_crossentropy'
                     'optimizer':tf.keras.optimizers.Adam(learning_rate=lr_schedule(0)),
-                    'metrics': metrics
+                    'metrics': self.metrics(task)
                    }                      ##dictionary of the arguments to be passed to the method compile()
 
     callbacks = [tf.keras.callbacks.ModelCheckpoint(filepath='./',

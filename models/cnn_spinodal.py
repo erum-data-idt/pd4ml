@@ -17,14 +17,14 @@ class Network(NetworkABC):
             "./cnn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
         ),
     ]  ##list of callbacks to be used in model.
-    metrics = [
+    def metrics(self, task): return [
         tf.keras.metrics.BinaryAccuracy(name="acc"),
         tf.keras.metrics.AUC(name="AUC"),
     ]  ##list of metrics to be used
-    compile_args = {
+    def compile_args(self, task): return {
         "optimizer": tf.keras.optimizers.Adam(0.001),
         "loss": tf.keras.losses.BinaryCrossentropy(from_logits=True),
-        "metrics": metrics,
+        "metrics": self.metrics(task),
     }  ##dictionary of the arguments to be passed to the method compile()
     fit_args = {
         "shuffle": True,

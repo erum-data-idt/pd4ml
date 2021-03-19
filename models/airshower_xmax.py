@@ -99,14 +99,14 @@ class Network(NetworkABC):
             ),
         ]
 
-    @property
-    def metrics(self):
+    
+    def metrics(self, task):
         return [resolution]
 
-    @property
-    def compile_args(self):
+    
+    def compile_args(self, task):
         return dict(
-            super().compile_args,
+            metrics = self.metrics(task),
             loss="mse",
             optimizer=tf.keras.optimizers.Adam(lr=3e-3, amsgrad=True),
         )

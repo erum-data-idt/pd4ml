@@ -8,11 +8,11 @@ from erum_data_data.erum_data_data import EOSL
 
 class Network(NetworkABC):
 	model_name = '_cnnEOS_'
-	metrics = [tf.keras.metrics.BinaryAccuracy(name="acc")]
-	compile_args = {'loss': tf.keras.losses.binary_crossentropy,
-					'optimizer': tf.keras.optimizers.Adamax(lr=0.0001),
-					'metrics': metrics
-					}
+	def metrics(self, task): return  [tf.keras.metrics.BinaryAccuracy(name="acc")]
+	def compile_args(self, task): return {'loss': tf.keras.losses.binary_crossentropy,
+					      'optimizer': tf.keras.optimizers.Adamax(lr=0.0001),
+					      'metrics': self.metrics(task)
+					      }
 	compatible_datasets = [EOSL]
 	callbacks = [
                     tf.keras.callbacks.EarlyStopping(
