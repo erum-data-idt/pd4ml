@@ -1,8 +1,11 @@
 import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import mean_squared_error as MSE
 
 from template import NetworkABC
-from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Belle
+from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Belle, Airshower
+from utils import train_plots, roc_auc, test_accuracy, test_f1_score
 
 
 
@@ -10,27 +13,50 @@ class Network(NetworkABC):
 
     model_name = '_simple_graph_'
 
-    def __init__(self):
-        pass
+    def metrics(self, task):
+        if task == 'regression':
+            return [tf.keras.metrics.MeanSquaredError()]
+        elif task == 'classification':
+            return [tf.keras.metrics.BinaryAccuracy(name="acc"), tf.keras.metrics.AUC(name="AUC")]
+
+    def loss(self, task):
+        loss = tf.keras.losses.MeanSquaredError() if task == 'regression' else tf.keras.losses.BinaryCrossentropy() 
+        return loss
+
+    def compile_args(self, task): 
+        return {
+                "optimizer": tf.keras.optimizers.Adam(0.001),
+                "loss": self.loss(task),
+                "metrics": self.metrics(task)
+               }
 
 
-    metrics   = [tf.keras.metrics.BinaryAccuracy(name = "acc")]  ##list of metrics to be used
-    compile_args = {'loss':'binary_crossentropy',#'categorical_crossentropy'
-                    'optimizer':tf.keras.optimizers.Adam(learning_rate=1e-3),
-                    'metrics': metrics
-                   }                      ##dictionary of the arguments to be passed to the method compile()
+    #metrics   = [tf.keras.metrics.BinaryAccuracy(name = "acc")]  ##list of metrics to be used
+    #compile_args = {'loss':'binary_crossentropy',#'categorical_crossentropy'
+    #                'optimizer':tf.keras.optimizers.Adam(learning_rate=1e-3),
+    #                'metrics': metrics
+    #               }                      ##dictionary of the arguments to be passed to the method compile()
 
     callbacks = [tf.keras.callbacks.ModelCheckpoint(filepath='./',
-                             monitor='val_acc',
+                             monitor='val_loss',
                              verbose=1,
                              save_best_only=True),
                  #tf.keras.callbacks.LearningRateScheduler(lr_schedule),
-                 tf.keras.callbacks.EarlyStopping(monitor='val_acc',
+                 tf.keras.callbacks.EarlyStopping(monitor='val_loss',
                                                   min_delta =0.0001,
                                                   patience=15,
                                                   restore_best_weights = True),
+                tf.keras.callbacks.ReduceLROnPlateau(
+                    monitor="val_loss",
+                    factor=0.75,
+                    patience=5,
+                    verbose=1,
+                    mode="auto",
+                    min_delta=0,
+                    min_lr=1e-5,
+            ),
                 ]                                              ##list of callbacks to be used in model.
-    fit_args = {'batch_size': 1024,
+    fit_args = {'batch_size': 256,
                 'epochs': 200,
                 'validation_split': 0.2,
                 'shuffle': True,
@@ -38,21 +64,8 @@ class Network(NetworkABC):
                }                      ##dictionary of the arguments to be passed to the method fit()
 
     
-    compatible_datasets = [Belle]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+    compatible_datasets = [Airshower]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
 
-    '''
-    def preprocessing(self, X):
-        """
-        Method should take as an input the list of datasets to be used as an iput for the model
-        and after the application of all the preprocessing routine, it should return the modified data
-        in the desired shapes
-        """
-        X[0] = X[0][:,0:max_part,:]
-        X = np.reshape(X[0], (len(X[0]), (X[0].shape[1]*X[0].shape[2])))
-        v = convert(X)
-        dataset = Dataset(v, data_format='channel_last')
-        return dataset.X
-    '''
     
     def get_shapes(self, input_dataset):
         """
@@ -114,9 +127,46 @@ class Network(NetworkABC):
         for i in range(3):
             x = tf.keras.layers.Dense(units, activation="relu")(x)
 
-        outputs = tf.keras.layers.Dense(1, activation="sigmoid")(x)
+        if ds.task == 'classification':
+            outputs = tf.keras.layers.Dense(1, activation="sigmoid")(x)
+        elif ds.task == 'regression':
+            outputs = tf.keras.layers.Dense(1, activation="linear")(x)
 
         return tf.keras.Model(inputs=[feature_input,adjacency_input], outputs=outputs, name=ds.name)
+    
+    
+    def evaluation(self, **kwargs):
+        dataset = kwargs.get("dataset")
+        if dataset.task == "classification":
+            super().evaluation(**kwargs)
+        else:  # regression task
+            history = kwargs.pop("history")
+            plot_loss(history, dataset.name, True)
+            x_test = kwargs.pop("x_test")
+            y_test = kwargs.pop("y_test")
+            model  = kwargs.pop("model")
+            y_pred = model.predict(x_test)
+            test_predict(y_test, y_pred)
+
+# should later go to utils
+def test_predict(y_test, y_pred):
+    _str = "Test MSE score for Airshower dataset is: {} \n".format(MSE(y_test, y_pred))
+    print(_str)
+    with open('scores_Airshower.txt', 'a') as file:
+        file.write(_str)
+
+# should later go to utils
+def plot_loss(history, ds, save=False):
+    plt.plot(history.history["loss"])
+    plt.plot(history.history["val_loss"])
+    plt.title(ds + " model loss [training]")
+    plt.ylabel("loss")
+    plt.xlabel("epoch")
+    plt.legend(["train", "val"], loc="upper left")
+    if save:
+        plt.savefig(f"{ds}_train_loss.png", dpi=96)
+    # plt.show()
+    plt.clf()
 
 
 class SimpleGCN(tf.keras.layers.Layer):
