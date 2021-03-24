@@ -10,6 +10,8 @@ from sklearn.metrics import roc_curve
 from sklearn.metrics import auc
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
+from sklearn.metrics import mean_squared_error as MSE
+import tensorflow as tf
     
 
 
@@ -109,3 +111,36 @@ def test_f1_score(y_pred, y_test, ds, model_name):
     print(_str)
     with open('scores{}{}.txt'.format(model_name, ds), 'a') as file:
         file.write(_str)
+        
+        
+        
+        
+        
+#### for regression task (i.e. airshowers) ###
+
+def test_predict_regression(y_test, y_pred):
+    mse_score = MSE(y_test, y_pred)
+    mean_res_score = _mean_resolution(y_test,y_pred)
+    _str = "Test MSE score for Airshower dataset is: {} and Resolution score is: {} \n".format(mse_score, mean_res_score)
+    print(_str)
+    with open('scores_Airshower.txt', 'a') as file:
+        file.write(_str)
+
+# should later go to utils
+def plot_loss_regression(history, ds, save=False):
+    plt.plot(history.history["loss"])
+    plt.plot(history.history["val_loss"])
+    plt.title(ds + " model loss [training]")
+    plt.ylabel("loss")
+    plt.xlabel("epoch")
+    plt.legend(["train", "val"], loc="upper left")
+    if save:
+        plt.savefig(f"{ds}_train_loss.png", dpi=96)
+    # plt.show()
+    plt.clf()
+    
+def _mean_resolution(y_true, y_pred):
+    """ Metric to control for standart deviation """
+    y_true = tf.cast(y_true, tf.float32)
+    mean, var = tf.nn.moments((y_true - y_pred), axes=[0])
+    return tf.reduce_mean(tf.sqrt(var))

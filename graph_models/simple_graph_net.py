@@ -1,11 +1,9 @@
 import tensorflow as tf
 import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.metrics import mean_squared_error as MSE
 
 from template import NetworkABC
 from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Belle, Airshower
-from utils import train_plots, roc_auc, test_accuracy, test_f1_score
+from utils import train_plots, roc_auc, test_accuracy, test_f1_score, test_predict_regression, plot_loss_regression
 
 
 
@@ -45,6 +43,7 @@ class Network(NetworkABC):
                  tf.keras.callbacks.EarlyStopping(monitor='val_loss',
                                                   min_delta =0.0001,
                                                   patience=15,
+                                                  verbose = 1,
                                                   restore_best_weights = True),
                 tf.keras.callbacks.ReduceLROnPlateau(
                     monitor="val_loss",
@@ -141,32 +140,13 @@ class Network(NetworkABC):
             super().evaluation(**kwargs)
         else:  # regression task
             history = kwargs.pop("history")
-            plot_loss(history, dataset.name, True)
+            plot_loss_regression(history, dataset.name, True)
             x_test = kwargs.pop("x_test")
             y_test = kwargs.pop("y_test")
             model  = kwargs.pop("model")
             y_pred = model.predict(x_test)
-            test_predict(y_test, y_pred)
+            test_predict_regression(y_test, y_pred)
 
-# should later go to utils
-def test_predict(y_test, y_pred):
-    _str = "Test MSE score for Airshower dataset is: {} \n".format(MSE(y_test, y_pred))
-    print(_str)
-    with open('scores_Airshower.txt', 'a') as file:
-        file.write(_str)
-
-# should later go to utils
-def plot_loss(history, ds, save=False):
-    plt.plot(history.history["loss"])
-    plt.plot(history.history["val_loss"])
-    plt.title(ds + " model loss [training]")
-    plt.ylabel("loss")
-    plt.xlabel("epoch")
-    plt.legend(["train", "val"], loc="upper left")
-    if save:
-        plt.savefig(f"{ds}_train_loss.png", dpi=96)
-    # plt.show()
-    plt.clf()
 
 
 class SimpleGCN(tf.keras.layers.Layer):
