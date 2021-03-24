@@ -2,12 +2,12 @@
 ##	William Korcari: william.korcari@desy.de
 
 ## import of the models
-#from fcn import Network  
+from fcn import Network  
 #from airshower_xmax import Network
 #from gcn_belle import Network
 #from cnn_spinodal import Network
 #from particle_net import Network
-from eos_cnn import Network
+#from eos_cnn import Network
 #from benchmark.benchmark import Benchmark
 
 #########################################

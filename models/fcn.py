@@ -1,7 +1,7 @@
 ##################################
 ###  FCN EXAMPLE IMPELEMTATION ###
 from template import NetworkABC
-
+from matplotlib import pyplot as plt
 import tensorflow as tf
 import numpy as np
 
@@ -49,7 +49,7 @@ class Network(NetworkABC):
     compatible_datasets = [
             #               TopTagging, 
             #               Spinodal, 
-              #             EOSL,
+            #               EOSL,
                            Airshower,
                #            Belle
                           ]
@@ -108,7 +108,8 @@ class Network(NetworkABC):
 	
         dataset = kwargs.pop("dataset")
         if dataset.task == "classification":
-            super().evaluation(**kwargs)
+            kwargs["dataset"] =  dataset
+            super().evaluation( **kwargs)
         else:
             history = kwargs.pop("history")
             plot_loss(history, dataset.name, True)
@@ -120,9 +121,10 @@ class Network(NetworkABC):
 
 
 def test_predict(y_test, y_pred):
+    from sklearn.metrics import mean_squared_error as MSE
     _str = "Test MSE score for Airshower dataset is: {} \n".format(MSE(y_test, y_pred))
     print(_str)
-    with open('scores_Airshower.txt', 'a') as file:
+    with open('scores_fcn_Airshower.txt', 'a') as file:
         file.write(_str)
 
 
