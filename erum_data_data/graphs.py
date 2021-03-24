@@ -150,6 +150,25 @@ class LoadGraph:
                 return ds_train, ds_val
             else:
                 return from_tensor_slices(slice(None))
+            
+            
+    def airshower_graph(split = "train", path = "./datasets", force_download = False):
+        from erum_data_data import Airshower
+        """
+        transforms the Airshower dataset into a graph
+        """
+        
+        X,y = Airshower.load(split, path, force_download)
+        
+        X_adj = _adjacency_matrix_img_8connected(X[0])
+        
+        X_feats = np.concatenate((X[0],X[1]), axis=3).reshape(X[0].shape[0],81,81)
+        
+        X_graph = {}
+        X_graph['features'] = X_feats
+        X_graph['adj_matrix'] = X_adj
+        
+        return X_graph, y
 
 
               

@@ -125,6 +125,7 @@ class Airshower(Dataset):
     url = "https://desycloud.desy.de/index.php/s/YHa79Gx94CbPx8Q/download"
     md5 = "367dc93bec6111a1990f85cc8ff58d1f"
     task = 'regression'
+    load_graph = LoadGraph.airshower_graph
 
 class Belle(Dataset):
     """
