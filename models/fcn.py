@@ -106,9 +106,8 @@ class Network(NetworkABC):
 
     def evaluation(self, **kwargs):
 	
-        dataset = kwargs.pop("dataset")
+        dataset = kwargs.get("dataset")
         if dataset.task == "classification":
-            kwargs["dataset"] =  dataset
             super().evaluation( **kwargs)
         else:
             history = kwargs.pop("history")
@@ -118,15 +117,24 @@ class Network(NetworkABC):
             model  = kwargs.pop("model")
             y_pred = model.predict(x_test)
             test_predict(y_test, y_pred)
-
+#def resolution(y_true, y_pred):
+#    """ Metric to control for standart deviation """
+#    mean, var = tf.nn.moments((y_true - y_pred), axes=[0])
+#    return tf.sqrt(var)
+def _mean_resolution(y_true, y_pred):
+    """ Metric to control for standart deviation """
+    y_true = tf.cast(y_true, tf.float32)
+    mean, var = tf.nn.moments((y_true - y_pred), axes=[0])
+    return tf.reduce_mean(tf.sqrt(var))
 
 def test_predict(y_test, y_pred):
     from sklearn.metrics import mean_squared_error as MSE
     _str = "Test MSE score for Airshower dataset is: {} \n".format(MSE(y_test, y_pred))
+    Str = "Test resolution for Airshower ds is: {} \n".format(_mean_resolution(y_test, y_pred))
     print(_str)
     with open('scores_fcn_Airshower.txt', 'a') as file:
         file.write(_str)
-
+        file.write(Str)
 
 def plot_loss(history, ds, save=False):
     plt.plot(history.history["loss"])
