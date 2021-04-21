@@ -2,8 +2,8 @@
 ##	William Korcari: william.korcari@desy.de
 
 ## import of the models
-#from fcn import Network  
-from airshower_xmax import Network
+from fcn import Network  
+#from airshower_xmax import Network
 #from gcn_belle import Network
 #from cnn_spinodal import Network
 #from particle_net import Network
@@ -25,7 +25,12 @@ for ds in datasets:
     nn.init_preprocessing(X_train)
     x_train = nn.preprocessing(X_train)
     x_test = nn.preprocessing(X_test)
-    
+
+### hyperparameters fine-tuning
+    #nn.fit_args["batch_size"] = 50
+    #print(nn.fit_args)
+###
+
     model = nn.model(ds, shapes=nn.get_shapes(x_train))
     model.compile(**nn.compile_args(ds.task))
     print(model.summary())

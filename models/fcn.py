@@ -32,7 +32,7 @@ class Network(NetworkABC):
 
     callbacks = [
         tf.keras.callbacks.EarlyStopping(
-            monitor="val_loss", min_delta=0.0001, patience=15, restore_best_weights=True
+            monitor="val_loss", min_delta=0.001, patience=15, restore_best_weights=True
         ),
         tf.keras.callbacks.ModelCheckpoint(
             "./fcn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
@@ -43,15 +43,15 @@ class Network(NetworkABC):
         "validation_split": 0.2,
         "epochs": 100,
         "callbacks": callbacks,
-        "batch_size": 300,
+        "batch_size": 256,
     }
 
     compatible_datasets = [
-            #               TopTagging, 
-            #               Spinodal, 
-            #               EOSL,
+                           TopTagging, 
+                           Spinodal, 
+                           EOSL,
                            Airshower,
-               #            Belle
+                           Belle
                           ]
 
    
