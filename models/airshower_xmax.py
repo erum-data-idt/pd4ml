@@ -124,6 +124,8 @@ class Network(NetworkABC):
 
     def preprocessing(self, in_data):
         signal, time, _ = in_data
+        signal[signal == -1] = np.nan  # replace -1 with nan's to make nanmean work
+        time[time == -1] = np.nan
         time, _ = norm_time(time, self.std)
         signal = norm_signal(signal)
         return [signal, time]
@@ -140,6 +142,7 @@ class Network(NetworkABC):
     def std(self):
         x_train, _ = Airshower.load(split="train")
         _, time, _ = x_train
+        time[time == -1] = np.nan   # replace -1 with nan's to make nanmean work
         _, std = norm_time(time)
         return std
 
@@ -182,13 +185,14 @@ def _mean_resolution(y_true, y_pred):
     y_true = tf.cast(y_true, tf.float32)
     mean, var = tf.nn.moments((y_true - y_pred), axes=[0])
     return tf.reduce_mean(tf.sqrt(var))
+
 def test_predict(y_test, y_pred):
-    _str = "Test MSE score for Airshower dataset is: {} \n".format(MSE(y_test, y_pred))
+    mse_score = MSE(y_test, y_pred)
+    mean_res_score = _mean_resolution(y_test,y_pred)
+    _str = "Test MSE score for Airshower dataset is: {} and Resolution score is: {} \n".format(mse_score, mean_res_score)
     print(_str)
-    Str = "resolution score for Airshower dataset is: {} \n".format(_mean_resolution(y_test, y_pred))
     with open('scores_Airshower.txt', 'a') as file:
         file.write(_str)
-        file.write(Str)
     
 
 def plot_loss(history, ds, save=False):

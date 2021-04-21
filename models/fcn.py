@@ -129,12 +129,12 @@ def _mean_resolution(y_true, y_pred):
 
 def test_predict(y_test, y_pred):
     from sklearn.metrics import mean_squared_error as MSE
-    _str = "Test MSE score for Airshower dataset is: {} \n".format(MSE(y_test, y_pred))
-    Str = "Test resolution for Airshower ds is: {} \n".format(_mean_resolution(y_test, y_pred))
+    mse_score = MSE(y_test, y_pred)
+    mean_res_score = _mean_resolution(y_test,y_pred)
+    _str = "Test MSE score for Airshower dataset is: {} and Resolution score is: {} \n".format(mse_score, mean_res_score)
     print(_str)
-    with open('scores_fcn_Airshower.txt', 'a') as file:
+    with open('scores_Airshower.txt', 'a') as file:
         file.write(_str)
-        file.write(Str)
 
 def plot_loss(history, ds, save=False):
     plt.plot(history.history["loss"])
