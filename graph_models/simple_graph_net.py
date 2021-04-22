@@ -1,10 +1,13 @@
 import tensorflow as tf
 import numpy as np
+import os
+import sys
 
-from template import NetworkABC
 from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Belle, Airshower
-from utils import train_plots, roc_auc, test_accuracy, test_f1_score, test_predict_regression, plot_loss_regression
 
+sys.path.append('../models')
+from template import NetworkABC
+#from ../models/utils import train_plots, roc_auc, test_accuracy, test_f1_score #test_predict_regression, plot_loss_regression
 
 
 class Network(NetworkABC):
@@ -35,10 +38,10 @@ class Network(NetworkABC):
     #                'metrics': metrics
     #               }                      ##dictionary of the arguments to be passed to the method compile()
 
-    callbacks = [tf.keras.callbacks.ModelCheckpoint(filepath='./',
-                             monitor='val_loss',
-                             verbose=1,
-                             save_best_only=True),
+    callbacks = [#tf.keras.callbacks.ModelCheckpoint(filepath='./',
+                 #            monitor='val_loss',
+                 #            verbose=1,
+                 #            save_best_only=True),
                  #tf.keras.callbacks.LearningRateScheduler(lr_schedule),
                  tf.keras.callbacks.EarlyStopping(monitor='val_loss',
                                                   min_delta =0.0001,
@@ -48,7 +51,7 @@ class Network(NetworkABC):
                 tf.keras.callbacks.ReduceLROnPlateau(
                     monitor="val_loss",
                     factor=0.75,
-                    patience=5,
+                    patience=8,
                     verbose=1,
                     mode="auto",
                     min_delta=0,
@@ -56,14 +59,14 @@ class Network(NetworkABC):
             ),
                 ]                                              ##list of callbacks to be used in model.
     fit_args = {'batch_size': 256,
-                'epochs': 200,
+                'epochs': 300,
                 'validation_split': 0.2,
                 'shuffle': True,
                 'callbacks': callbacks
                }                      ##dictionary of the arguments to be passed to the method fit()
 
     
-    compatible_datasets = [Airshower]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+    compatible_datasets = [Spinodal, EOSL]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
 
     
     def get_shapes(self, input_dataset):
@@ -140,12 +143,50 @@ class Network(NetworkABC):
             super().evaluation(**kwargs)
         else:  # regression task
             history = kwargs.pop("history")
-            plot_loss_regression(history, dataset.name, True)
+            plot_loss(history, dataset.name, True)
             x_test = kwargs.pop("x_test")
             y_test = kwargs.pop("y_test")
             model  = kwargs.pop("model")
             y_pred = model.predict(x_test)
-            test_predict_regression(y_test, y_pred)
+            test_predict(y_test, y_pred)
+
+            
+            
+            
+            
+# evaluation methods for regression task (should probably go into utils as well)
+def _mean_resolution(y_true, y_pred):
+    """ Metric to control for standart deviation """
+    y_true = tf.cast(y_true, tf.float32)
+    mean, var = tf.nn.moments((y_true - y_pred), axes=[0])
+    return tf.reduce_mean(tf.sqrt(var))
+
+def test_predict(y_test, y_pred):
+    from sklearn.metrics import mean_squared_error as MSE
+    mse_score = MSE(y_test, y_pred)
+    mean_res_score = _mean_resolution(y_test,y_pred)
+    _str = "Test MSE score for Airshower dataset is: {} and Resolution score is: {} \n".format(mse_score, mean_res_score)
+    print(_str)
+    path = "./Scores/Airshower/"
+    if not (os.path.isdir(path)):
+        os.makedirs(path)
+    with open(path + 'scores_graph_Airshower.txt', 'a') as file:
+        file.write(_str)
+        
+def plot_loss(history, ds, save=False):
+    plt.plot(history.history["loss"])
+    plt.plot(history.history["val_loss"])
+    plt.title(ds + " model loss [training]")
+    plt.ylabel("loss")
+    plt.xlabel("epoch")
+    plt.legend(["train", "val"], loc="upper left")
+    if save:
+        path = "./Plots/Airshower/"
+        if not (os.path.isdir(path)):
+            os.makedirs(path)
+        plt.savefig(f"{path}{ds}_graph_train_loss.png", dpi=96)
+    plt.clf()
+            
 
 
 

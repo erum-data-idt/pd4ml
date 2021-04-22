@@ -37,11 +37,19 @@ class Network(NetworkABC):
         #tf.keras.callbacks.ModelCheckpoint(
         #    "./fcn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
         #),
+        tf.keras.callbacks.ReduceLROnPlateau(
+            monitor="val_loss",
+            factor=0.75,
+            patience=8,
+            verbose=1,
+            mode="auto",
+            min_delta=0,
+            min_lr=1e-5,),
     ] 
     fit_args = {
         "shuffle": True,
         "validation_split": 0.2,
-        "epochs": 100,
+        "epochs": 300,
         "callbacks": callbacks,
         "batch_size": 256,
     }

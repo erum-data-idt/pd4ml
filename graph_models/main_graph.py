@@ -3,15 +3,8 @@
 
 ## import of the models
 from simple_graph_net import Network
-##	utils.py is the file that contains all the self-built methods of this script.
-#from utils import train_plots
-#from utils import roc_auc
-#from utils import test_accuracy
-#from utils import test_f1_score
 
-#from os import chdir
 #########################################
-#####  EXAMPLE IMPLEMENTATION OF FCN  ###
 
 nn = Network()
 
@@ -26,7 +19,11 @@ for ds in datasets:
     model.compile(**nn.compile_args(ds.task))
     print(model.summary())
     history = model.fit(x=x_train, y=y_train, **nn.fit_args)
-   
+    
+    # after trining saving best model
+    filepath = './trained_models/{}/{}_checkpoint'.format(ds.name, nn.model_tag(ds.name, nn.model_name)) 
+    model.save(filepath)
+    
     # evaluation after training
     nn.evaluation(
         model=model,
@@ -34,4 +31,5 @@ for ds in datasets:
         dataset=ds,
         x_test=x_test,
         y_test=y_test,
+        model_name = nn.model_name,
     )
