@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import os
 import sys
+import matplotlib.pyplot as plt
 
 from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Belle, Airshower
 
