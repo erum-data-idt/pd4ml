@@ -78,7 +78,7 @@ def norm_signal(signal):
 
 class Network(NetworkABC):
     compatible_datasets = [Airshower]
-
+    model_name = '_resNet_'
     @property
     def callbacks(self):
         return [
@@ -191,7 +191,10 @@ def test_predict(y_test, y_pred):
     mean_res_score = _mean_resolution(y_test,y_pred)
     _str = "Test MSE score for Airshower dataset is: {} and Resolution score is: {} \n".format(mse_score, mean_res_score)
     print(_str)
-    with open('scores_Airshower.txt', 'a') as file:
+    path = "./Scores/Airshower/"
+        if not (os.path.isdir(path)):
+            os.makedirs(path)
+    with open(path + '/scores_Airshower.txt', 'a') as file:
         file.write(_str)
     
 
@@ -203,6 +206,8 @@ def plot_loss(history, ds, save=False):
     plt.xlabel("epoch")
     plt.legend(["train", "val"], loc="upper left")
     if save:
-        plt.savefig(f"{ds}_train_loss.png", dpi=96)
-    # plt.show()
+        path = "./Plots/{}/".format(ds)
+        if not (os.path.isdir(path)):
+            os.makedirs(path)
+        plt.savefig(f"{ds}_resNet_train_loss.png", dpi=96)
     plt.clf()

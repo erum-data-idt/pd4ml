@@ -3,7 +3,7 @@
 from abc import ABCMeta, abstractmethod
 from typing import List, Dict
 from utils import train_plots, roc_auc, test_accuracy, test_f1_score
-
+import time
 
 class NetworkABC(metaclass=ABCMeta):
     def __init__(self):
@@ -63,6 +63,13 @@ class NetworkABC(metaclass=ABCMeta):
     
     def init_preprocessing(self, x_train):
         pass
+
+    def model_tag(self, ds_name, model_name):
+        ts = time.localtime()
+        ts = time.strftime("%Y%m%d_%H%M%S", ts)
+        tag = ds_name + model_name + ts
+        return tag
+ 
     @property
     def task(self): 
         return self._task
@@ -76,10 +83,11 @@ class NetworkABC(metaclass=ABCMeta):
         dataset = kwargs.pop("dataset")
         x_test = kwargs.pop("x_test")
         y_test = kwargs.pop("y_test")
-        train_plots(history, dataset.name, True)
+        model_name = kwargs.pop("model_name")
+        train_plots(history, dataset.name, model_name, True)
 
         # evaluation plots and scores
         y_pred = model.predict(x_test).ravel()
-        roc_auc(y_pred, y_test, dataset.name, True)
-        test_accuracy(y_pred, y_test, dataset.name, self.model_name)
-        test_f1_score(y_pred, y_test, dataset.name, self.model_name)
+        roc_auc(y_pred, y_test, dataset.name, model_name, True)
+        test_accuracy(y_pred, y_test, dataset.name, model_name)
+        test_f1_score(y_pred, y_test, dataset.name, model_name)

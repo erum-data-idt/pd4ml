@@ -49,9 +49,9 @@ class Network(NetworkABC):
     compatible_datasets = [
         #                   TopTagging, 
                            Spinodal, 
-        #                   EOSL,
-         #                  Airshower,
-          #                 Belle
+                           EOSL,
+                           Airshower,
+                           Belle
                           ]
 
    
@@ -117,10 +117,9 @@ class Network(NetworkABC):
             model  = kwargs.pop("model")
             y_pred = model.predict(x_test)
             test_predict(y_test, y_pred)
-#def resolution(y_true, y_pred):
-#    """ Metric to control for standart deviation """
-#    mean, var = tf.nn.moments((y_true - y_pred), axes=[0])
-#    return tf.sqrt(var)
+
+
+
 def _mean_resolution(y_true, y_pred):
     """ Metric to control for standart deviation """
     y_true = tf.cast(y_true, tf.float32)
@@ -133,7 +132,10 @@ def test_predict(y_test, y_pred):
     mean_res_score = _mean_resolution(y_test,y_pred)
     _str = "Test MSE score for Airshower dataset is: {} and Resolution score is: {} \n".format(mse_score, mean_res_score)
     print(_str)
-    with open('scores_fcn_Airshower.txt', 'a') as file:
+    path = "./Scores/Airshower/"
+    if not (os.path.isdir(path)):
+        os.makedirs(path)
+    with open(path + 'scores_fcn_Airshower.txt', 'a') as file:
         file.write(_str)
 
 def plot_loss(history, ds, save=False):
@@ -144,6 +146,8 @@ def plot_loss(history, ds, save=False):
     plt.xlabel("epoch")
     plt.legend(["train", "val"], loc="upper left")
     if save:
-        plt.savefig(f"{ds}_train_loss.png", dpi=96)
-    # plt.show()
+        path = "./Plots/Airshower/"
+        if not (os.path.isdir(path)):
+            os.makedirs(path)
+        plt.savefig(f"{path}{ds}_fcn_train_loss.png", dpi=96)
     plt.clf()

@@ -1,7 +1,7 @@
 ### This is a template file meant to be a guideline to smooth out the implementation of our models in the same framework. 
 ##  William.
 
-
+import os
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
@@ -10,12 +10,12 @@ from sklearn.metrics import roc_curve
 from sklearn.metrics import auc
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
-    
+ 
 
 
 
     
-def train_plots(history, ds, save = False):
+def train_plots(history, ds, model_name, save = False):
     
     """
     Produces plots (loss and accuracy) of training history for training and validation data.
@@ -31,8 +31,10 @@ def train_plots(history, ds, save = False):
     plt.xlabel('epoch')
     plt.legend(['train', 'val'], loc='upper left')
     if save:
-        plt.savefig('{}_train_loss.png'.format(ds), dpi=96)
-    #plt.show()
+        path = "./Plots/{}/".format(ds)
+        if not (os.path.isdir(path)):
+            os.makedirs(path)
+        plt.savefig(path + '{}{}train_loss.png'.format(ds, model_name), dpi=96)
     plt.clf()
 
     plt.plot(history.history['acc'])
@@ -42,11 +44,13 @@ def train_plots(history, ds, save = False):
     plt.xlabel('epoch')
     plt.legend(['train', 'val'], loc='upper left')
     if save:
-        plt.savefig('{}_train_accuracy.png'.format(ds), dpi=96)
-#    plt.show()
+        path = "./Plots/{}/".format(ds)
+        if not (os.path.isdir(path)):
+            os.makedirs(path)
+        plt.savefig(path + '{}{}train_accuracy.png'.format(ds, model_name), dpi=96)
     plt.clf()
 
-def roc_auc(y_pred, y_test, ds, save = False):
+def roc_auc(y_pred, y_test, ds, model_name, save = False):
     
     """
     Plots ROC and reports AUC score.
@@ -66,8 +70,11 @@ def roc_auc(y_pred, y_test, ds, save = False):
     plt.title('ROC curve')
     plt.legend(loc='best')
     if save:
-        plt.savefig('{}_roc_auc.png'.format(ds), dpi=96)
-    #plt.show()
+        path = "./Plots/{}/".format(ds)
+        if not (os.path.isdir(path)):
+            os.makedirs(path)
+      
+        plt.savefig(path+'{}{}roc_auc.png'.format(ds, model_name), dpi=96)
     plt.clf()
 
 def test_accuracy(y_pred, y_test, ds, model_name):
@@ -88,8 +95,10 @@ def test_accuracy(y_pred, y_test, ds, model_name):
     auc_keras = auc(fpr_keras, tpr_keras)
     _r = "AUC: {:.4f} \n".format(auc_keras)
     print(_r)
-
-    with open('scores{}{}.txt'.format(model_name, ds), 'a') as file:
+    path = "./Scores/{}/".format(ds)
+    if not (os.path.isdir(path)):
+        os.makedirs(path)
+    with open(path +'scores{}{}.txt'.format(model_name, ds), 'a') as file:
         file.write(_str)
         file.write(_r)
 
@@ -107,5 +116,8 @@ def test_f1_score(y_pred, y_test, ds, model_name):
     rounded_pred = np.around(y_pred)
     _str = "Test F1 score for {} dataset is: {} \n".format(ds, f1_score(y_test, rounded_pred ))
     print(_str)
-    with open('scores{}{}.txt'.format(model_name, ds), 'a') as file:
+    path = "./Scores/{}/".format(ds)
+    if not (os.path.isdir(path)):
+        os.makedirs(path)
+    with open(path + 'scores{}{}.txt'.format(model_name, ds), 'a') as file:
         file.write(_str)
