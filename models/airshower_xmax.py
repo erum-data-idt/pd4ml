@@ -173,12 +173,13 @@ class Network(NetworkABC):
     def evaluation(self, **kwargs):
         history = kwargs.pop("history")
         dataset = kwargs.pop("dataset")
-        plot_loss(history, dataset.name, True)
+        path    = kwargs.pop("path")
+        plot_loss(history, path, dataset.name, True)
         x_test = kwargs.pop("x_test")
         y_test = kwargs.pop("y_test")
         model  = kwargs.pop("model")
         y_pred = model.predict(x_test)
-        test_predict(y_test, y_pred)
+        test_predict(y_test, y_pred, path)
 
 def _mean_resolution(y_true, y_pred):
     """ Metric to control for standart deviation """
@@ -186,19 +187,19 @@ def _mean_resolution(y_true, y_pred):
     mean, var = tf.nn.moments((y_true - y_pred), axes=[0])
     return tf.reduce_mean(tf.sqrt(var))
 
-def test_predict(y_test, y_pred):
+def test_predict(y_test, y_pred, path):
     mse_score = MSE(y_test, y_pred)
     mean_res_score = _mean_resolution(y_test,y_pred)
     _str = "Test MSE score for Airshower dataset is: {} and Resolution score is: {} \n".format(mse_score, mean_res_score)
     print(_str)
-    path = "./Scores/Airshower/"
+    path = os.path.join(path, "Scores/")
         if not (os.path.isdir(path)):
             os.makedirs(path)
-    with open(path + '/scores_Airshower.txt', 'a') as file:
+    with open(path + 'scores_Airshower.txt', 'a') as file:
         file.write(_str)
     
 
-def plot_loss(history, ds, save=False):
+def plot_loss(history, path, ds, save=False):
     plt.plot(history.history["loss"])
     plt.plot(history.history["val_loss"])
     plt.title(ds + " model loss [training]")
@@ -206,8 +207,8 @@ def plot_loss(history, ds, save=False):
     plt.xlabel("epoch")
     plt.legend(["train", "val"], loc="upper left")
     if save:
-        path = "./Plots/{}/".format(ds)
+        path = os.path.join(path, "Plots/")
         if not (os.path.isdir(path)):
             os.makedirs(path)
-        plt.savefig(f"{ds}_resNet_train_loss.png", dpi=96)
+        plt.savefig(f"{path}{ds}_resNet_train_loss.png", dpi=96)
     plt.clf()

@@ -15,7 +15,7 @@ from sklearn.metrics import f1_score
 
 
     
-def train_plots(history, ds, model_name, save = False):
+def train_plots(history, path, ds, model_name, save = False):
     
     """
     Produces plots (loss and accuracy) of training history for training and validation data.
@@ -31,7 +31,7 @@ def train_plots(history, ds, model_name, save = False):
     plt.xlabel('epoch')
     plt.legend(['train', 'val'], loc='upper left')
     if save:
-        path = "./Plots/{}/".format(ds)
+        path = os.path.join(path, "Plots/")
         if not (os.path.isdir(path)):
             os.makedirs(path)
         plt.savefig(path + '{}{}train_loss.png'.format(ds, model_name), dpi=96)
@@ -44,13 +44,10 @@ def train_plots(history, ds, model_name, save = False):
     plt.xlabel('epoch')
     plt.legend(['train', 'val'], loc='upper left')
     if save:
-        path = "./Plots/{}/".format(ds)
-        if not (os.path.isdir(path)):
-            os.makedirs(path)
         plt.savefig(path + '{}{}train_accuracy.png'.format(ds, model_name), dpi=96)
     plt.clf()
 
-def roc_auc(y_pred, y_test, ds, model_name, save = False):
+def roc_auc(y_pred, y_test, path, ds, model_name, save = False):
     
     """
     Plots ROC and reports AUC score.
@@ -70,14 +67,14 @@ def roc_auc(y_pred, y_test, ds, model_name, save = False):
     plt.title('ROC curve')
     plt.legend(loc='best')
     if save:
-        path = "./Plots/{}/".format(ds)
+        path = os.path.join(path, "Plots/")
         if not (os.path.isdir(path)):
             os.makedirs(path)
       
         plt.savefig(path+'{}{}roc_auc.png'.format(ds, model_name), dpi=96)
     plt.clf()
 
-def test_accuracy(y_pred, y_test, ds, model_name):
+def test_accuracy(y_pred, y_test, path, ds, model_name):
     
     """
     Returns accuracy score.
@@ -95,7 +92,7 @@ def test_accuracy(y_pred, y_test, ds, model_name):
     auc_keras = auc(fpr_keras, tpr_keras)
     _r = "AUC: {:.4f} \n".format(auc_keras)
     print(_r)
-    path = "./Scores/{}/".format(ds)
+    path = os.path.join(path, "Scores/")
     if not (os.path.isdir(path)):
         os.makedirs(path)
     with open(path +'scores{}{}.txt'.format(model_name, ds), 'a') as file:
@@ -103,7 +100,7 @@ def test_accuracy(y_pred, y_test, ds, model_name):
         file.write(_r)
 
 
-def test_f1_score(y_pred, y_test, ds, model_name):
+def test_f1_score(y_pred, y_test, path, ds, model_name):
     
     """
     Returns f1 score.
@@ -116,7 +113,7 @@ def test_f1_score(y_pred, y_test, ds, model_name):
     rounded_pred = np.around(y_pred)
     _str = "Test F1 score for {} dataset is: {} \n".format(ds, f1_score(y_test, rounded_pred ))
     print(_str)
-    path = "./Scores/{}/".format(ds)
+    path = os.path.join(path, "Scores/")
     if not (os.path.isdir(path)):
         os.makedirs(path)
     with open(path + 'scores{}{}.txt'.format(model_name, ds), 'a') as file:
