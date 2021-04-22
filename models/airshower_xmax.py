@@ -193,8 +193,8 @@ def test_predict(y_test, y_pred, path):
     _str = "Test MSE score for Airshower dataset is: {} and Resolution score is: {} \n".format(mse_score, mean_res_score)
     print(_str)
     path = os.path.join(path, "Scores/")
-        if not (os.path.isdir(path)):
-            os.makedirs(path)
+    if not (os.path.isdir(path)):
+        os.makedirs(path)
     with open(path + 'scores_Airshower.txt', 'a') as file:
         file.write(_str)
     
