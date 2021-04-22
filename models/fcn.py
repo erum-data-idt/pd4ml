@@ -4,7 +4,7 @@ from template import NetworkABC
 from matplotlib import pyplot as plt
 import tensorflow as tf
 import numpy as np
-
+import os
 from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Airshower, Belle
 
 

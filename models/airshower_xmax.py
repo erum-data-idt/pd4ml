@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error as MSE
 from erum_data_data.erum_data_data import Airshower
-
+import os
 
 def resolution(y_true, y_pred):
     """ Metric to control for standart deviation """
