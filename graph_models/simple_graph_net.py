@@ -66,7 +66,7 @@ class Network(NetworkABC):
                }                      ##dictionary of the arguments to be passed to the method fit()
 
     
-    compatible_datasets = [Spinodal, EOSL]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+    compatible_datasets = [TopTagging, Spinodal, EOSL, Belle, Airshower]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
 
     
     def get_shapes(self, input_dataset):
@@ -137,19 +137,20 @@ class Network(NetworkABC):
         return tf.keras.Model(inputs=[feature_input,adjacency_input], outputs=outputs, name=ds.name)
     
     
+    
     def evaluation(self, **kwargs):
         dataset = kwargs.get("dataset")
         if dataset.task == "classification":
-            super().evaluation(**kwargs)
-        else:  # regression task
+            super().evaluation( **kwargs)
+        else:
             history = kwargs.pop("history")
-            plot_loss(history, dataset.name, True)
+            path = kwargs.pop("path")
+            plot_loss(history, path, dataset.name, True)
             x_test = kwargs.pop("x_test")
             y_test = kwargs.pop("y_test")
             model  = kwargs.pop("model")
             y_pred = model.predict(x_test)
-            test_predict(y_test, y_pred)
-
+            test_predict(y_test, y_pred, path)
             
             
             
@@ -161,19 +162,19 @@ def _mean_resolution(y_true, y_pred):
     mean, var = tf.nn.moments((y_true - y_pred), axes=[0])
     return tf.reduce_mean(tf.sqrt(var))
 
-def test_predict(y_test, y_pred):
+def test_predict(y_test, y_pred, path):
     from sklearn.metrics import mean_squared_error as MSE
     mse_score = MSE(y_test, y_pred)
     mean_res_score = _mean_resolution(y_test,y_pred)
     _str = "Test MSE score for Airshower dataset is: {} and Resolution score is: {} \n".format(mse_score, mean_res_score)
     print(_str)
-    path = "./Scores/Airshower/"
+    path = os.path.join(path, "Scores/")
     if not (os.path.isdir(path)):
         os.makedirs(path)
-    with open(path + 'scores_graph_Airshower.txt', 'a') as file:
+    with open(path + 'scores_fcn_Airshower.txt', 'a') as file:
         file.write(_str)
-        
-def plot_loss(history, ds, save=False):
+
+def plot_loss(history, path, ds, save=False):
     plt.plot(history.history["loss"])
     plt.plot(history.history["val_loss"])
     plt.title(ds + " model loss [training]")
@@ -181,12 +182,11 @@ def plot_loss(history, ds, save=False):
     plt.xlabel("epoch")
     plt.legend(["train", "val"], loc="upper left")
     if save:
-        path = "./Plots/Airshower/"
+        path = os.path.join(path, "Plots/")
         if not (os.path.isdir(path)):
             os.makedirs(path)
-        plt.savefig(f"{path}{ds}_graph_train_loss.png", dpi=96)
+        plt.savefig(f"{path}{ds}_fcn_train_loss.png", dpi=96)
     plt.clf()
-            
 
 
 

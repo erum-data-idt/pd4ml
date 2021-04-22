@@ -20,8 +20,8 @@ for ds in datasets:
     print(model.summary())
     history = model.fit(x=x_train, y=y_train, **nn.fit_args)
     
-    # after trining saving best model
-    filepath = './trained_models/{}/{}_checkpoint'.format(ds.name, nn.model_tag(ds.name, nn.model_name)) 
+    # after training saving best model
+    filepath = './trained_models/{}/{}_model'.format(ds.name, nn.model_tag(ds.name, nn.model_name)) 
     model.save(filepath)
     
     # evaluation after training
@@ -32,4 +32,5 @@ for ds in datasets:
         x_test=x_test,
         y_test=y_test,
         model_name = nn.model_name,
+        path = filepath,
     )
