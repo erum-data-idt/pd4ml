@@ -35,6 +35,9 @@ for ds in datasets:
     model.compile(**nn.compile_args(ds.task))
     print(model.summary())
     history = model.fit(x=x_train, y=y_train, **nn.fit_args)
+    filepath = './trained_models/{}/{}_checkpoint'.format(ds.name, nn.model_tag(ds.name, model.name)) 
+    model.save(filepath)
+    
 
     #benchmark = Benchmark(dataset=ds.name, network=model.name)
     #benchmark.snapshot(history=history.history)

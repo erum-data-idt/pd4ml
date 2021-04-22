@@ -10,9 +10,9 @@ class Network(NetworkABC):
         tf.keras.callbacks.EarlyStopping(
             monitor="val_loss", min_delta=0.0001, patience=15, restore_best_weights=True
         ),
-        tf.keras.callbacks.ModelCheckpoint(
-            "./gcn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
-        ),
+#        tf.keras.callbacks.ModelCheckpoint(
+#            "./gcn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
+ #       ),
     ]
     def metrics(self, task): return [
         tf.keras.metrics.BinaryAccuracy(name="acc"),

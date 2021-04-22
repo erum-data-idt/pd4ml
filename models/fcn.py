@@ -34,9 +34,9 @@ class Network(NetworkABC):
         tf.keras.callbacks.EarlyStopping(
             monitor="val_loss", min_delta=0.001, patience=15, restore_best_weights=True
         ),
-        tf.keras.callbacks.ModelCheckpoint(
-            "./fcn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
-        ),
+        #tf.keras.callbacks.ModelCheckpoint(
+        #    "./fcn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
+        #),
     ] 
     fit_args = {
         "shuffle": True,
@@ -47,11 +47,11 @@ class Network(NetworkABC):
     }
 
     compatible_datasets = [
-                           TopTagging, 
+        #                   TopTagging, 
                            Spinodal, 
-                           EOSL,
-                           Airshower,
-                           Belle
+        #                   EOSL,
+         #                  Airshower,
+          #                 Belle
                           ]
 
    
@@ -133,7 +133,7 @@ def test_predict(y_test, y_pred):
     mean_res_score = _mean_resolution(y_test,y_pred)
     _str = "Test MSE score for Airshower dataset is: {} and Resolution score is: {} \n".format(mse_score, mean_res_score)
     print(_str)
-    with open('scores_Airshower.txt', 'a') as file:
+    with open('scores_fcn_Airshower.txt', 'a') as file:
         file.write(_str)
 
 def plot_loss(history, ds, save=False):
