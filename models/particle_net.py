@@ -270,9 +270,8 @@ class _DotDict:
 
 class Network(NetworkABC):
 
-    def __init__(self):
-        pass
 
+    model_name = "_partNet_"
 
     def metrics(self, task): return [tf.keras.metrics.BinaryAccuracy(name = "acc")]  ##list of metrics to be used
     def compile_args(self, task): return {'loss':'binary_crossentropy',#'categorical_crossentropy'
@@ -330,7 +329,7 @@ class Network(NetworkABC):
         input_shapes : dict
             The shapes of each input (`points`, `features`, `mask`).
         """
-
+        
         setting = _DotDict()
         setting.num_class = 2 #num_classes
         # conv_params: list of tuple in the format (K, (C1, C2, C3))

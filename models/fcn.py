@@ -55,11 +55,11 @@ class Network(NetworkABC):
     }
 
     compatible_datasets = [
-        #                   TopTagging, 
-        #                   Spinodal, 
-        #                   EOSL,
+                           TopTagging, 
+                           Spinodal, 
+                           EOSL,
                            Airshower,
-        #                   Belle
+                           Belle
                           ]
 
    
