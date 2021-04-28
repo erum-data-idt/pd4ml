@@ -88,7 +88,8 @@ class NetworkABC(metaclass=ABCMeta):
 
         # evaluation plots and scores
         y_pred = model.predict(x_test).ravel()
-        train_plots(history, path, dataset.name, model_name, True)
+        if history != None:
+            train_plots(history, path, dataset.name, model_name, True)
         roc_auc(y_pred, y_test, path, dataset.name, model_name, True)
         test_accuracy(y_pred, y_test, path, dataset.name, model_name)
         test_f1_score(y_pred, y_test, path, dataset.name, model_name)

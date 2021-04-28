@@ -120,11 +120,13 @@ class Network(NetworkABC):
         else:
             history = kwargs.pop("history")
             path = kwargs.pop("path")
-            plot_loss(history, path, dataset.name, True)
+            if history != None:
+                plot_loss(history, path, dataset.name, True)
             x_test = kwargs.pop("x_test")
             y_test = kwargs.pop("y_test")
             model  = kwargs.pop("model")
             y_pred = model.predict(x_test)
+            y_pred = y_pred.squeeze()
             test_predict(y_test, y_pred, path)
 
 

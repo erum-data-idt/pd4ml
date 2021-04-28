@@ -68,6 +68,7 @@ class Network(NetworkABC):
 
     
     compatible_datasets = [TopTagging, Spinodal, EOSL, Belle, Airshower]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+    #compatible_datasets = [Airshower]
 
     
     def get_shapes(self, input_dataset):
@@ -143,14 +144,16 @@ class Network(NetworkABC):
         dataset = kwargs.get("dataset")
         if dataset.task == "classification":
             super().evaluation( **kwargs)
-        else:
+        else: # regression task
             history = kwargs.pop("history")
             path = kwargs.pop("path")
-            plot_loss(history, path, dataset.name, True)
+            if history != None:
+                plot_loss(history, path, dataset.name, True)
             x_test = kwargs.pop("x_test")
             y_test = kwargs.pop("y_test")
             model  = kwargs.pop("model")
             y_pred = model.predict(x_test)
+            y_pred = y_pred.squeeze()
             test_predict(y_test, y_pred, path)
             
             
@@ -172,7 +175,7 @@ def test_predict(y_test, y_pred, path):
     path = os.path.join(path, "Scores/")
     if not (os.path.isdir(path)):
         os.makedirs(path)
-    with open(path + 'scores_fcn_Airshower.txt', 'a') as file:
+    with open(path + 'scores_simple_graph_Airshower.txt', 'a') as file:
         file.write(_str)
 
 def plot_loss(history, path, ds, save=False):
@@ -186,7 +189,7 @@ def plot_loss(history, path, ds, save=False):
         path = os.path.join(path, "Plots/")
         if not (os.path.isdir(path)):
             os.makedirs(path)
-        plt.savefig(f"{path}{ds}_fcn_train_loss.png", dpi=96)
+        plt.savefig(f"{path}{ds}_simple_graph_train_loss.png", dpi=96)
     plt.clf()
 
 
