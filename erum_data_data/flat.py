@@ -27,7 +27,7 @@ class LoadFlat:
         from erum_data_data import TopTagging
         
         X,y = TopTagging.load(split, path, force_download)
-        
+        X = np.reshape(X[0], (len(X[0]), (X[0].shape[1]*X[0].shape[2])))
         return convert(X), y
         
 
