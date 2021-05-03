@@ -84,7 +84,7 @@ class LoadFlat:
         signal, time, _ = X
         signal[signal == -1] = np.nan  # replace -1 with nan's to make nanmean work
         time[time == -1] = np.nan
-        time, _ = norm_time(time, self.std)
+        time, _ = norm_time(time)
         signal = norm_signal(signal)
         return [signal, time], y
         

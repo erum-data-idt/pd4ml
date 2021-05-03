@@ -19,8 +19,8 @@ datasets = nn.compatible_datasets
 
 for ds in datasets:
 
-    X_train, y_train = ds.load(split="train")
-    X_test, y_test = ds.load(split="test")
+    X_train, y_train = ds.load_flat(split="train")
+    X_test, y_test = ds.load_flat(split="test")
     
     nn.init_preprocessing(X_train)
     x_train = nn.preprocessing(X_train)
