@@ -179,11 +179,11 @@ class LoadData:
             return time, std
 
 
-       def norm_signal(signal):
-           signal[np.less(signal, 0)] = 0
-           signal = np.log10(signal + 1)
-           signal[np.isnan(signal)] = 0
-           return signal
+        def norm_signal(signal):
+            signal[np.less(signal, 0)] = 0
+            signal = np.log10(signal + 1)
+            signal[np.isnan(signal)] = 0
+            return signal
 
         X,y = Airshower.load(split, path, force_download)
         signal, time, _ = X
