@@ -51,7 +51,7 @@ class LoadData:
             return X, y #add preprocessing later
         
         
-    def TopTagging_graph(split = "train", path = "./datasets", graph = False, force_download = False):
+    def TopTagging_data(split = "train", path = "./datasets", graph = False, force_download = False):
         from erum_data_data import TopTagging
         """
         transforms the TopTagging dataset into a graph
@@ -87,7 +87,7 @@ class LoadData:
         else:
             return [X_graph['features']], y
         
-    def belle_graph(
+    def belle_data(
         split="train",
         path="./datasets",
         force_download=False,
