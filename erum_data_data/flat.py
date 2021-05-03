@@ -5,25 +5,18 @@ from . import belle_graph_utils as _belle
 
 class LoadFlat:
     """
-    Transformation from the dataset to a graph 
+    Performing the preprocessing routines for each dataset
     
-    returns graph features, the adjacency matrix and a mask (per default all True)
     """
     
     def spinodal_flat(split = "train", path = "./datasets", force_download = False):
         from erum_data_data import Spinodal
-        """
-        transforms Spinodal dataset into flat
-        """
         X,y = Spinodal.load(split, path, force_download)
         return X, y
     
     
     def eosl_flat(split = "train", path = "./datasets", force_download = False):
         from erum_data_data import EOSL
-        """
-        transforms the EOSL dataset into flat
-        """
         
         X,y = EOSL.load(split, path, force_download)
         
@@ -32,13 +25,14 @@ class LoadFlat:
         
     def TopTagging_flat(split = "train", path = "./datasets", force_download = False):
         from erum_data_data import TopTagging
-        """
-        transforms the TopTagging dataset into a graph
-        """
         
         X,y = TopTagging.load(split, path, force_download)
-        return X, y
         
+        return conver(X), y
+        
+
+
+
     def belle_flat(
         split="train",
         path="./datasets",
@@ -86,6 +80,7 @@ class LoadFlat:
         time[time == -1] = np.nan
         time, _ = norm_time(time)
         signal = norm_signal(signal)
+        #add proper reshaping here
         return [signal, time], y
         
         

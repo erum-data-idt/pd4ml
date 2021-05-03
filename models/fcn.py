@@ -65,22 +65,22 @@ class Network(NetworkABC):
    
 
 
-#    def preprocessing(self, in_data):
-#        """in_data: list of arrays. Input to be preprocessed
-#        returns list of flattened array.
-#        """
-#        out_data = []
-#        for data in in_data:
-#            if len(data.shape[1:]) > 1:
-#                size = 1
-#                for i in range(1, len(data.shape)):
-#                    size *= data.shape[i]  
-#                out_data.append(np.reshape(data, (len(data), size)))#data.shape[1] * data.shape[2])))
-#            else:
-#                out_data.append(data)    
-#        if len(out_data) > 2:
-#            return out_data[:2]
-#        return out_data
+    def preprocessing(self, in_data):
+        """in_data: list of arrays. Input to be preprocessed
+        returns list of flattened array.
+        """
+        out_data = []
+        for data in in_data:
+            if len(data.shape[1:]) > 1:
+                size = 1
+                for i in range(1, len(data.shape)):
+                    size *= data.shape[i]  
+                out_data.append(np.reshape(data, (len(data), size)))#data.shape[1] * data.shape[2])))
+            else:
+                out_data.append(data)    
+        if len(out_data) > 2:
+            return out_data[:2]
+        return out_data
 
     def get_shapes(self, in_data):
         return [x.shape[1:] for x in in_data]

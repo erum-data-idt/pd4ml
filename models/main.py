@@ -21,7 +21,6 @@ for ds in datasets:
 
     X_train, y_train = ds.load_flat(split="train")
     X_test, y_test = ds.load_flat(split="test")
-    
     nn.init_preprocessing(X_train)
     x_train = nn.preprocessing(X_train)
     x_test = nn.preprocessing(X_test)
@@ -30,7 +29,7 @@ for ds in datasets:
     #nn.fit_args["batch_size"] = 50
     #print(nn.fit_args)
 ###
-
+    print("SHAPES", y_train.shape)
     model = nn.model(ds, shapes=nn.get_shapes(x_train))
     model.compile(**nn.compile_args(ds.task))
     print(model.summary())
