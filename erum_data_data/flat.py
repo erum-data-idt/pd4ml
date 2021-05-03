@@ -28,7 +28,7 @@ class LoadFlat:
         
         X,y = TopTagging.load(split, path, force_download)
         
-        return conver(X), y
+        return convert(X), y
         
 
 
