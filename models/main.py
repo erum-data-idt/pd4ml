@@ -19,8 +19,8 @@ datasets = nn.compatible_datasets
 
 for ds in datasets:
 
-    X_train, y_train = ds.load(split="train")
-    X_test, y_test = ds.load(split="test")
+    X_train, y_train = ds.load_data(split="train")
+    X_test, y_test = ds.load_data(split="test")
     
     nn.init_preprocessing(X_train)
     x_train = nn.preprocessing(X_train)
@@ -42,8 +42,7 @@ for ds in datasets:
     #benchmark = Benchmark(dataset=ds.name, network=model.name)
     #benchmark.snapshot(history=history.history)
     # print summary table or all recorded trainings
-    #benchmark.summary_report()
-    # From here on, one should be able to use already
+
     # defined methods as shown in the following lines.
     # Let us know if you face any issues with that.
 
