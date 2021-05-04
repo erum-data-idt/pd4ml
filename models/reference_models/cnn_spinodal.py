@@ -1,9 +1,10 @@
-from template import NetworkABC
 import tensorflow as tf
 import numpy as np
 
 from erum_data_data.erum_data_data import Spinodal
-
+import sys
+sys.path.append("..")
+from template_model.template import NetworkABC
 
 class Network(NetworkABC):
     def __init__(self):

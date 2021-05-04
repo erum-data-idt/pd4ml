@@ -1,12 +1,13 @@
 from functools import cached_property
-from ..model_template.template import NetworkABC
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error as MSE
 from erum_data_data.erum_data_data import Airshower
 import os
-
+import sys
+sys.path.append("..")
+from model_template.template import NetworkABC
 def resolution(y_true, y_pred):
     """ Metric to control for standart deviation """
     mean, var = tf.nn.moments((y_true - y_pred), axes=[0])

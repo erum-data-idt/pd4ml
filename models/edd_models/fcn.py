@@ -1,17 +1,19 @@
 ##################################
 ###  FCN EXAMPLE IMPELEMTATION ###
-from ..template_model.template import NetworkABC
-from matplotlib import pyplot as plt
-import tensorflow as tf
-import numpy as np
 import os
+import sys
+import numpy as np
+import tensorflow as tf
+from matplotlib import pyplot as plt
 from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Airshower, Belle
 
+sys.path.append('..')
+from template_model.template import NetworkABC
 
 class Network(NetworkABC):
     
     model_name = '_fcn_'
-    
+    build_graph = False 
     def metrics(self, task):
         if task == 'regression':
             return [tf.keras.metrics.MeanSquaredError()]
@@ -55,11 +57,11 @@ class Network(NetworkABC):
     }
 
     compatible_datasets = [
-                           TopTagging, 
-#                           Spinodal, 
+                          # TopTagging, 
+                          # Spinodal, 
 #                           EOSL,
-#                           Airshower,
-#                           Belle
+                           #Airshower,
+                           Belle
                           ]
 
    
@@ -70,7 +72,7 @@ class Network(NetworkABC):
         returns list of flattened array.
         """
         out_data = []
-        for data in in_data:
+        for data in in_data['features']:
             if len(data.shape[1:]) > 1:
                 size = 1
                 for i in range(1, len(data.shape)):

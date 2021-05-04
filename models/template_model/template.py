@@ -1,9 +1,11 @@
 # This is a template file meant to be a guideline to smooth
 # out the implementation of our models in the same framework.
+import sys
+import time
 from abc import ABCMeta, abstractmethod
 from typing import List, Dict
-from ..utils.utils import train_plots, roc_auc, test_accuracy, test_f1_score
-import time
+sys.path.append("..")
+from utils.utils import train_plots, roc_auc, test_accuracy, test_f1_score
 
 class NetworkABC(metaclass=ABCMeta):
     def __init__(self):

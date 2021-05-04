@@ -1,6 +1,5 @@
 from .dataset import Dataset
-from .graphs import LoadGraph
-from .flat   import LoadFlat
+from .load_data import LoadPreprocessedData as lpd
 
 class TopTagging(Dataset):
     """
@@ -34,9 +33,7 @@ class TopTagging(Dataset):
     url = "https://desycloud.desy.de/index.php/s/aZqyNSg4B7nn8qQ/download"
     md5 = "708a8369d75ceff2229bd8c46b47afea"
     task = 'classification'
-    load_flat = LoadFlat.TopTagging_flat
-    load_graph = LoadGraph.TopTagging_graph
-
+    load_data = lpd.top_tagging_data
 
 class Spinodal(Dataset):
     """
@@ -59,9 +56,7 @@ class Spinodal(Dataset):
     url = "https://desycloud.desy.de/index.php/s/zZCCSfwwEkT5Pgk/download"
     md5 = "c22326822d9bac7c074467ccccc6fe4f"
     task = 'classification'
-    load_flat = LoadFlat.spinodal_flat
-    load_graph = LoadGraph.spinodal_graph
-
+    load_data = lpd.spinodal_data
 
 class EOSL(Dataset):
     """
@@ -84,9 +79,7 @@ class EOSL(Dataset):
     url = "https://desycloud.desy.de/index.php/s/DT7sWm6rNR5zss9/download"
     md5 = "c070a9743163c3f467ceb87ac4e19fd1"
     task = 'classification'
-    load_flat = LoadFlat.eosl_flat
-    load_graph = LoadGraph.eosl_graph
-
+    load_data = lpd.eosl_data
 
 class Airshower(Dataset):
     """
@@ -128,8 +121,7 @@ class Airshower(Dataset):
     url = "https://desycloud.desy.de/index.php/s/YHa79Gx94CbPx8Q/download"
     md5 = "367dc93bec6111a1990f85cc8ff58d1f"
     task = 'regression'
-    load_flat = LoadFlat.airshower_flat
-    load_graph = LoadGraph.airshower_graph
+    load_data = lpd.airshower_data
 
 class Belle(Dataset):
     """
@@ -163,6 +155,5 @@ class Belle(Dataset):
     url = "https://desycloud.desy.de/index.php/s/RKB4z3mMcPPY982/download"
     md5 = "85b10c9df3903455ab247a0ab4b51e5f"
     task = 'classification'
-    load_flat = LoadFlat.belle_flat
-    load_graph = LoadGraph.belle_graph
-    load_graph_tf_data = lambda *args, **kwargs: LoadGraph.belle_graph(*args, **kwargs, as_tf_data=True)
+    load_data = lpd.belle_data
+    load_graph_tf_data = lambda *args, **kwargs: lpd.belle_data(*args, **kwargs, as_tf_data=True)

@@ -1,9 +1,9 @@
 import tensorflow as tf
 from tensorflow.keras import layers
-from template import NetworkABC
 from erum_data_data.erum_data_data import Belle
-
-
+import sys
+sys.path.append("..")
+from template_model.template import NetworkABC
 class Network(NetworkABC):
     model_name = '_gcn_belle_'
     callbacks = [

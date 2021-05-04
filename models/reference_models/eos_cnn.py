@@ -1,10 +1,10 @@
-from template import NetworkABC
-
 import tensorflow as tf
 import numpy as np
 from sklearn.preprocessing import StandardScaler
-
 from erum_data_data.erum_data_data import EOSL
+import sys
+sys.path.append("..")
+from template_model.template import NetworkABC
 
 class Network(NetworkABC):
 	model_name = '_cnnEOS_'

@@ -1,21 +1,21 @@
-import tensorflow as tf
-import numpy as np
 import os
 import sys
+import numpy as np
+import tensorflow as tf
 import matplotlib.pyplot as plt
 
+sys.path.append('..')
 from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Belle, Airshower
-from ..template_model.template import NetworkABC
+from template_model.template import NetworkABC
 
 
-#sys.path.append('../models')
 #from ../models/utils import train_plots, roc_auc, test_accuracy, test_f1_score #test_predict_regression, plot_loss_regression
 
 
 class Network(NetworkABC):
 
-    model_name = '_simple_graph_'
-
+    model_name = '_graph_net_'
+    build_graph = True
     def metrics(self, task):
         if task == 'regression':
             return [tf.keras.metrics.MeanSquaredError()]

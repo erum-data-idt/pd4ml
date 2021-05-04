@@ -4,8 +4,9 @@ import numpy as np
 import pandas as pd
 import awkward
 import uproot_methods
-
-from template import NetworkABC
+import sys
+sys.path.append("..")
+from template_model.template import NetworkABC
 from erum_data_data.erum_data_data import TopTagging
 
 
