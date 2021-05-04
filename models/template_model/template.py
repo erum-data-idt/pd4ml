@@ -2,7 +2,7 @@
 # out the implementation of our models in the same framework.
 from abc import ABCMeta, abstractmethod
 from typing import List, Dict
-from utils import train_plots, roc_auc, test_accuracy, test_f1_score
+from ..utils.utils import train_plots, roc_auc, test_accuracy, test_f1_score
 import time
 
 class NetworkABC(metaclass=ABCMeta):

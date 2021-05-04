@@ -1,5 +1,5 @@
 from functools import cached_property
-from template import NetworkABC
+from ..model_template.template import NetworkABC
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt

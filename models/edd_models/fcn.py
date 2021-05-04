@@ -1,6 +1,6 @@
 ##################################
 ###  FCN EXAMPLE IMPELEMTATION ###
-from template import NetworkABC
+from ..template_model.template import NetworkABC
 from matplotlib import pyplot as plt
 import tensorflow as tf
 import numpy as np

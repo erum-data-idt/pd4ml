@@ -5,9 +5,10 @@ import sys
 import matplotlib.pyplot as plt
 
 from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Belle, Airshower
+from ..template_model.template import NetworkABC
 
-sys.path.append('../models')
-from template import NetworkABC
+
+#sys.path.append('../models')
 #from ../models/utils import train_plots, roc_auc, test_accuracy, test_f1_score #test_predict_regression, plot_loss_regression
 
 
