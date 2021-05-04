@@ -32,7 +32,7 @@ class LoadFlat:
         keys  = ['part_pt_log', 'part_e_log', 'part_etarel', 'part_phirel']
         arrs = []
         for key in keys:
-            arrs.append(pad_array(a[key], 100))
+            arrs.append(pad_array(v[key], 100))
         X_out = np.stack(arrs, axis=-1)
 
         return [X_out], y
