@@ -1,5 +1,5 @@
 import numpy as np
-from .tt_graph_utils import load_top, convert
+from .tt_graph_utils import load_top, convert, pad_array
 from . import belle_graph_utils as _belle
 
 
@@ -29,8 +29,13 @@ class LoadFlat:
         X,y = TopTagging.load(split, path, force_download)
         X = np.reshape(X[0], (len(X[0]), (X[0].shape[1]*X[0].shape[2])))
         v = convert(X, 200)
-        X = v.to_numpy()  
-        return [X], y
+        keys  = ['part_pt_log', 'part_e_log', 'part_etarel', 'part_phirel']
+        arrs = []
+        for key in keys:
+            arrs.append(pad_array(a[key], 100))
+        X_out = np.stack(arrs, axis=-1)
+
+        return [X_out], y
         
 
 
