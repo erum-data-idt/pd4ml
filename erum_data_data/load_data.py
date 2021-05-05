@@ -1,6 +1,6 @@
 import numpy as np
 from functools import cached_property
-from sklearn.preprocessing import StandardScaler as Scaler
+from sklearn.preprocessing import StandardScaler
 from .preprocessing_utils import load_top, convert
 from .preprocessing_utils import np_onehot, remap_pdg, adjacency_matrix_from_mothers_np, adjacency_matrix_from_mothers_tf 
 from .preprocessing_utils import _adjacency_matrix_img_8connected
@@ -13,7 +13,8 @@ class LoadPreprocessedData:
     
     returns graph features, the adjacency matrix and a mask (per default all True)
     """
-    
+
+ 
     def spinodal_data(split = "train", path = "./datasets", graph = False, force_download = False):
         from erum_data_data import Spinodal
         """
@@ -32,10 +33,6 @@ class LoadPreprocessedData:
         
         return X_graph, y
     
-    #@cached_property
-    #def scaler(_data):
-    #    return Scaler().fit(_data)
-         
     def eosl_data(split = "train", path = "./datasets", graph = False, force_download = False):
         from erum_data_data import EOSL
         """
@@ -45,15 +42,16 @@ class LoadPreprocessedData:
         X,y = EOSL.load(split, path, force_download)
         X[0] = X[0].reshape(X[0].shape[0], X[0].shape[1]* X[0].shape[2])
         if split == 'train':
-            self.scaler(X[0])
+            scaler = StandardScaler().fit(X[0])
+            scaler.transform(X[0])
         elif split == 'test':
-            X[0] = self.scaler.transform(X[0])      
-        
-        X[0] = x.reshape(X[0].shape[0], 1, X[0].shape[1], X[0].shape[2])
+            X_train, _ = EOSL.load('train', path, False)
+            X_train = X_train[0].reshape(X_train[0].shape[0], X_train[0].shape[1]* X_train[0].shape[2])
+            scaler = StandardScaler().fit(X_train)
+            scaler.transform(X[0])      
 
         X_graph = {}
         if not graph:
-        # ADD SCALER
             X_graph['features'] = X
         elif graph:
             X_adj = _adjacency_matrix_img_8connected(X[0])
