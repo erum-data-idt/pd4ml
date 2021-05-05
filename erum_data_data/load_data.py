@@ -1,4 +1,6 @@
 import numpy as np
+from functools import cached_property
+from sklearn.preprocessing import StandardScaler as Scaler
 from .preprocessing_utils import load_top, convert
 from .preprocessing_utils import np_onehot, remap_pdg, adjacency_matrix_from_mothers_np, adjacency_matrix_from_mothers_tf 
 from .preprocessing_utils import _adjacency_matrix_img_8connected
@@ -30,7 +32,10 @@ class LoadPreprocessedData:
         
         return X_graph, y
     
-    
+    #@cached_property
+    #def scaler(_data):
+    #    return Scaler().fit(_data)
+         
     def eosl_data(split = "train", path = "./datasets", graph = False, force_download = False):
         from erum_data_data import EOSL
         """
@@ -38,6 +43,14 @@ class LoadPreprocessedData:
         """
         
         X,y = EOSL.load(split, path, force_download)
+        X[0] = X[0].reshape(X[0].shape[0], X[0].shape[1]* X[0].shape[2])
+        if split == 'train':
+            self.scaler(X[0])
+        elif split == 'test':
+            X[0] = self.scaler.transform(X[0])      
+        
+        X[0] = x.reshape(X[0].shape[0], 1, X[0].shape[1], X[0].shape[2])
+
         X_graph = {}
         if not graph:
         # ADD SCALER
@@ -75,13 +88,13 @@ class LoadPreprocessedData:
         
         if not graph:
             feature_dict['features'] = ['part_pt_log', 'part_e_log', 'part_etarel', 'part_phirel']
-            X_graph['features'] = [load_top(v ,feature_dict, max_part_pad, stack_axis, None, graph)]
+            X_graph['features'] = [load_top(v, feature_dict, max_part_pad, stack_axis, None, graph)]
 
         if graph:
             feature_dict['points'] = ['part_etarel', 'part_phirel']
             feature_dict['features'] = ['part_pt_log', 'part_e_log', 'part_etarel', 'part_phirel']
             feature_dict['mask'] = ['part_pt_log']
-            X_graph['features'], X_graph['adj_matrix'] = load_top(v ,feature_dict, max_part_pad, stack_axis, K, graph)
+            X_graph['features'], X_graph['adj_matrix'] = load_top(v, feature_dict, max_part_pad, stack_axis, K, graph)
         
         return X_graph, y
         
@@ -194,7 +207,6 @@ class LoadPreprocessedData:
         time[time == -1] = np.nan
         time, _ = norm_time(time)
         signal = norm_signal(signal)
-        #add proper reshaping here
         if not graph: 
             X_graph['features'] = [signal, time]
 
@@ -204,9 +216,4 @@ class LoadPreprocessedData:
             X_graph['features'] = [] #perform here the reshaping of the data 
         
         return X_graph, y
-
-
-              
-              
-        
 

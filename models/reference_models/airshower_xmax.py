@@ -123,14 +123,13 @@ class Network(NetworkABC):
             shuffle=True,
         )
 
-    #def preprocessing(self, in_data):
-    #    pass
-     #   signal, time, _ = in_data
-     #   signal[signal == -1] = np.nan  # replace -1 with nan's to make nanmean work
-     #   time[time == -1] = np.nan
-      #  time, _ = norm_time(time, self.std)
-      #  signal = norm_signal(signal)
-    #    return [signal, time]
+    def preprocessing(self, in_data):
+        signal, time, _ = in_data
+        signal[signal == -1] = np.nan  # replace -1 with nan's to make nanmean work
+        time[time == -1] = np.nan
+        time, _ = norm_time(time, self.std)
+        signal = norm_signal(signal)
+        return [signal, time]
 
     @cached_property
     def stats(self):
