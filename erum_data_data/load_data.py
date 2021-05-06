@@ -87,7 +87,6 @@ class LoadPreprocessedData:
         if not graph:
             feature_dict['features'] = ['part_pt_log', 'part_e_log', 'part_etarel', 'part_phirel']
             X_graph['features'] = [load_top(v, feature_dict, max_part_pad, stack_axis, None, graph)]
-
         if graph:
             feature_dict['points'] = ['part_etarel', 'part_phirel']
             feature_dict['features'] = ['part_pt_log', 'part_e_log', 'part_etarel', 'part_phirel']

@@ -200,10 +200,11 @@ def load_top(v, feature_dict, pad_len, stack_axis, K = None, build_graph = True)
                 assert np.array_equal(counts, v[col].counts)
             #L: need to put 9999 for zero padding;                                                                              
             #L: 0 is a bad default ('fake' neighbours)                                                                          
-            if ('etarel' in col or 'phirel' in col):#L                                                                          
-                value=9999.#L                                                                                                   
-            else:#L                                                                                                             
-                value=0.#L                                                                                                      
+            #if ('etarel' in col or 'phirel' in col):#L                                                                    
+            value = 0.
+            #    value=9999.#L                                                                                                   
+            #else:#L                                                                                                             
+            #    value=0.#L                                                                                                      
             arrs.append(pad_array(v[col], pad_len, value=value))
         values[k] = np.stack(arrs, axis=stack_axis)
 
