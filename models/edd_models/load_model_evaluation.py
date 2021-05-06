@@ -10,23 +10,18 @@ from graph_net import Network
 
 
 #### Filepath to saved model ####
-filepath = './trained_models/Airshower/Airshower_simple_graph_20210422_191633_model'
+filepath = './trained_models/Airshower/Airshower_graph_net_20210506_172952_model'
 ds = Airshower       # dataset
-load_graph = True   # load data as graph or not?
 
 #############################
 #############################
 
 nn = Network()
+build_graph = nn.build_graph
 
 # load data
-if load_graph:
-    x_test, y_test = ds.load_graph('test', path = './datasets')
-else:
-    X_train, y_train = ds.load(split="train")
-    X_test, y_test = ds.load(split="test")
-    nn.init_preprocessing(X_train)
-    x_test = nn.preprocessing(X_test)
+x_test, y_test = ds.load_data('test', path = './datasets', graph = build_graph)
+x_test = nn.preprocessing(x_test)
 
 # load model
 model = tf.keras.models.load_model(filepath)

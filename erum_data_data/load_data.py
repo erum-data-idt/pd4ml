@@ -22,16 +22,16 @@ class LoadPreprocessedData:
         """
         
         X,y = Spinodal.load(split, path, force_download)
-        X_graph = {}
+        X_data = {}
         if not graph:
-            X_graph['features'] = X
+            X_data['features'] = X
         elif graph: 
             X_adj = _adjacency_matrix_img_8connected(X[0])
             X_feats = X[0].reshape(X[0].shape[0],X[0].shape[1]**2,1)
-            X_graph['features'] = X_feats
-            X_graph['adj_matrix'] = X_adj
+            X_data['features'] = X_feats
+            X_data['adj_matrix'] = X_adj
         
-        return X_graph, y
+        return X_data, y
     
     def eosl_data(split = "train", path = "./datasets", graph = False, force_download = False):
         from erum_data_data import EOSL
@@ -40,26 +40,29 @@ class LoadPreprocessedData:
         """
         
         X,y = EOSL.load(split, path, force_download)
-        X[0] = X[0].reshape(X[0].shape[0], X[0].shape[1]* X[0].shape[2])
+        n = X[0].shape[0] 
+        l = X[0].shape[1]
+        w = X[0].shape[2]
+        X[0] = X[0].reshape(n, l*w)
         if split == 'train':
             scaler = StandardScaler().fit(X[0])
-            scaler.transform(X[0])
+            X[0] = scaler.transform(X[0])
         elif split == 'test':
             X_train, _ = EOSL.load('train', path, False)
-            X_train = X_train[0].reshape(X_train[0].shape[0], X_train[0].shape[1]* X_train[0].shape[2])
+            X_train = X_train[0].reshape(X_train[0].shape[0], l*w)
             scaler = StandardScaler().fit(X_train)
-            scaler.transform(X[0])      
+            X[0] = scaler.transform(X[0])      
 
-        X_graph = {}
+        X_data = {}
         if not graph:
-            X_graph['features'] = X
+            X_data['features'] = X[0]
         elif graph:
-            X_adj = _adjacency_matrix_img_8connected(X[0])
-            X_feats = X[0].reshape(X[0].shape[0],X[0].shape[1]**2,1)
-            X_graph['features'] = X_feats
-            X_graph['adj_matrix'] = X_adj
+            X_adj = _adjacency_matrix_img_8connected(X[0].reshape(n,l,w))
+            X_feats = X[0].reshape(n,l*w,1)
+            X_data['features'] = X_feats
+            X_data['adj_matrix'] = X_adj
         
-        return X_graph, y
+        return X_data, y
         
         
     def top_tagging_data(split = "train", path = "./datasets", graph = False, force_download = False):
@@ -74,7 +77,7 @@ class LoadPreprocessedData:
         K = 7
         max_part = 200
         max_part_pad = 100
-        X_graph = {}
+        X_data = {}
         data_format='channel_last'
         stack_axis = 1 if data_format=='channel_first' else -1
 
@@ -86,14 +89,14 @@ class LoadPreprocessedData:
         
         if not graph:
             feature_dict['features'] = ['part_pt_log', 'part_e_log', 'part_etarel', 'part_phirel']
-            X_graph['features'] = [load_top(v, feature_dict, max_part_pad, stack_axis, None, graph)]
+            X_data['features'] = [load_top(v, feature_dict, max_part_pad, stack_axis, None, graph)]
         if graph:
             feature_dict['points'] = ['part_etarel', 'part_phirel']
             feature_dict['features'] = ['part_pt_log', 'part_e_log', 'part_etarel', 'part_phirel']
             feature_dict['mask'] = ['part_pt_log']
-            X_graph['features'], X_graph['adj_matrix'] = load_top(v, feature_dict, max_part_pad, stack_axis, K, graph)
+            X_data['features'], X_data['adj_matrix'] = load_top(v, feature_dict, max_part_pad, stack_axis, K, graph)
         
-        return X_graph, y
+        return X_data, y
         
         
     def belle_data(
@@ -117,21 +120,22 @@ class LoadPreprocessedData:
             y = y[:max_entries]
 
         if not as_tf_data:
-            X_graph = {}
-            X_graph['features'] = [np.concatenate(
-                                                   [X[0][:, :, :-1],
-                                                    np_onehot(remap_pdg(X[0][:, :, -1]), num_pdg)
-                                                   ],
-                                                   axis=-1
-                                                   ),
-                                   ]
+            X_data = {}
+            X_feats = np.concatenate([    
+                                     X[0][:, :, :-1],
+                                     np_onehot(remap_pdg(X[0][:, :, -1]), num_pdg)
+                                     ],
+                                     axis=-1)
+                                   
             if not graph:
-                X_graph['features'].append(X[1])
+                X_data['features'] = [X_feats]
+                X_data['features'].append(X[1])
             
             elif graph:
-                X_graph['adj_matrix'] = adjacency_matrix_from_mothers_np(X[1].astype(np.int8))
+                X_data['features'] = X_feats
+                X_data['adj_matrix'] = adjacency_matrix_from_mothers_np(X[1].astype(np.int8))
 
-            return X_graph, y
+            return X_data, y
         else:
 
             import tensorflow as tf
@@ -179,7 +183,7 @@ class LoadPreprocessedData:
         """
         
         X,y = Airshower.load(split, path, force_download)
-        X_graph = {}
+        X_data = {}
 
         def norm_time(time, std=None):
             u = np.isnan(time)
@@ -205,12 +209,12 @@ class LoadPreprocessedData:
         time, _ = norm_time(time)
         signal = norm_signal(signal)
         if not graph: 
-            X_graph['features'] = [signal, time]
+            X_data['features'] = [signal, time]
 
         elif graph:
-            X_graph['adj_matrix'] = _adjacency_matrix_img_8connected(X[0])
+            X_data['adj_matrix'] = _adjacency_matrix_img_8connected(X[0])
                     
-            X_graph['features'] = [] #perform here the reshaping of the data 
+            X_data['features'] = np.concatenate((signal,time), axis=3).reshape(X[0].shape[0],81,81)
         
-        return X_graph, y
+        return X_data, y
 

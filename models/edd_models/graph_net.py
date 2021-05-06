@@ -47,8 +47,8 @@ class Network(NetworkABC):
                  #tf.keras.callbacks.LearningRateScheduler(lr_schedule),
                  tf.keras.callbacks.EarlyStopping(monitor='val_loss',
                                                   min_delta =0.0001,
-                                                  patience=15,
-                                                  verbose = 1,
+                                                  patience=1,
+                                                  verbose = 15,
                                                   restore_best_weights = True),
                 tf.keras.callbacks.ReduceLROnPlateau(
                     monitor="val_loss",
@@ -69,8 +69,6 @@ class Network(NetworkABC):
 
     
     compatible_datasets = [TopTagging, Spinodal, EOSL, Belle, Airshower]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
-    #compatible_datasets = [Airshower]
-
     
     def get_shapes(self, input_dataset):
         """

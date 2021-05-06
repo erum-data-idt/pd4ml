@@ -2,8 +2,8 @@
 ##	William Korcari: william.korcari@desy.de
 
 ## import of the models
-#from graph_net import Network
-from fcn import Network
+from graph_net import Network
+#from fcn import Network
 #########################################
 
 nn = Network()
