@@ -68,7 +68,8 @@ class Network(NetworkABC):
                }                      ##dictionary of the arguments to be passed to the method fit()
 
     
-    compatible_datasets = [TopTagging, Spinodal, EOSL, Belle, Airshower]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+    #compatible_datasets = [TopTagging, Spinodal, EOSL, Belle, Airshower]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+    compatible_datasets = [EOSL]
     
     def get_shapes(self, input_dataset):
         """

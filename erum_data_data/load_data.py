@@ -55,7 +55,7 @@ class LoadPreprocessedData:
 
         X_data = {}
         if not graph:
-            X_data['features'] = X[0]
+            X_data['features'] = [X[0]]
         elif graph:
             X_adj = _adjacency_matrix_img_8connected(X[0].reshape(n,l,w))
             X_feats = X[0].reshape(n,l*w,1)
