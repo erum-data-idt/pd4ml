@@ -94,35 +94,10 @@ class Network(NetworkABC):
 
         adj_l = adjacency_input
 
-        #symmetric
-        #adj_l = adj_l + tf.linalg.matrix_transpose(adj_l)
-
-        #have values either 0 or 1
-        #(the adding above could produce higher values than 1)
-        #adj_l = tf.cast(adj_l != 0, dtype=tf.float32)#--->  gives error, not needed
-
-        #normalization
-        #calculate outer product of degree vector and multiply with adjaceny matrix
-        #deg_diag = tf.reduce_sum(adj_l, axis=2)
-        #deg12_diag = tf.where(deg_diag > 0, deg_diag ** -0.5, 0)
-        #adj_l = (
-        #    tf.matmul(
-        #        tf.expand_dims(deg12_diag, axis=2),
-        #        tf.expand_dims(deg12_diag, axis=1),
-        #    )
-        #    * adj_l
-        #)
-
         p = feature_input
         for i in range(3):
-        #for i in range(1):
             p = tf.keras.layers.Dense(units, activation="relu")(p)
-            #p = tf.keras.layers.Dropout(0.2)(p)
         
-        #new to avoid overfitting
-        #p = tf.keras.layers.AveragePooling1D(pool_size=2, data_format="channels_first")(p)
-
-        #units = int(units/2)
         for i in range(3):
             p = SimpleGCN(units, activation="relu")([p, adj_l])
 
