@@ -47,8 +47,8 @@ class Network(NetworkABC):
                  #tf.keras.callbacks.LearningRateScheduler(lr_schedule),
                  tf.keras.callbacks.EarlyStopping(monitor='val_loss',
                                                   min_delta =0.0001,
-                                                  patience=1,
-                                                  verbose = 15,
+                                                  patience=15,
+                                                  verbose = 1,
                                                   restore_best_weights = True),
                 tf.keras.callbacks.ReduceLROnPlateau(
                     monitor="val_loss",
