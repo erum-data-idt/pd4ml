@@ -44,9 +44,9 @@ Some example plots can be found in the notebooks in the example folder.
 
 ---
 
-### Contributing a model:
+### Creating a model:
 
-In the folder `template_model_implamentation` multiple model implementations can be found. Each can be imported in the `main.py` script and run on the specified datasets. If you'd like to contribute a model, please submit a model in the form outlined in `template.py` with a pull request. 
+In the folder `models` multiple model implementations can be found. Each can be imported in the `main.py` script and run on the specified datasets. If you'd like to contribute a model, feel free to implement it using the `template.py`. 
 
 ---
 
