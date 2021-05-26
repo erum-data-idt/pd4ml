@@ -7,7 +7,7 @@ from erum_data_data.erum_data_data import Airshower
 import os
 import sys
 sys.path.append("..")
-from model_template.template import NetworkABC
+from template_model.template import NetworkABC
 def resolution(y_true, y_pred):
     """ Metric to control for standart deviation """
     mean, var = tf.nn.moments((y_true - y_pred), axes=[0])
