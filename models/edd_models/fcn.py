@@ -98,18 +98,25 @@ class Network(NetworkABC):
                 dense_layers[i][0] = tf.keras.layers.Dense(256, activation = 'relu')(input_layers[i])
                 for j in range(1, 4):
                     dense_layers[i][j] = tf.keras.layers.Dense(256, activation = 'relu')(dense_layers[i][j-1])
-        dense = {}
+
+
         if len(input_layers) > 1:
-            merged = tf.keras.layers.Concatenate(axis=1)([dense_layers[i][3] for i in range(len(dense_layers))])
-            dense[0] = tf.keras.layers.Dense(256, activation = 'relu')(merged)
+            x = tf.keras.layers.Concatenate(axis=1)([dense_layers[i][3] for i in range(len(dense_layers))])
+            x = tf.keras.layers.Dense(256, activation = 'relu')(x)
         else: 
-            dense[0] = tf.keras.layers.Dense(256, activation = 'relu')(input_layers[0])
+            x = tf.keras.layers.Dense(256, activation = 'relu')(input_layers[0])
         for i in range (1, 10):
-            dense[i] = tf.keras.layers.Dense(256, activation = 'relu')(dense[i-1])
+            #x = tf.keras.layers.BatchNormalization()(x)
+            #x = tf.keras.layers.PReLU()(x)
+            #x = tf.keras.layers.Dropout(0.2)(x)
+            x = tf.keras.layers.Dense(256, activation = 'relu')(x)
+        #x = tf.keras.layers.BatchNormalization()(x)
+        #x = tf.keras.layers.PReLU()(x)
+        #x = tf.keras.layers.Dropout(0.5)(x)
         if ds.task == 'classification':
-            output  = tf.keras.layers.Dense(1, activation = 'sigmoid')(dense[len(dense)-1])
+            output  = tf.keras.layers.Dense(1, activation = 'sigmoid')(x)
         if ds.task == 'regression':
-            output  = tf.keras.layers.Dense(1, activation = 'linear')(dense[len(dense)-1])
+            output  = tf.keras.layers.Dense(1, activation = 'linear')(x)
         model = tf.keras.models.Model(inputs = [input_layers[i] for i in range(len(input_layers))], outputs = output)
         
         return model
