@@ -28,29 +28,20 @@ class Network(NetworkABC):
 
     def compile_args(self, task): 
         return {
-                "optimizer": tf.keras.optimizers.Adam(0.001),
+                "optimizer": tf.keras.optimizers.Adam(0.0001),
                 "loss": self.loss(task),
                 "metrics": self.metrics(task)
                }
 
 
-    #metrics   = [tf.keras.metrics.BinaryAccuracy(name = "acc")]  ##list of metrics to be used
-    #compile_args = {'loss':'binary_crossentropy',#'categorical_crossentropy'
-    #                'optimizer':tf.keras.optimizers.Adam(learning_rate=1e-3),
-    #                'metrics': metrics
-    #               }                      ##dictionary of the arguments to be passed to the method compile()
-
-    callbacks = [#tf.keras.callbacks.ModelCheckpoint(filepath='./',
-                 #            monitor='val_loss',
-                 #            verbose=1,
-                 #            save_best_only=True),
-                 #tf.keras.callbacks.LearningRateScheduler(lr_schedule),
+    callbacks = [
+	
                  tf.keras.callbacks.EarlyStopping(monitor='val_loss',
-                                                  min_delta =0.0001,
-                                                  patience=15,
+                                                  min_delta =0.00001,
+                                                  patience=50,
                                                   verbose = 1,
                                                   restore_best_weights = True),
-                tf.keras.callbacks.ReduceLROnPlateau(
+                 tf.keras.callbacks.ReduceLROnPlateau(
                     monitor="val_loss",
                     factor=0.75,
                     patience=8,
@@ -60,16 +51,15 @@ class Network(NetworkABC):
                     min_lr=1e-5,
             ),
                 ]                                              ##list of callbacks to be used in model.
-    fit_args = {'batch_size': 256,
-                'epochs': 300,
+    fit_args = {'batch_size': 32,
+                'epochs': 400,
                 'validation_split': 0.2,
                 'shuffle': True,
                 'callbacks': callbacks
                }                      ##dictionary of the arguments to be passed to the method fit()
 
     
-    #compatible_datasets = [TopTagging, Spinodal, EOSL, Belle, Airshower]          ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
-    compatible_datasets = [EOSL]
+    compatible_datasets = [TopTagging, Belle, Spinodal, EOSL, Airshower]
     
     def get_shapes(self, input_dataset):
         """
@@ -88,7 +78,7 @@ class Network(NetworkABC):
         input_shapes : dict
             The shapes of each input (`points`, `features`, `mask`, `adj_matrix`).
         """
-        units = 256#128
+        units = 256
         feature_input = tf.keras.layers.Input(shape=shapes['features'], name="features")
         adjacency_input = tf.keras.layers.Input(shape=shapes['adj_matrix'], name="adj_matrix")
 
@@ -97,15 +87,23 @@ class Network(NetworkABC):
         p = feature_input
         for i in range(3):
             p = tf.keras.layers.Dense(units, activation="relu")(p)
-        
+            p = tf.keras.layers.PReLU(shared_axes = -1)(p)
         for i in range(3):
             p = SimpleGCN(units, activation="relu")([p, adj_l])
-
+            p = tf.keras.layers.BatchNormalization()(p)
+            p = tf.keras.layers.PReLU()(p)
+            p = tf.keras.layers.Dropout(0.2)(p)
         x = tf.keras.layers.GlobalAveragePooling1D()(p)
 
-        for i in range(3):
+        for i in range(6):
             x = tf.keras.layers.Dense(units, activation="relu")(x)
-
+            x = tf.keras.layers.BatchNormalization()(x)
+            x = tf.keras.layers.PReLU()(x)
+            x = tf.keras.layers.Dropout(0.2)(x)
+        x = tf.keras.layers.Dense(units, activation="relu")(x)
+        x = tf.keras.layers.BatchNormalization()(x)
+        x = tf.keras.layers.PReLU()(x)
+        x = tf.keras.layers.Dropout(0.1)(x)  
         if ds.task == 'classification':
             outputs = tf.keras.layers.Dense(1, activation="sigmoid")(x)
         elif ds.task == 'regression':
