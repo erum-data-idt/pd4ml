@@ -1,10 +1,11 @@
-### This is a template file meant to be a guideline to smooth out the implementation of our models in the same framework.
 ##	William Korcari: william.korcari@desy.de
-
+##      Erik Buhmann   : erik.buhmann@desy.de
 ## import of the models
-#from graph_net import Network
-from fcn import Network
+import pickle
+from graph_net import Network
+#from fcn import Network
 #########################################
+
 
 nn = Network()
 build_graph = nn.build_graph
@@ -17,6 +18,7 @@ for ds in datasets:
 
     x_train = nn.preprocessing(x_train)
     x_test = nn.preprocessing(x_test)
+    
 
     model = nn.model(ds, shapes=nn.get_shapes(x_train))
     model.compile(**nn.compile_args(ds.task))
@@ -24,10 +26,15 @@ for ds in datasets:
     history = model.fit(x=x_train, y=y_train, **nn.fit_args)
     
     # after training saving best model
-    filepath = './trained_models/{}/{}_model'.format(ds.name, nn.model_tag(ds.name, nn.model_name)) 
+    filepath = './trained_models/{}/{}_LR1e4_batch32_dpr01_model'.format(ds.name, nn.model_tag(ds.name, nn.model_name)) 
     model.save(filepath)
     
-    # evaluation after training
+    logfile = f'{filepath}/history.log'
+    
+    with open(logfile, 'wb') as file_pi:
+        pickle.dump(history.history, file_pi)
+
+# evaluation after training
     nn.evaluation(
         model=model,
         history=history,

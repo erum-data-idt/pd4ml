@@ -36,9 +36,7 @@ class Network(NetworkABC):
         tf.keras.callbacks.EarlyStopping(
             monitor="val_loss", min_delta=0.001, patience=15, restore_best_weights=True
         ),
-        #tf.keras.callbacks.ModelCheckpoint(
-        #    "./fcn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
-        #),
+
         tf.keras.callbacks.ReduceLROnPlateau(
             monitor="val_loss",
             factor=0.75,
@@ -57,11 +55,11 @@ class Network(NetworkABC):
     }
 
     compatible_datasets = [
-                          # TopTagging, 
-                          # Spinodal, 
+                           TopTagging, 
+                           Spinodal, 
                            EOSL,
-                          # Airshower,
-                          # Belle
+                           Airshower,
+                           Belle
                           ]
 
    
@@ -77,7 +75,7 @@ class Network(NetworkABC):
                 size = 1
                 for i in range(1, len(data.shape)):
                     size *= data.shape[i]  
-                out_data.append(np.reshape(data, (len(data), size)))#data.shape[1] * data.shape[2])))
+                out_data.append(np.reshape(data, (len(data), size)))
             else:
                 out_data.append(data)    
         if len(out_data) > 2:
@@ -106,14 +104,6 @@ class Network(NetworkABC):
         else: 
             x = tf.keras.layers.Dense(256, activation = 'relu')(input_layers[0])
         for i in range (1, 10):
-            #x = tf.keras.layers.BatchNormalization()(x)
-            #x = tf.keras.layers.PReLU()(x)
-            #x = tf.keras.layers.Dropout(0.2)(x)
-            x = tf.keras.layers.Dense(256, activation = 'relu')(x)
-        #x = tf.keras.layers.BatchNormalization()(x)
-        #x = tf.keras.layers.PReLU()(x)
-        #x = tf.keras.layers.Dropout(0.5)(x)
-        if ds.task == 'classification':
             output  = tf.keras.layers.Dense(1, activation = 'sigmoid')(x)
         if ds.task == 'regression':
             output  = tf.keras.layers.Dense(1, activation = 'linear')(x)
