@@ -128,8 +128,7 @@ class LoadPreprocessedData:
                                      axis=-1)
                                    
             if not graph:
-                X_data['features'] = [X_feats]
-                X_data['features'].append(X[1])
+                X_data['features'] = [np.concatenate([X_feats, X[1].reshape(X[1].shape[0], X[1].shape[1], 1)], axis=-1)]
             
             elif graph:
                 X_data['features'] = X_feats
@@ -208,13 +207,16 @@ class LoadPreprocessedData:
         time[time == -1] = np.nan
         time, _ = norm_time(time)
         signal = norm_signal(signal)
-        if not graph: 
-            X_data['features'] = [signal, time]
+        
+        X_feats = np.concatenate((signal,time), axis=3).reshape(X[0].shape[0],81,81)
+           
+        if not graph:
+            X_data['features'] = [X_feats]
 
         elif graph:
+            X_data['features'] = X_feats
             X_data['adj_matrix'] = _adjacency_matrix_img_8connected(X[0])
                     
-            X_data['features'] = np.concatenate((signal,time), axis=3).reshape(X[0].shape[0],81,81)
         
         return X_data, y
 

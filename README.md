@@ -8,7 +8,7 @@ pip install git+https://github.com/erikbuh/erum_data_data.git
 # or just git clone & 'pip install .' in this folder
 ```
 
-The essential function so far is the "load" function to load the training and testing datasets. The datasets features "X" are returned as a list of numpy arrays. The labels are returend directly as a numpy array. 
+The essential function is the `load` function to load the training and testing datasets. The datasets features "X" are returned as a list of numpy arrays. The labels are returend directly as a numpy array. 
 
 ```python
 from erum_data_data import Spinodal   # or any other dataset (see below) 
@@ -40,6 +40,14 @@ for dataset in edd.Dataset.datasets_register:
     print(dataset.name)
 ```
 
+An additionally `load_data` function performs some basic preprocessing steps as well as allows the return of an adjecancy matrix:
+```python
+from erum_data_data import Spinodal   # or any other dataset
+x_train, y_train = Spinodal.load_data('train', path = './datasets', graph = True)
+```
+
+`x_train` is dictionary with the contents `features` and `adj_matrix`. If no adjecancy matrix is required, one may set `graph = False`. 
+
 Some example plots can be found in the notebooks in the example folder.
 
 ---
@@ -47,18 +55,6 @@ Some example plots can be found in the notebooks in the example folder.
 ### Creating a model:
 
 In the folder `models` multiple model implementations can be found. Each can be imported in the `main.py` script and run on the specified datasets. If you'd like to contribute a model, feel free to implement it using the `template.py`. 
-
----
-
-### Graph network:
-
-Loading the data as a Graph (with features and an adjacency matrix):
-```python
-from erum_data_data import Spinodal   # or any other dataset
-x_train, y_train = Spinodal.load_graph('train', path = './datasets')
-```
-
-`x_train` is dictionary with the contents `features` and `adj_matrix` 
 
 ---
 
