@@ -16,7 +16,7 @@ class LoadPreprocessedData:
 
  
     def spinodal_data(split = "train", path = "./datasets", graph = False, force_download = False):
-        from erum_data_data import Spinodal
+        from pd4ml import Spinodal
         """
         transforms the Spinodal dataset into a graph
         """
@@ -34,7 +34,7 @@ class LoadPreprocessedData:
         return X_data, y
     
     def eosl_data(split = "train", path = "./datasets", graph = False, force_download = False):
-        from erum_data_data import EOSL
+        from pd4ml import EOSL
         """
         transforms the EOSL dataset into a graph
         """
@@ -66,7 +66,7 @@ class LoadPreprocessedData:
         
         
     def top_tagging_data(split = "train", path = "./datasets", graph = False, force_download = False):
-        from erum_data_data import TopTagging
+        from pd4ml import TopTagging
         """
         transforms the TopTagging dataset into a graph
         """
@@ -110,7 +110,7 @@ class LoadPreprocessedData:
         batch_size=1024,
         validation_split=0.2,
     ):
-        from erum_data_data import Belle
+        from pd4ml import Belle
 
         X, y = Belle.load(split, path, force_download)
 
@@ -176,7 +176,7 @@ class LoadPreprocessedData:
             
             
     def airshower_data(split = "train", path = "./datasets", graph= False, force_download = False):
-        from erum_data_data import Airshower
+        from pd4ml import Airshower
         """
         transforms the Airshower dataset into a graph
         """

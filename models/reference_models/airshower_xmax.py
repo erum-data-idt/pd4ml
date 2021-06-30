@@ -3,7 +3,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error as MSE
-from erum_data_data.erum_data_data import Airshower
+from pd4ml.pd4ml import Airshower
 import os
 import sys
 sys.path.append("..")

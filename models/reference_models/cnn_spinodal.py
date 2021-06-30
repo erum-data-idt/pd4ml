@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 
-from erum_data_data.erum_data_data import Spinodal
+from pd4ml.pd4ml import Spinodal
 import sys
 sys.path.append("..")
 from template_model.template import NetworkABC

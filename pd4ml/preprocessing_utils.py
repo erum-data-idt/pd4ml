@@ -110,7 +110,7 @@ def batch_distance_matrix_numpy(A, B):
 
 def to_adj(points,mask,K):
     # takes input of the shape batch (B), number of particles (P), list of k-nearest neighbor indices (k_max)
-    # ie the output of https://github.com/erikbuh/erum_data_data/blob/main/models/particle_net.py#L186
+    # ie the output of https://github.com/erikbuh/pd4ml/blob/main/models/particle_net.py#L186
 
     D = batch_distance_matrix_numpy(points, points)  # (N, P, P)
     #L
@@ -294,7 +294,7 @@ def adjacency_matrix_from_mothers_tf(mother_indices, symmetrize=True, add_diagon
 
 
 def get_sorted_pdg():
-    from erum_data_data import Belle
+    from pd4ml import Belle
     data = Belle.load()
     mapped_pdg, counts = np.unique(data[0][0][:, :, -1].ravel(), return_counts=True)
     mapped = mapped_pdg[np.argsort(counts)][::-1].astype(int)

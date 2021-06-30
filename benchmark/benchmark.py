@@ -2,7 +2,7 @@ import os
 import json
 from abc import abstractmethod, ABCMeta
 from datetime import datetime
-from erum_data_data.utils import console
+from pd4ml.utils import console
 from .infos import meta, runtime, env
 
 

@@ -7,7 +7,7 @@ import uproot_methods
 import sys
 sys.path.append("..")
 from template_model.template import NetworkABC
-from erum_data_data.erum_data_data import TopTagging
+from pd4ml.pd4ml import TopTagging
 
 
 def _transform(dataframe, start=0, stop=-1, jet_size=0.8):

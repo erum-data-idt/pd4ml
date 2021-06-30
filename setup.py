@@ -1,14 +1,14 @@
 from setuptools import setup
 
 setup(
-    name="erum_data_data",
-    version="0.21",
+    name="pd4ml",
+    version="0.3",
     description="setup for downloading data comparison data",
     url="https://github.com/erikbuh/erum_data_data",
     author="Erik Buhmann",
     author_email="erik.buhmann@uni-hamburg.de",
     license="MIT",
-    packages=["erum_data_data"],
+    packages=["pd4ml"],
     install_requires=[
         "numpy >= 1.14.0",
         "six >= 1.10.0",

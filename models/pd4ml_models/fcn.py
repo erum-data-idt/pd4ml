@@ -5,7 +5,7 @@ import sys
 import numpy as np
 import tensorflow as tf
 from matplotlib import pyplot as plt
-from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Airshower, Belle
+from pd4ml.pd4ml import TopTagging, Spinodal, EOSL, Airshower, Belle
 
 sys.path.append('..')
 from template_model.template import NetworkABC

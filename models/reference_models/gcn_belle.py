@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras import layers
-from erum_data_data.erum_data_data import Belle
+from pd4ml.pd4ml import Belle
 import sys
 sys.path.append("..")
 from template_model.template import NetworkABC

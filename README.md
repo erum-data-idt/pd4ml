@@ -1,4 +1,4 @@
-# erum_data_data
+# Physics Data for Machine Learning (pd4ml)
 
 install this package as a python module with pip via:
 
@@ -11,7 +11,7 @@ pip install git+https://github.com/erikbuh/erum_data_data.git
 The essential function is the `load` function to load the training and testing datasets. The datasets features "X" are returned as a list of numpy arrays. The labels are returend directly as a numpy array. 
 
 ```python
-from erum_data_data import Spinodal   # or any other dataset (see below) 
+from pd4ml import Spinodal   # or any other dataset (see below) 
 
 # loading training data into RAM (downloads dataset first time)
 X_train, y_train  = Spinodal.load('train', path='./datasets')
@@ -34,7 +34,7 @@ Spinodal.print_description()
 
 Show all available datasets:
 ```python
-import erum_data_data as edd
+import pd4ml as edd
 
 for dataset in edd.Dataset.datasets_register:
     print(dataset.name)
@@ -42,7 +42,7 @@ for dataset in edd.Dataset.datasets_register:
 
 An additionally `load_data` function performs some basic preprocessing steps as well as allows the return of an adjecancy matrix:
 ```python
-from erum_data_data import Spinodal   # or any other dataset
+from pd4ml import Spinodal   # or any other dataset
 x_train, y_train = Spinodal.load_data('train', path = './datasets', graph = True)
 ```
 

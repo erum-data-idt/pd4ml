@@ -2,7 +2,7 @@
 ## loads a network file, a saved model and runs the same evaluation as after training (minus history) 
 
 import tensorflow as tf
-from erum_data_data.erum_data_data import TopTagging, Spinodal, EOSL, Belle, Airshower
+from pd4ml.pd4ml import TopTagging, Spinodal, EOSL, Belle, Airshower
 
 ## import of the models
 from graph_net import Network
