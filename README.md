@@ -34,9 +34,9 @@ Spinodal.print_description()
 
 Show all available datasets:
 ```python
-import pd4ml as edd
+import pd4ml
 
-for dataset in edd.Dataset.datasets_register:
+for dataset in pd4ml.Dataset.datasets_register:
     print(dataset.name)
 ```
 
