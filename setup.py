@@ -3,9 +3,9 @@ from setuptools import setup
 setup(
     name="pd4ml",
     version="0.3",
-    description="setup for downloading data comparison data",
-    url="https://github.com/erikbuh/erum_data_data",
-    author="Erik Buhmann",
+    description="an interface for a collection of fundermental physics datasets",
+    url="https://github.com/erum-data-idt/pd4ml",
+    author="Organisation: ErUM Data IDT (Erik Buhmann and many others)",
     author_email="erik.buhmann@uni-hamburg.de",
     license="MIT",
     packages=["pd4ml"],
