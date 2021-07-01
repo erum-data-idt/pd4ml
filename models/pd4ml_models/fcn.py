@@ -55,11 +55,11 @@ class Network(NetworkABC):
     }
 
     compatible_datasets = [
-                           TopTagging, 
-                           Spinodal, 
+#                           TopTagging, 
+          #                 Spinodal, 
                            EOSL,
                            Airshower,
-                           Belle
+#                           Belle
                           ]
 
    
@@ -87,27 +87,15 @@ class Network(NetworkABC):
 
 
     def model(self, ds, shapes, save_model_png=False):
-        input_layers = {}
-        dense_layers = []
-        for i, shape in enumerate(shapes):
-            if len(shape) > 0:
-                input_layers[i] = tf.keras.Input(shape = shape) 
-                dense_layers.append({})
-                dense_layers[i][0] = tf.keras.layers.Dense(256, activation = 'relu')(input_layers[i])
-                for j in range(1, 4):
-                    dense_layers[i][j] = tf.keras.layers.Dense(256, activation = 'relu')(dense_layers[i][j-1])
-
-
-        if len(input_layers) > 1:
-            x = tf.keras.layers.Concatenate(axis=1)([dense_layers[i][3] for i in range(len(dense_layers))])
+        input_layer = tf.keras.Input(shape = shapes[0]) 
+        x = tf.keras.layers.Dense(256, activation = 'relu')(input_layer)
+        for i in range (11):
             x = tf.keras.layers.Dense(256, activation = 'relu')(x)
-        else: 
-            x = tf.keras.layers.Dense(256, activation = 'relu')(input_layers[0])
-        for i in range (1, 10):
+        if ds.task == 'classification':
             output  = tf.keras.layers.Dense(1, activation = 'sigmoid')(x)
         if ds.task == 'regression':
             output  = tf.keras.layers.Dense(1, activation = 'linear')(x)
-        model = tf.keras.models.Model(inputs = [input_layers[i] for i in range(len(input_layers))], outputs = output)
+        model = tf.keras.models.Model(inputs = input_layer, outputs = output)
         
         return model
 
