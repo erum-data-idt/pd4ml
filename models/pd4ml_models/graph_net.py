@@ -9,9 +9,6 @@ from pd4ml.pd4ml import TopTagging, Spinodal, EOSL, Belle, Airshower
 from template_model.template import NetworkABC
 
 
-#from ../models/utils import train_plots, roc_auc, test_accuracy, test_f1_score #test_predict_regression, plot_loss_regression
-
-
 class Network(NetworkABC):
 
     model_name = '_graph_net_'
@@ -132,7 +129,6 @@ class Network(NetworkABC):
             
             
             
-# evaluation methods for regression task (should probably go into utils as well)
 def _mean_resolution(y_true, y_pred):
     """ Metric to control for standart deviation """
     y_true = tf.cast(y_true, tf.float32)

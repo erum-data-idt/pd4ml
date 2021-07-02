@@ -4,8 +4,6 @@ from sklearn.preprocessing import StandardScaler
 from .preprocessing_utils import load_top, convert
 from .preprocessing_utils import np_onehot, remap_pdg, adjacency_matrix_from_mothers_np, adjacency_matrix_from_mothers_tf 
 from .preprocessing_utils import _adjacency_matrix_img_8connected
-#from . import belle_graph_utils as _belle
-#from .tt_graph_utils import load_top, convert
 
 class LoadPreprocessedData:
     """
@@ -73,7 +71,6 @@ class LoadPreprocessedData:
         
         X,y = TopTagging.load(split, path, force_download)
 
-        #Currently hardcoded:
         K = 7
         max_part = 200
         max_part_pad = 100

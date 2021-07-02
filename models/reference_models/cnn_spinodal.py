@@ -10,34 +10,33 @@ class Network(NetworkABC):
     def __init__(self):
         pass
     model_name = '_cnn_spinodal_'
+
+    ##list of callbacks to be used in model.
     callbacks = [
         tf.keras.callbacks.EarlyStopping(
             monitor="val_loss", min_delta=0.0001, patience=15, restore_best_weights=True
         ),
-#        tf.keras.callbacks.ModelCheckpoint(
- #           "./cnn_checkpoint", monitor="val_loss", save_best_only=True, save_weights_only=True
-  #      ),
-    ]  ##list of callbacks to be used in model.
+    ]
     def metrics(self, task): return [
         tf.keras.metrics.BinaryAccuracy(name="acc"),
         tf.keras.metrics.AUC(name="AUC"),
-    ]  ##list of metrics to be used
+    ]  
     def compile_args(self, task): return {
         "optimizer": tf.keras.optimizers.Adam(0.001),
         "loss": tf.keras.losses.BinaryCrossentropy(from_logits=True),
         "metrics": self.metrics(task),
-    }  ##dictionary of the arguments to be passed to the method compile()
+    }  
     fit_args = {
         "shuffle": True,
         "validation_split": 0.2,
         "epochs": 200,
         "callbacks": callbacks,
         "batch_size": 100,
-    }  ##dictionary of the arguments to be passed to the method fit()
+    }
 
     compatible_datasets = [
         Spinodal
-    ]  ## we would also ask you to add a list of the datasets that would be compatible with your implementation
+    ]  
 
     def preprocessing(self, in_data):
         """

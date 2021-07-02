@@ -1,6 +1,3 @@
-### This is a template file meant to be a guideline to smooth out the implementation of our models in the same framework. 
-##  William.
-
 import os
 import matplotlib as mpl
 mpl.use('Agg')

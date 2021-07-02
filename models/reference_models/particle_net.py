@@ -295,9 +295,9 @@ class Network(NetworkABC):
                 'validation_split': 0.2,
                 'shuffle': True,
                 'callbacks': callbacks
-               }                      ##dictionary of the arguments to be passed to the method fit()
+               }    
 
-    compatible_datasets = [TopTagging]         ## we would also ask you to add a list of the datasets that would be compatible with your implementation 
+    compatible_datasets = [TopTagging]  
 
     def preprocessing(self, X):
         """

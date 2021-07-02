@@ -141,12 +141,7 @@ def to_adj(points,mask,K):
         # produce column indices
         # reading the k-est index at the approriate place from the input
         cols = matrix[:,:,k].flatten()
-        # use fancy indexing of batch/row/column lists 
-        # together to change the elements of the adjacency 
-        # matrix for this position from 0 to 1
         adj[i_batch,rows,cols] = 1
-        # make symmetric --> asymmetric models give better scores
-        #adj[i_batch,cols,rows] = 1
 
     # diagonal
     adj[i_batch,rows,rows] = 1
@@ -159,28 +154,9 @@ def to_adj(points,mask,K):
 
     #find  the indices and broadcast to adj
     adj[np.where(mask_row==0)]=0
-
-    ##too expensive computationally
-    #tr_mask = np.transpose(mask,(0,2,1))
-    #adj = tr_mask*adj
-    #adj = adj*mask
     
-    #optional: normalize rows
-    #row_sums = adj.sum(axis=2)
-    #row_sums[row_sums == 0] = 1
-    #adj = adj / row_sums[:, np.newaxis]
-
-    #optional: normalize columns
-    #col_sums = adj.sum(axis=1)
-    #col_sums[col_sums == 0] = 1
-    #adj = adj / col_sums[:, np.newaxis]
-
     #transpose
     adj = np.transpose(adj,(0,2,1))
-
-    # return the adjacency matrix
-    
-    # change dtype to int8
     adj = adj.astype('int8')
     return adj
 
@@ -198,13 +174,7 @@ def load_top(v, feature_dict, pad_len, stack_axis, K = None, build_graph = True)
                 counts = v[col].counts
             else:
                 assert np.array_equal(counts, v[col].counts)
-            #L: need to put 9999 for zero padding;                                                                              
-            #L: 0 is a bad default ('fake' neighbours)                                                                          
-            #if ('etarel' in col or 'phirel' in col):#L                                                                    
             value = 0.
-            #    value=9999.#L                                                                                                   
-            #else:#L                                                                                                             
-            #    value=0.#L                                                                                                      
             arrs.append(pad_array(v[col], pad_len, value=value))
         values[k] = np.stack(arrs, axis=stack_axis)
 

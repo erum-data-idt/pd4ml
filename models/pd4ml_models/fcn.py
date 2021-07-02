@@ -1,5 +1,5 @@
 ##################################
-###  FCN EXAMPLE IMPELEMTATION ###
+###  FCN IMPELEMTATION ###
 import os
 import sys
 import numpy as np
@@ -55,11 +55,11 @@ class Network(NetworkABC):
     }
 
     compatible_datasets = [
-#                           TopTagging, 
-          #                 Spinodal, 
+                           TopTagging, 
+                           Spinodal, 
                            EOSL,
                            Airshower,
-#                           Belle
+                           Belle
                           ]
 
    

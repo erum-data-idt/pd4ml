@@ -30,7 +30,7 @@ print(model.summary())
 # rerun evaluation
 nn.evaluation(
     model=model,
-    history=None,  # no history present
+    history=None, 
     dataset=ds,
     x_test=x_test,
     y_test=y_test,
