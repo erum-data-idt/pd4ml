@@ -1,6 +1,6 @@
 # Physics Data for Machine Learning (pd4ml)
 
-This repository contains datasets and model for machine learning from the publication "Shared Data and Algorithms for Deep Learning in Fundamental Physics" (add arXiv link)
+This repository contains datasets and model for machine learning from the publication "Shared Data and Algorithms for Deep Learning in Fundamental Physics" ([arXiv:2107.00656](https://arxiv.org/abs/2107.00656))
 
 You can install this package as a python module with pip via:
 
