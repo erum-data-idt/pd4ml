@@ -26,7 +26,7 @@ for ds in datasets:
     history = model.fit(x=x_train, y=y_train, **nn.fit_args)
     
     # after training saving best model
-    filepath = './trained_models/{}/{}_LR1e4_batch32_dpr01_model'.format(ds.name, nn.model_tag(ds.name, nn.model_name)) 
+    filepath = './trained_models/{}/{}_model'.format(ds.name, nn.model_tag(ds.name, nn.model_name)) 
     model.save(filepath)
     
     logfile = f'{filepath}/history.log'
