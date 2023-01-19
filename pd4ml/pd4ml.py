@@ -30,7 +30,7 @@ class TopTagging(Dataset):
 
     name = "TopTagging"
     filename = "1_top_tagging_2M.npz"
-    url = "https://desycloud.desy.de/index.php/s/aZqyNSg4B7nn8qQ/download"
+    url = 'https://syncandshare.desy.de/index.php/s/TWqT3E9j6q5yYSF/download/1_top_tagging_2M.npz'
     md5 = "708a8369d75ceff2229bd8c46b47afea"
     task = 'classification'
     load_data = lpd.top_tagging_data
@@ -53,7 +53,7 @@ class Spinodal(Dataset):
 
     name = "Spinodal"
     filename = "2_spinodal_29k.npz"
-    url = "https://desycloud.desy.de/index.php/s/zZCCSfwwEkT5Pgk/download"
+    url = 'https://syncandshare.desy.de/index.php/s/RN9AYWLgKHEPEfF/download/2_spinodal_29k.npz'
     md5 = "c22326822d9bac7c074467ccccc6fe4f"
     task = 'classification'
     load_data = lpd.spinodal_data
@@ -76,7 +76,7 @@ class EOSL(Dataset):
 
     name = "EOSL"
     filename = "3_EOSL_or_EOSQ_180k.npz"
-    url = "https://desycloud.desy.de/index.php/s/DT7sWm6rNR5zss9/download"
+    url = "https://syncandshare.desy.de/index.php/s/NXojejGjKdSJSR2/download/3_EOSL_or_EOSQ_180k.npz"
     md5 = "c070a9743163c3f467ceb87ac4e19fd1"
     task = 'classification'
     load_data = lpd.eosl_data
@@ -118,7 +118,7 @@ class Airshower(Dataset):
 
     name = "Airshower"
     filename = "4_airshower_100k_regression.npz"
-    url = "https://desycloud.desy.de/index.php/s/YHa79Gx94CbPx8Q/download"
+    url = "https://syncandshare.desy.de/index.php/s/8oJoYcaCRaC9dL7/download/4_airshower_100k_regression.npz"
     md5 = "367dc93bec6111a1990f85cc8ff58d1f"
     task = 'regression'
     load_data = lpd.airshower_data
@@ -152,7 +152,7 @@ class Belle(Dataset):
 
     name = "Belle"
     filename = "6_belle_selective_400k.npz"
-    url = "https://desycloud.desy.de/index.php/s/RKB4z3mMcPPY982/download"
+    url = "https://syncandshare.desy.de/index.php/s/CWD9CdCHgizgNxq/download/6_belle_selective_400k.npz"
     md5 = "85b10c9df3903455ab247a0ab4b51e5f"
     task = 'classification'
     load_data = lpd.belle_data
