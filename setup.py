@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="pd4ml",
-    version="0.3",
+    version="0.3.1",
     description="an interface for a collection of fundermental physics datasets",
     url="https://github.com/erum-data-idt/pd4ml",
     author="Organisation: ErUM Data IDT (Erik Buhmann and many others)",
